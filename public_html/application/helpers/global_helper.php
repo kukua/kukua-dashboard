@@ -67,14 +67,6 @@ class GlobalHelper {
     }
 
     public static function outputCsv($fileName, $assocDataArray) {
-        ob_clean();
-        header('Pragma: public');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Cache-Control: private', false);
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment;filename=' . $fileName);
-
         $keys = [
             "Epoch",
             "mm",
@@ -86,24 +78,43 @@ class GlobalHelper {
             "%",
             "hectopascal"
         ];
+
+        $zipFile = 'stations-' . microtime() . '.zip';
+        $zip = new ZipArchive;
+        if ($zip->open($zipFile, ZipArchive::CREATE) !== true) {
+            throw new Exception("Cannot open zip archive");
+        }
+
         if (count($assocDataArray)) {
-            $fp = fopen('php://output', 'w');
-            $i = 0;
             foreach($assocDataArray as $key => $station) {
-
-                #Only the first time, set headers.
-                if ($i == 0) {
-                    fputcsv($fp, $station["columns"]);
-                    fputcsv($fp, $keys);
+                $fp = fopen('php://output', 'w');
+                if ($fp === false) {
+                    throw new Exception("unable to open php's output buffer");
                 }
-                $i++;
 
+                ob_start();
+                fputcsv($fp, $station["columns"]);
+                fputcsv($fp, $keys);
                 foreach($station["points"] as $values) {
                     fputcsv($fp, $values);
                 }
+                $string = ob_get_clean();
+                $zip->addFromString($station["name"] . ".csv", $string);
+                ob_clean();
+                fclose($fp);
             }
-            fclose($fp);
+            $zip->close();
         }
+
+        header('Pragma: public');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Cache-Control: private', false);
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment;filename=' . $zipFile);
+        header('Content-Length: ' . filesize($zipFile));
+        header("Content-Transfer-Encoding: binary");
+        readfile($zipFile);
         ob_flush();
     }
 }
