@@ -12,15 +12,6 @@
         kukua.refreshed();
     };
 
-    kukua.refreshed = function() {
-        if (window.location.hash == "#refresh") {
-            var dashboard = kukua.getDashboard();
-            var panelId   = kukua.getPanelId();
-            var dates     = kukua.getDates();
-            kukua.reloadGraph(dashboard, panelId, dates.from, dates.to);
-        }
-    };
-
     kukua.datePickerInit = function() {
         var input_from = kukua.getDatePickerFrom();
         var input_to =   kukua.getDatePickerTo();
@@ -34,6 +25,21 @@
         input_to.datetimepicker(datePickerOptions);
     };
 
+    //Get values
+    kukua.getDatePickerFrom = function() {
+        return $("#js-datetimepicker-min");
+    };
+    kukua.getDatePickerTo = function() {
+        return $("#js-datetimepicker-max");
+    };
+    kukua.getDashboard = function() {
+        return $("#js-graph-location-swap").val();
+    };
+    kukua.getPanelId = function() {
+        return $("#js-graph-type-swap").val();
+    };
+
+    //
     kukua.swapPanel = function() {
         $("#js-graph-type-swap").on('change', function() {
             var dashboard = kukua.getDashboard();
@@ -71,18 +77,15 @@
         })
     };
 
-    kukua.getDatePickerFrom = function() {
-        return $("#js-datetimepicker-min");
+    kukua.refreshed = function() {
+        if (window.location.hash == "#refresh") {
+            var dashboard = kukua.getDashboard();
+            var panelId   = kukua.getPanelId();
+            var dates     = kukua.getDates();
+            kukua.reloadGraph(dashboard, panelId, dates.from, dates.to);
+        }
     };
-    kukua.getDatePickerTo = function() {
-        return $("#js-datetimepicker-max");
-    };
-    kukua.getDashboard = function() {
-        return $("#js-graph-location-swap").val();
-    };
-    kukua.getPanelId = function() {
-        return $("#js-graph-type-swap").val();
-    };
+
     kukua.getDates = function() {
         var dateFrom    = moment().subtract("8", "days").format("YYYYMMDD");
         var dateTo      = moment().subtract("1", "day").format("YYYYMMDD");

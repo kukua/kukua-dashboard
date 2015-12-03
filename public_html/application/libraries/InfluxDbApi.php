@@ -7,42 +7,76 @@ class InfluxDbApi {
     protected $_password;
 
     protected $_select;
+    protected $_from;
+    protected $_where;
     protected $_group;
     protected $_order;
     protected $_output;
 
+    protected $_validGroupedBy;
+
+    /**
+     * Class constructor, sets default values
+     *
+     * @access public
+     * @return void
+     */
     public function __construct() {
         $this->_url = "http://dashboard.kukua.cc";
         $this->_port = "8086";
         $this->_user = "kukua";
         $this->_password = "pZhkvQwfP5";
 
-        $this->_select = "SELECT time,rainTicks,windTicks,windGustTicks,windDir,windGustDir,temp,presBMP,hum";
-        $this->_group  = "5m";
+        $this->_select = "SELECT time,
+                                 count(rainTicks) as RainTicks,
+                                 mean(windTicks) as WindTicks,
+                                 mean(windGustTicks) as WindGustTicks,
+                                 mean(windDir) as WindDir,
+                                 mean(windGustDir) as WindGustDir,
+                                 mean(temp) as Temperature,
+                                 mean(hum) as Humidity,
+                                 mean(presBMP) as PresBMP";
         $this->_order  = "asc";
+        $this->_validGroupedBy = ["5m", "1h", "12h", "24h"];
     }
 
-    public function buildQuery($from = null, $dateFrom = null, $dateTo = null) {
-        if (!$this->_validTimestamp($dateFrom) || !$this->_validTimestamp($dateTo)) {
-            throw new InvalidArgumentException("Please supply a from and/or to date as timestamp");
-        }
+    /**
+     * Returns the given output by $this->call()
+     *
+     * @access public
+     * @return Array
+     */
+    public function getOutput() {
+        return $this->_output;
+    }
 
-        $user = GlobalHelper::getUser();
-        if ($from === null) {
-            $from = implode(",", Graph::$stations[$user]);
-        } else {
-            $from = Graph::$stations[$user][$this->input->post("nation")];
-        }
+    /**
+     * Build the query with given parameters
+     *
+     * @access public
+     * @param  mixed $from
+     * @param  mixed $dateFrom
+     * @param  mixed $dateTo
+     * @param  string $group
+     */
+    public function buildQuery($from = null, $dateFrom = null, $dateTo = null, $group = "1h") {
+        $this->_populate($from, $dateFrom, $dateTo, $group);
 
         $query = $this->_select . "
-            FROM " . $from . "
-            WHERE time > " . $dateFrom . "s
-            AND time < " . $dateTo . "s
-            GROUP BY time(" . $this->_group . ")
-            ORDER asc";
+            FROM " . $this->_from . "
+            WHERE " . $this->_where . "
+            GROUP BY " . $this->_group . "
+            ORDER " . $this->_order;
         $this->_query = urlencode($query);
     }
 
+    /**
+     * The curl call to influxDb
+     *
+     * @access public
+     * @throws Exception
+     * @return void
+     */
     public function call() {
         $headers = [
             "Content-type: application/json",
@@ -64,10 +98,57 @@ class InfluxDbApi {
         }
     }
 
-    public function getOutput() {
-        return $this->_output;
+    /**
+     * Populate class variables
+     *
+     * @access protected
+     * @param  string $from
+     * @param  string $dateFrom
+     * @param  string $dateTo
+     * @param  string $group
+     * @throws Exception
+     * @return void
+     */
+    protected function _populate($from, $dateFrom, $dateTo, $group) {
+        if (!$this->_validTimestamp($dateFrom) || !$this->_validTimestamp($dateTo)) {
+            throw new InvalidArgumentException("Please supply a from and/or to date as timestamp");
+        }
+
+        //from
+        $user = GlobalHelper::getUser();
+        $this->_from = implode(",", Graph::$stations[$user]);
+        if ($from !== null) {
+            $this->_from = Graph::$stations[$user][$from];
+        }
+
+        //where
+        $this->_where = "time > " . $dateFrom . "s AND time < " . $dateTo . "s";
+
+        //group by
+        $this->_group = "time(" . $group . ")";
+        if ($this->_validateGroup($group) !== true) {
+            $this->_group = "time(1h)";
+        }
     }
 
+    /**
+     * Validate group by
+     *
+     * @access protected
+     * @param  string $group
+     * @return boolean
+     */
+    protected function _validateGroup($group) {
+        return in_array($group, $this->_validGroupedBy);
+    }
+
+    /**
+     * Validates if param is timestamp
+     *
+     * @access protected
+     * @param  int | string $time
+     * @return boolean
+     */
     protected function _validTimestamp($time) {
         return ((int) $time === $time)
             && ($time <= PHP_INT_MAX)

@@ -69,7 +69,6 @@ class Graph extends MyController {
         }
 
         $nation = ($this->input->post("nation") != "") ? $this->input->post("nation") : null;
-
         $from   = $this->input->post("from") . " 00:00:00";
         $to     = $this->input->post("to") . " 23:59:59";
         $dateFrom = DateTime::createFromFormat("Y/m/d H:i:s", $from)->getTimestamp();
@@ -77,7 +76,7 @@ class Graph extends MyController {
 
         try {
             $influx = new InfluxDbApi();
-            $influx->buildQuery($nation, $dateFrom, $dateTo);
+            $influx->buildQuery($nation, $dateFrom, $dateTo, $this->input->post("submit"));
             $influx->call();
             $values = $influx->getOutput();
             GlobalHelper::outputCsv("export-" . $from . "-" . $to . ".csv", $values);

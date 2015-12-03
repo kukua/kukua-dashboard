@@ -75,6 +75,17 @@ class GlobalHelper {
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment;filename=' . $fileName);
 
+        $keys = [
+            "Epoch",
+            "mm",
+            "*3.6/300 = m/s",
+            "*3.6/100 = m/s",
+            "degrees",
+            "degrees",
+            "celcius",
+            "%",
+            "hectopascal"
+        ];
         if (count($assocDataArray)) {
             $fp = fopen('php://output', 'w');
             $i = 0;
@@ -83,6 +94,7 @@ class GlobalHelper {
                 #Only the first time, set headers.
                 if ($i == 0) {
                     fputcsv($fp, $station["columns"]);
+                    fputcsv($fp, $keys);
                 }
                 $i++;
 
