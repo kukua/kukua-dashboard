@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group clearfix">
-                        <label class="pull-right">Download and group per</label>
+                        <label class="pull-right">Download csv and group per</label>
                         <div class="clearfix"></div>
                         <div class="btn-group pull-right" role="group">
                             <button type="submit" name="submit" value="5m" class="btn btn-primary">5m</button>
