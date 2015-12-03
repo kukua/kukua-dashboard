@@ -1,0 +1,8 @@
+.DS_Store
+.env
+tools/*.log
+
+public_html/node_modules
+public_html/bower_components
+public_html/assets/dist
+public_html/.environment/development.php

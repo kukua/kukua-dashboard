@@ -1,0 +1,32 @@
+.u-text-center {
+    text-align: center;
+}
+.u-text-right {
+    text-align: right;
+}
+.margin-top {
+    margin-top: 20px;
+}
+.margin-top-half {
+    margin-top: 10px;
+}
+.label-width {
+    min-width: 60px;
+}
+
+/* Media queries SM (768px and up) */
+@media(min-width: 768px) {
+    .sm-pull-right {
+        float: right;
+    }
+}
+
+/* Media queries MD (992px and up) */
+@media(min-width: 992px) {
+
+}
+
+/* Media queries LG (1200px and up) */
+@media(min-width: 1200px) {
+
+}

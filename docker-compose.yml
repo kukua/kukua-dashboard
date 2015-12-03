@@ -1,0 +1,40 @@
+influxdb:
+    image: tutum/influxdb:0.8.8
+    env_file: .env
+    volumes:
+        - ./config/influxdb.toml:/config/config.toml:ro
+    ports:
+        - "8083:8083"
+        - "8086:8086"
+    expose:
+        - "8090"
+        - "8099"
+grafana:
+    image: grafana/grafana:2.5.0
+    env_file: .env
+    volumes:
+        - ./config/grafana.ini:/etc/grafana/grafana.ini:ro
+    ports:
+        - "9000:9000"
+    links:
+        - influxdb
+hhvm:
+    image: diegomarangoni/hhvm:fastcgi
+    working_dir: /data
+    volumes:
+        - ./public_html/:/data
+nginx:
+    image: nginx
+    ports:
+    - "80:80"
+    volumes:
+    - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    - ./nginx/sites/:/etc/nginx/sites-available:ro
+    - ./nginx/fastcgi.conf:/etc/nginx/fastcgi.conf:ro
+    - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+    - ./nginx/start.sh:/etc/nginx/start.sh
+    - ./nginx/logs/:/logs
+    - ./public_html/:/data
+    links:
+        - hhvm
+    command: /etc/nginx/start.sh
