@@ -26,7 +26,9 @@ var js_files = [
     js_plugin_path + 'moment/min/moment-with-locales.js',
     js_plugin_path + 'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
     js_plugin_path + 'mailcheck/src/mailcheck.js',
+    js_plugin_path + 'highcharts/lib/highcharts.src.js',
 
+    js_script_path + 'chart.js',
     js_script_path + 'graph.js',
     js_script_path + 'mailcheck.js'
 ];

@@ -59,8 +59,8 @@ class InfluxDbApi {
      * @param  mixed $dateTo
      * @param  string $group
      */
-    public function buildQuery($from = null, $dateFrom = null, $dateTo = null, $group = "1h") {
-        $this->_populate($from, $dateFrom, $dateTo, $group);
+    public function buildQuery($type = null, $from = null, $dateFrom = null, $dateTo = null, $group = "1h") {
+        $this->_populate($type, $from, $dateFrom, $dateTo, $group);
 
         $query = $this->_select . "
             FROM " . $this->_from . "
@@ -91,7 +91,7 @@ class InfluxDbApi {
 
         $output = curl_exec($ch);
         curl_close($ch);
-        $this->_output = json_decode($output, true);
+        $this->_output = $output;
 
         if (empty($this->_output)) {
             Throw new Exception("No results");
@@ -109,9 +109,23 @@ class InfluxDbApi {
      * @throws Exception
      * @return void
      */
-    protected function _populate($from, $dateFrom, $dateTo, $group) {
+    protected function _populate($type, $from, $dateFrom, $dateTo, $group) {
         if (!$this->_validTimestamp($dateFrom) || !$this->_validTimestamp($dateTo)) {
             throw new InvalidArgumentException("Please supply a from and/or to date as timestamp");
+        }
+
+        //select
+        if ($type !== null && is_array($type)) {
+            $select = "SELECT time, ";
+            foreach($type as $column => $name) {
+                $prefix = "mean";
+                if ($column === "rain") {
+                    $prefix = "count";
+                }
+                $select .= $prefix . " (" . $column . ") as " . $name . ",";
+            }
+            $select = rtrim($select, ",");
+            $this->_select = $select;
         }
 
         //from

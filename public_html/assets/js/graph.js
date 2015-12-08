@@ -1,15 +1,15 @@
 (function(kukua) {
     'use strict';
     kukua.onDomReady = function() {
+
         //Initializations
         kukua.datePickerInit();
 
-        //Actions
-        kukua.swapPanel();
-        kukua.swapDatePicker();
-        kukua.swapDashboard();
+        //onChange reload graph
+        kukua.formChanges();
 
-        kukua.refreshed();
+        //Render first onDomReady
+        kukua.graph();
     };
 
     kukua.datePickerInit = function() {
@@ -25,65 +25,53 @@
         input_to.datetimepicker(datePickerOptions);
     };
 
+    kukua.graph = function() {
+        var graphType       = kukua.getGraphType();
+        var graphTypeText   = kukua.getGraphTypeText();
+        var graphDate       = kukua.getDates();
+
+        var options = chart.getOptions();
+        options.chart.zoomType = 'x';
+        options.title.text = graphTypeText
+
+        switch(graphType.val()) {
+            case 'temp':
+                options.chart.type = "line";
+                options.yAxis.title.text = graphTypeText + " (°C)"
+                break;
+            case 'rain':
+                options.chart.type = "column";
+                options.yAxis.title.text = graphTypeText + " (mm)"
+                break;
+        }
+        chart.render("#chart", "/graph/build/" + graphType.val() + "/5m", options);
+    };
+
+    kukua.formChanges = function() {
+        kukua.getDatePickerFrom().on("dp.change", function() {
+            kukua.graph()
+        });
+        kukua.getDatePickerTo().on("dp.change", function() {
+            kukua.graph()
+        });
+        $("#js-graph-type-swap").on("change", function() {
+            kukua.graph()
+        });
+    };
+
     //Get values
     kukua.getDatePickerFrom = function() {
-        return $("#js-datetimepicker-min");
+        return $("#js-datetimepicker-min")
     };
     kukua.getDatePickerTo = function() {
-        return $("#js-datetimepicker-max");
+        return $("#js-datetimepicker-max")
     };
-    kukua.getDashboard = function() {
-        return $("#js-graph-location-swap").val();
+    kukua.getGraphType = function() {
+        return $("#js-graph-type-swap")
     };
-    kukua.getPanelId = function() {
-        return $("#js-graph-type-swap").val();
-    };
-
-    //
-    kukua.swapPanel = function() {
-        $("#js-graph-type-swap").on('change', function() {
-            var dashboard = kukua.getDashboard();
-            var dates     = kukua.getDates();
-            var panelId   = $(this).val();
-            kukua.reloadGraph(dashboard, panelId, dates.from, dates.to);
-        })
-    };
-
-    kukua.swapDatePicker = function() {
-        kukua.getDatePickerFrom().on("dp.change", function (e) {
-            kukua.getDatePickerTo().data("DateTimePicker").minDate(e.date);
-            var dashboard = kukua.getDashboard();
-            var panelId   = kukua.getPanelId();
-            var min       = $(this).val();
-            var max       = kukua.getDatePickerTo().val();
-            kukua.reloadGraph(dashboard, panelId, min, max);
-        })
-        kukua.getDatePickerTo().on("dp.change", function (e) {
-            kukua.getDatePickerFrom().data("DateTimePicker").maxDate(e.date);
-            var dashboard = kukua.getDashboard();
-            var panelId   = kukua.getPanelId();
-            var min       = kukua.getDatePickerFrom().val();
-            var max       = $(this).val();
-            kukua.reloadGraph(dashboard, panelId, min, max);
-        })
-    };
-
-    kukua.swapDashboard = function () {
-        $("#js-graph-location-swap").on("change", function() {
-            var dates = kukua.getDates();
-            var panelId = kukua.getPanelId();
-            var dashboard = $(this).val();
-            kukua.reloadGraph(dashboard, panelId, dates.from, dates.to);
-        })
-    };
-
-    kukua.refreshed = function() {
-        if (window.location.hash == "#refresh") {
-            var dashboard = kukua.getDashboard();
-            var panelId   = kukua.getPanelId();
-            var dates     = kukua.getDates();
-            kukua.reloadGraph(dashboard, panelId, dates.from, dates.to);
-        }
+    kukua.getGraphTypeText = function() {
+        var input = kukua.getGraphType()
+        return input.find("option:selected").text()
     };
 
     kukua.getDates = function() {
@@ -97,19 +85,5 @@
         }
         return {"from": dateFrom, "to": dateTo};
     };
-
-    kukua.reloadGraph = function (dashboard, panelId, dateFrom, dateTo) {
-        var from = dateFrom.replace(/\//gi,"");
-        var to   = dateTo.replace(/\//gi,"");
-
-        if (dashboard != "") {
-            var dashboard = "_" + dashboard;
-        }
-        var hostname      = "dashboard.kukua.cc";
-        var pre_dashboard = $("#js-graph").data("user");
-        var frameUrl      = "http://" + hostname + ":9000/dashboard-solo/db/" + pre_dashboard + dashboard + "?panelId=" + panelId + "&fullscreen&edit&from=" + from + "&to=" + to + "&theme=light";
-        $("#js-graph").attr("src", function(i, val) { return frameUrl });
-    };
-
 })(window.kukua = window.kukua || {});
 $(document).ready(kukua.onDomReady);

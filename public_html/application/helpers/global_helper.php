@@ -98,7 +98,7 @@ class GlobalHelper {
                 foreach($station["points"] as $values) {
                     fputcsv($fp, $values);
                 }
-                $string = ob_get_clean();
+                $string = ob_get_contents();
                 $zip->addFromString($station["name"] . ".csv", $string);
                 ob_clean();
                 fclose($fp);

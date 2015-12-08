@@ -31,14 +31,8 @@ class Graph extends MyController {
      * @return view
      */
     public function index() {
-        $api = new GrafanaApi();
-        $api->call("/dashboards/db/kukuatz");
-
-        //If the /graph/download returned no results
-        //display the given values
         if ($this->session->postLocation !== Null) {
             $items = [
-                "postLocation" => $this->session->postLocation,
                 "postDateFrom" => $this->session->postDateFrom,
                 "postDateTo"   => $this->session->postDateTo,
             ];
@@ -52,10 +46,7 @@ class Graph extends MyController {
             $this->session->unset_userdata(array_keys($items));
         }
 
-        $user = GlobalHelper::getUser();
-        $this->data["locations"]   = Graph::$stations[$user];
-        $this->data["panelGraphs"] = $api->result();
-        $this->data["graphUrl"]    = $this->_graphUrl();
+        $this->data["panelGraphs"] = [];
         $this->load->view("graph/index", $this->data);
     }
 
@@ -76,10 +67,10 @@ class Graph extends MyController {
 
         try {
             $influx = new InfluxDbApi();
-            $influx->buildQuery($nation, $dateFrom, $dateTo, $this->input->post("submit"));
+            $influx->buildQuery(null, $nation, $dateFrom, $dateTo, $this->input->post("submit"));
             $influx->call();
             $values = $influx->getOutput();
-            GlobalHelper::outputCsv("export-" . $from . "-" . $to . ".csv", $values);
+            GlobalHelper::outputCsv("export-" . $from . "-" . $to . ".csv", json_decode($values, true));
         } catch (Exception $e) {
             Notification::set(Graph::INFO, "The selected from-to dates gave zero results.");
             $sessionData = [
@@ -88,8 +79,42 @@ class Graph extends MyController {
                 "postDateTo"   => $this->input->post("to"),
             ];
             $this->session->set_userdata($sessionData);
-            redirect("/graph/index#refresh", "refresh");
+            redirect("/graph/index", "refresh");
         }
+    }
+
+    //Test function for new graph
+    public function build($graph = null, $interval= "5m") {
+        $type = null;
+        $nation = null;
+        $submit = $interval;
+
+        $from = GlobalHelper::getDefaultDate("P8D");
+        $to   = GlobalHelper::getDefaultDate("P1D");
+
+        if ($this->input->post("from") || $this->input->post("to")) {
+            $from = $this->input->post("from");
+            $to   = $this->input->post("to");
+        }
+        $fromDate = DateTime::createFromFormat("Y/m/d", $from);
+        $toDate   = DateTime::createFromFormat("Y/m/d", $to);
+
+        //Temporary
+        if ($graph !== null) {
+            if ($graph == "temp") {
+                $type["temp"] = "Temperature";
+            }
+            if ($graph == "rain") {
+                $type["rainTicks"] = "Rain";
+            }
+        }
+
+        $influx = new InfluxDbApi();
+        $influx->buildQuery($type, $nation, $fromDate->getTimestamp(), $toDate->getTimestamp(), $submit);
+        $influx->call();
+        $values = $influx->getOutput();
+        echo $values;
+        exit;
     }
 
     protected function _graphUrl() {
