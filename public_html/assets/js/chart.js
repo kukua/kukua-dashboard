@@ -79,12 +79,13 @@
 
                         //Set daterangepicker object
                         kukua.getDateRangePicker().daterangepicker({
-                            "startDate": moment(extremes.userMin),
-                            "endDate": moment(extremes.max)
-                        })
+                            ranges: kukua.getDatePickerRanges(),
+                            startDate: moment(extremes.userMin),
+                            endDate: moment(extremes.max)
+                        }, kukua.datePickerCallback)
 
-                        //Set input value
-                        kukua.datePickerCallback(moment(extremes.userMin), moment(extremes.max))
+                        //Rebind
+                        kukua.datePickerChange()
                     }
                 },
                 alternateGridColor: "#f7f7f7"

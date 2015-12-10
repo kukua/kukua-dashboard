@@ -4,6 +4,7 @@
 
         //Initializations
         kukua.datePickerInit()
+        kukua.datePickerCallback(moment(), moment())
 
         //onChange reload graph
         kukua.formChanges()
@@ -14,21 +15,22 @@
 
     kukua.datePickerInit = function() {
         kukua.getDateRangePicker().daterangepicker({
-            ranges: {
-               'Today': [moment(), moment()],
-               'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-               'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-               'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-               'This Month': [moment().startOf('month'), moment().endOf('month')],
-               'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            }
+            ranges: kukua.getDatePickerRanges()
         }, kukua.datePickerCallback)
+    };
 
-        kukua.datePickerCallback(moment(), moment())
+    kukua.getDatePickerRanges = function() {
+        return {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
     };
 
     kukua.datePickerCallback = function(start,end) {
-
         var startDate = start.startOf('day')
         var endDate   = end.endOf('day')
 
@@ -59,18 +61,19 @@
         chart.render("#chart", "/graph/build/" + graphType.val() + "/" + graphInterval.val() + "/", options)
     };
 
-    kukua.formChanges = function() {
-        kukua.getGraphInterval().on("change", function() {
-            kukua.graph()
-        })
-
+    kukua.datePickerChange = function() {
         //Date range select
         kukua.getDateRangePicker().on("apply.daterangepicker", function(ev, picker) {
             kukua.graph()
         })
+    };
 
-        //Graph swap
-        $("#js-graph-type-swap").on("change", function() {
+    kukua.formChanges = function() {
+        kukua.datePickerChange();
+        kukua.getGraphInterval().on("change", function() {
+            kukua.graph()
+        })
+        kukua.getGraphType().on("change", function() {
             kukua.graph()
         })
     };
