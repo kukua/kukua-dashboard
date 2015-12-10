@@ -11,8 +11,8 @@ var gulpIgnore  = require('gulp-ignore');
 var less        = require('gulp-less');
 var plumber     = require('gulp-plumber');
 var sourcemaps  = require('gulp-sourcemaps');
-var notifier    = require("node-notifier");
-var notify      = require("gulp-notify");
+var notifier    = require('node-notifier');
+var notify      = require('gulp-notify');
 var recess      = require('gulp-recess');
 
 var root = ((public_html) ? './public_html/' : './');
