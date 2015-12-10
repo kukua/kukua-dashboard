@@ -65,7 +65,6 @@ $autoload['libraries'] = [
     'Smartytpl',
     'form_validation',
     'Notification',
-    'GrafanaApi',
     'InfluxDbApi'
 ];
 

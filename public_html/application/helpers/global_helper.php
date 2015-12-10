@@ -111,10 +111,11 @@ class GlobalHelper {
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
         header('Content-Type: application/zip');
-        header('Content-Disposition: attachment;filename=' . $zipFile);
+        header('Content-Disposition: attachment;filename=export-stations-' . microtime() . '.zip');
         header('Content-Length: ' . filesize($zipFile));
         header("Content-Transfer-Encoding: binary");
         readfile($zipFile);
         ob_flush();
+        unlink($zipFile);
     }
 }

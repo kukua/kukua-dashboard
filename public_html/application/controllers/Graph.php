@@ -31,7 +31,7 @@ class Graph extends MyController {
      * @return view
      */
     public function index() {
-        if ($this->session->postLocation !== Null) {
+        if ($this->session->postDateFrom !== Null) {
             $items = [
                 "postDateFrom" => $this->session->postDateFrom,
                 "postDateTo"   => $this->session->postDateTo,
@@ -59,7 +59,6 @@ class Graph extends MyController {
             redirect("/graph/index");
         }
 
-        $nation = ($this->input->post("nation") != "") ? $this->input->post("nation") : null;
         $from   = $this->input->post("from") . " 00:00:00";
         $to     = $this->input->post("to") . " 23:59:59";
         $dateFrom = DateTime::createFromFormat("Y/m/d H:i:s", $from)->getTimestamp();
@@ -67,14 +66,13 @@ class Graph extends MyController {
 
         try {
             $influx = new InfluxDbApi();
-            $influx->buildQuery(null, $nation, $dateFrom, $dateTo, $this->input->post("submit"));
+            $influx->buildQuery(null, null, $dateFrom, $dateTo, $this->input->post("submit"));
             $influx->call();
             $values = $influx->getOutput();
             GlobalHelper::outputCsv("export-" . $from . "-" . $to . ".csv", json_decode($values, true));
         } catch (Exception $e) {
             Notification::set(Graph::INFO, "The selected from-to dates gave zero results.");
             $sessionData = [
-                "postLocation" => $this->input->post("nation"),
                 "postDateFrom" => $this->input->post("from"),
                 "postDateTo"   => $this->input->post("to"),
             ];

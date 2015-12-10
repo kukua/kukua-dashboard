@@ -9,15 +9,6 @@ influxdb:
     expose:
         - "8090"
         - "8099"
-grafana:
-    image: grafana/grafana:2.5.0
-    env_file: .env
-    volumes:
-        - ./config/grafana.ini:/etc/grafana/grafana.ini:ro
-    ports:
-        - "9000:9000"
-    links:
-        - influxdb
 hhvm:
     image: diegomarangoni/hhvm:fastcgi
     working_dir: /data
