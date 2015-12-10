@@ -4,52 +4,46 @@
     <div class="container">
         {include file="global/notification.tpl"}
 
-        <form class="form" action="/graph/download" id="js-submit" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded">
+        <form class="form" action="/graph/download" id="js-submit" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" target="_blank">
             <div class="row">
                 <div class="col-sm-4">
                     <label>Select graph</label>
                     <select id="js-graph-type-swap" class="form-control" name="panelId">
-                        {foreach $panelGraphs as $id => $graph}
-                            <option value="{$id}">{$graph}</option>
-                        {/foreach}
                         <option value="temp">Temperature</option>
                         <option value="rain">Rainfall</option>
                     </select>
                 </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>From</label>
-                            {$value=""}
-                            {if isset($postDateFrom)}
-                                {$value=$postDateFrom}
-                            {else}
-                                {$value=GlobalHelper::getDefaultDate("P8D")}
-                            {/if}
-                        <input type="text" class="form-control" name="from" placeholder="Select a date" id="js-datetimepicker-min" value="{$value}">
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label>To</label>
-                            {$value=""}
-                            {if isset($postDateTo)}
-                                {$value=$postDateTo}
-                            {else}
-                                {$value=GlobalHelper::getDefaultDate("P1D")}
-                            {/if}
-                        <input type="text" class="form-control" name="to" placeholder="Select a date" id="js-datetimepicker-max" value="{$value}">
-                    </div>
-                </div>
                 <div class="col-sm-4">
-                    <div class="form-group clearfix">
-                        <label class="pull-right">Download csv and group per</label>
-                        <div class="clearfix"></div>
-                        <div class="btn-group pull-right" role="group">
-                            <button type="submit" name="submit" value="5m" class="btn btn-primary">5m</button>
-                            <button type="submit" name="submit" value="1h" class="btn btn-primary">1h</button>
-                            <button type="submit" name="submit" value="12h" class="btn btn-primary">12h</button>
-                            <button type="submit" name="submit" value="24h" class="btn btn-primary">24h</button>
+                    <div class="form-group">
+                        <label>Date range</label>
+                        <div id="reportrange" class="clearfix" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                            <div class="pull-left">
+                                <i class="glyphicon glyphicon-calendar"></i>&nbsp;
+                                <span></span>
+                            </div>
+                            <div class="pull-right">
+                                &nbsp;<i class="glyphicon glyphicon-chevron-down"></i>
+                            </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group clearfix">
+                        <label>Display per</label>
+                        <select id="js-graph-show-per" class="form-control" name="interval">
+                            <option value="5m">5 minutes</option>
+                            <option value="1h">1 hour</option>
+                            <option value="12h">12 hour</option>
+                            <option value="24h">24 hour</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <input type="hidden" name="from" id="dateFrom">
+                        <input type="hidden" name="to" id="dateTo">
+                        <input type="submit" value="Download csv" class="btn btn-primary btn-block">
                     </div>
                 </div>
             </div>

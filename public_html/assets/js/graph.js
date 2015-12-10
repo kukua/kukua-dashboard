@@ -3,68 +3,80 @@
     kukua.onDomReady = function() {
 
         //Initializations
-        kukua.datePickerInit();
+        kukua.datePickerInit()
 
         //onChange reload graph
-        kukua.formChanges();
+        kukua.formChanges()
 
         //Render first onDomReady
-        kukua.graph();
+        kukua.graph()
     };
 
     kukua.datePickerInit = function() {
-        var input_from = kukua.getDatePickerFrom();
-        var input_to =   kukua.getDatePickerTo();
-        var datePickerOptions = {
-            format: "YYYY/MM/DD",
-            useCurrent: false,
-            viewMode: 'years',
-            ignoreReadonly: true
-        };
-        input_from.datetimepicker(datePickerOptions);
-        input_to.datetimepicker(datePickerOptions);
+        kukua.getDateRangePicker().daterangepicker({
+            ranges: {
+               'Today': [moment(), moment()],
+               'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+               'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+               'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+               'This Month': [moment().startOf('month'), moment().endOf('month')],
+               'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, kukua.datePickerCallback)
+
+        kukua.datePickerCallback(moment(), moment())
+    };
+
+    kukua.datePickerCallback = function(start,end) {
+
+        var startDate = start.startOf('day')
+        var endDate   = end.endOf('day')
+
+        kukua.getDateRangePickerSpan().html(startDate.format('DD-MM-YYYY') + ' - ' + endDate.format('DD-MM-YYYY'))
+        $('input#dateFrom').val(startDate.format("X"))
+        $('input#dateTo').val(endDate.format("X"))
     };
 
     kukua.graph = function() {
-        var graphType       = kukua.getGraphType();
-        var graphTypeText   = kukua.getGraphTypeText();
-        var graphDate       = kukua.getDates();
+        var graphType       = kukua.getGraphType()
+        var graphTypeText   = kukua.getGraphTypeText()
+        var graphInterval   = kukua.getGraphInterval()
 
-        var options = chart.getOptions();
-        options.chart.zoomType = 'x';
+        var options = chart.getOptions()
+        options.chart.zoomType = 'x'
         options.title.text = graphTypeText
 
         switch(graphType.val()) {
             case 'temp':
-                options.chart.type = "line";
+                options.chart.type = "line"
                 options.yAxis.title.text = graphTypeText + " (°C)"
-                break;
+                break
             case 'rain':
-                options.chart.type = "column";
+                options.chart.type = "column"
                 options.yAxis.title.text = graphTypeText + " (mm)"
-                break;
+                break
         }
-        chart.render("#chart", "/graph/build/" + graphType.val() + "/5m", options);
+        chart.render("#chart", "/graph/build/" + graphType.val() + "/" + graphInterval.val() + "/", options)
     };
 
     kukua.formChanges = function() {
-        kukua.getDatePickerFrom().on("dp.change", function() {
+        kukua.getGraphInterval().on("change", function() {
             kukua.graph()
-        });
-        kukua.getDatePickerTo().on("dp.change", function() {
+        })
+
+        //Date range select
+        kukua.getDateRangePicker().on("apply.daterangepicker", function(ev, picker) {
             kukua.graph()
-        });
+        })
+
+        //Graph swap
         $("#js-graph-type-swap").on("change", function() {
             kukua.graph()
-        });
+        })
     };
 
-    //Get values
-    kukua.getDatePickerFrom = function() {
-        return $("#js-datetimepicker-min")
-    };
-    kukua.getDatePickerTo = function() {
-        return $("#js-datetimepicker-max")
+    kukua.getGraphInterval = function() {
+        return $('#js-graph-show-per')
     };
     kukua.getGraphType = function() {
         return $("#js-graph-type-swap")
@@ -73,17 +85,12 @@
         var input = kukua.getGraphType()
         return input.find("option:selected").text()
     };
-
-    kukua.getDates = function() {
-        var dateFrom    = moment().subtract("8", "days").format("YYYYMMDD");
-        var dateTo      = moment().subtract("1", "day").format("YYYYMMDD");
-        var min         = $("#js-datetimepicker-min").val();
-        var max         = $("#js-datetimepicker-max").val();
-        if (min != "" && max != "") {
-            dateFrom = min;
-            dateTo = max;
-        }
-        return {"from": dateFrom, "to": dateTo};
+    kukua.getDateRangePicker = function() {
+        return $("#reportrange")
     };
+    kukua.getDateRangePickerSpan = function() {
+        return $("#reportrange span")
+    };
+
 })(window.kukua = window.kukua || {});
 $(document).ready(kukua.onDomReady);

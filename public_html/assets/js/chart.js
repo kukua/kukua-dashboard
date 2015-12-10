@@ -7,12 +7,20 @@
 
     chart.render = function(container, jsonUrl, options) {
         if ($(container).length >= 1) {
+
+            //get dates from daterangepicker
+            var selectedDate = kukua.getDateRangePicker()
+            var postdata = {
+                'from': selectedDate.data('daterangepicker').startDate.startOf('day').format('X'),
+                'to': selectedDate.data('daterangepicker').endDate.endOf('day').format('X')
+            }
+
             var call = $.ajax({
                 type: 'POST',
                 url: jsonUrl,
-                data: $('#js-submit').serialize(),
+                data: postdata,
                 dataType: 'json'
-            });
+            })
 
             call.done(function(request) {
                 var result = new Array()
@@ -25,28 +33,28 @@
                         //Handle data differently per chart
                         switch(options.chart.type) {
                             case 'column':
-                                data.data.push(value);
-                                break;
+                                data.data.push(value)
+                                break
                             case 'line':
                                 var points = new Object()
                                 points.x  = value[0]
                                 points.y  = value[1]
                                 data.data.push(points)
-                                break;
+                                break
                         }
                     })
                     result.push(data)
-                });
+                })
 
                 //Add data points to the given options
-                options.series = result;
+                options.series = result
 
                 //Combine given options with default options
                 var opt = $.extend({}, chart.getOptions(), options)
 
                 //render
-                $(container).highcharts(opt);
-            });
+                $(container).highcharts(opt)
+            })
         }
     };
 
@@ -68,8 +76,15 @@
                 events: {
                     afterSetExtremes: function(event){
                         var extremes = this.getExtremes();
-                        $('#js-datetimepicker-max').val(moment(extremes.max).format("YYYY/MM/DD"));
-                        $('#js-datetimepicker-min').val(moment(extremes.userMin).format("YYYY/MM/DD"));
+
+                        //Set daterangepicker object
+                        kukua.getDateRangePicker().daterangepicker({
+                            "startDate": moment(extremes.userMin),
+                            "endDate": moment(extremes.max)
+                        })
+
+                        //Set input value
+                        kukua.datePickerCallback(moment(extremes.userMin), moment(extremes.max))
                     }
                 },
                 alternateGridColor: "#f7f7f7"

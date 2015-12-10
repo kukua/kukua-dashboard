@@ -24,7 +24,7 @@ var js_files = [
     js_plugin_path + 'jquery/dist/jquery.js',
     js_plugin_path + 'bootstrap/dist/js/bootstrap.js',
     js_plugin_path + 'moment/min/moment-with-locales.js',
-    js_plugin_path + 'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+    js_plugin_path + 'bootstrap-daterangepicker/daterangepicker.js',
     js_plugin_path + 'mailcheck/src/mailcheck.js',
     js_plugin_path + 'highcharts/lib/highcharts.src.js',
 

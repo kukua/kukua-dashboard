@@ -46,7 +46,6 @@ class Graph extends MyController {
             $this->session->unset_userdata(array_keys($items));
         }
 
-        $this->data["panelGraphs"] = [];
         $this->load->view("graph/index", $this->data);
     }
 
@@ -59,14 +58,12 @@ class Graph extends MyController {
             redirect("/graph/index");
         }
 
-        $from   = $this->input->post("from") . " 00:00:00";
-        $to     = $this->input->post("to") . " 23:59:59";
-        $dateFrom = DateTime::createFromFormat("Y/m/d H:i:s", $from)->getTimestamp();
-        $dateTo   = DateTime::createFromFormat("Y/m/d H:i:s", $to)->getTimestamp();
+        $dateFrom   = (int) $this->input->post("from");
+        $dateTo     = (int) $this->input->post("to");
 
         try {
             $influx = new InfluxDbApi();
-            $influx->buildQuery(null, null, $dateFrom, $dateTo, $this->input->post("submit"));
+            $influx->buildQuery(null, null, $dateFrom, $dateTo, $this->input->post("interval"));
             $influx->call();
             $values = $influx->getOutput();
             GlobalHelper::outputCsv("export-" . $from . "-" . $to . ".csv", json_decode($values, true));
@@ -87,15 +84,15 @@ class Graph extends MyController {
         $nation = null;
         $submit = $interval;
 
-        $from = GlobalHelper::getDefaultDate("P8D");
-        $to   = GlobalHelper::getDefaultDate("P1D");
+        //default week
+        $fromDate = DateTime::createFromFormat("Y/m/d", GlobalHelper::getDefaultDate("P1D"))->getTimestamp();
+        $toDate   = DateTime::createFromFormat("Y/m/d", GlobalHelper::getDefaultDate("P1D"))->getTimestamp();
 
+        //posted week
         if ($this->input->post("from") || $this->input->post("to")) {
-            $from = $this->input->post("from");
-            $to   = $this->input->post("to");
+            $fromDate = (int) $this->input->post("from");
+            $toDate   = (int) $this->input->post("to");
         }
-        $fromDate = DateTime::createFromFormat("Y/m/d", $from);
-        $toDate   = DateTime::createFromFormat("Y/m/d", $to);
 
         //Temporary
         if ($graph !== null) {
@@ -108,19 +105,10 @@ class Graph extends MyController {
         }
 
         $influx = new InfluxDbApi();
-        $influx->buildQuery($type, $nation, $fromDate->getTimestamp(), $toDate->getTimestamp(), $submit);
+        $influx->buildQuery($type, $nation, $fromDate, $toDate, $submit);
         $influx->call();
         $values = $influx->getOutput();
         echo $values;
         exit;
-    }
-
-    protected function _graphUrl() {
-        $server = "http://dashboard.kukua.cc";
-        $from = GlobalHelper::getDefaultDate("P8D");
-        $from = str_replace("/","",$from);
-        $to   = GlobalHelper::getDefaultDate("P1D");
-        $to   = str_replace("/","",$to);
-        return $server . ":9000/dashboard-solo/db/" . GlobalHelper::getUser() . "?panelId=4&fullscreen&from=" . $from . "&to=" . $to . "&theme=light";
     }
 }
