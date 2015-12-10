@@ -84,6 +84,8 @@
                             endDate: moment(extremes.max)
                         }, kukua.datePickerCallback)
 
+                        kukua.datePickerCallback(moment(extremes.userMin), moment(extremes.max));
+
                         //Rebind
                         kukua.datePickerChange()
                     }
