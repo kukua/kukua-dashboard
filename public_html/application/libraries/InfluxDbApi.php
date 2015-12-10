@@ -86,7 +86,7 @@ class InfluxDbApi {
         $init = $this->_url . ":" . $this->_port . "/db/data/series?p=" . $this->_password . "&u=" . $this->_user . "&q=" . $this->_query;
         $ch = curl_init($init);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_HEADERS, $headers);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         $output = curl_exec($ch);
