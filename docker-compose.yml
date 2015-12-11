@@ -14,6 +14,8 @@ hhvm:
     working_dir: /data
     volumes:
         - ./public_html/:/data
+    links:
+        - mysql
 nginx:
     image: nginx
     ports:
