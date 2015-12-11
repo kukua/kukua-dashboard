@@ -29,3 +29,18 @@ nginx:
     links:
         - hhvm
     command: /etc/nginx/start.sh
+mysql:
+    image: tutum/mysql:5.6
+    env_file: .env
+    ports:
+        - "3306:3306"
+phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    env_file: .env
+    ports:
+        - "3000:8080"
+    environment:
+        PMA_HOST: "mysql"
+        PMA_PORT: 3306
+    links:
+        - mysql:db
