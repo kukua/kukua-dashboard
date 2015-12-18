@@ -30,7 +30,8 @@ var js_files = [
 
     js_script_path + 'chart.js',
     js_script_path + 'graph.js',
-    js_script_path + 'mailcheck.js'
+    js_script_path + 'mailcheck.js',
+    js_script_path + 'helpers.js'
 ];
 
 /* process the js files and make it a minified js */

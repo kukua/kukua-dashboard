@@ -3,9 +3,9 @@
 class Graph extends MyController {
 
     public static $stations = [
-        "kukuatz" => [
+        "tanzania" => [
             'mwangoi'       => 'sivad_ndogo_a5e4d2c1',
-            'mavumo'        => 'sivad_ndogo_a687dcd8',
+            //'mavumo'        => 'sivad_ndogo_a687dcd8',
             'migambo'       => 'sivad_ndogo_a468d67c',
             'mshizii'       => 'sivad_ndogo_9f113b00',
             'baga'          => 'sivad_ndogo_890d85ba',
@@ -14,14 +14,14 @@ class Graph extends MyController {
             'mandakamnono'  => 'sivad_ndogo_841d300b',
             'sanyo'         => 'sivad_ndogo_7aa19521',
         ],
-        "kukuang" => [
+        "nigeria" => [
             'ibadan'        => 'sivad_ndogo_fab23419',
         ]
     ];
 
     public function __construct() {
         parent::__construct();
-        GlobalHelper::requireLogin();
+        $this->allow('members');
     }
 
     /**
@@ -31,7 +31,7 @@ class Graph extends MyController {
      * @return view
      */
     public function index() {
-        if ($this->session->postDateFrom !== Null) {
+        if ($this->session->postDateFrom !== null) {
             $items = [
                 "postDateFrom" => $this->session->postDateFrom,
                 "postDateTo"   => $this->session->postDateTo,

@@ -65,7 +65,9 @@ $autoload['libraries'] = [
     'Smartytpl',
     'form_validation',
     'Notification',
-    'InfluxDbApi'
+    'InfluxDbApi',
+    'ion_auth',
+    'Email'
 ];
 
 /*
@@ -108,7 +110,7 @@ $autoload['helper'] = [
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = [];
 
 /*
 | -------------------------------------------------------------------
@@ -122,7 +124,7 @@ $autoload['config'] = array();
 | "codeigniter_lang.php" would be referenced as array('codeigniter');
 |
 */
-$autoload['language'] = array();
+$autoload['language'] = [];
 
 /*
 | -------------------------------------------------------------------
@@ -137,4 +139,6 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array();
+$autoload['model'] = array(
+    'ion_auth_model'
+);

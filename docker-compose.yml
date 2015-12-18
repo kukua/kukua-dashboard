@@ -12,6 +12,7 @@ influxdb:
 hhvm:
     image: diegomarangoni/hhvm:fastcgi
     working_dir: /data
+    env_file: .env
     volumes:
         - ./public_html/:/data
     links:
@@ -29,7 +30,7 @@ nginx:
     - ./nginx/logs/:/logs
     - ./public_html/:/data
     links:
-        - hhvm
+    - hhvm
     command: /etc/nginx/start.sh
 mysql:
     image: tutum/mysql:5.6

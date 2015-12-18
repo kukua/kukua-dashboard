@@ -95,6 +95,7 @@
         }
         return text;
     };
+
     chart.getOptions = function() {
         var options = new Object({
             title: {
@@ -117,14 +118,14 @@
                         //Set daterangepicker object
                         kukua.getDateRangePicker().daterangepicker({
                             ranges: kukua.getDatePickerRanges(),
-                            startDate: moment(extremes.userMin),
+                            startDate: moment(extremes.min),
                             endDate: moment(extremes.max)
                         }, kukua.datePickerCallback)
 
-                        kukua.datePickerCallback(moment(extremes.userMin), moment(extremes.max));
-
                         //Rebind
                         kukua.datePickerChange()
+                        kukua.datePickerCallback(moment(extremes.userMin), moment(extremes.max));
+
                     }
                 },
                 alternateGridColor: "#f7f7f7"

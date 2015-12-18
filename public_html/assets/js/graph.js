@@ -30,7 +30,7 @@
         }
     };
 
-    kukua.datePickerCallback = function(start,end) {
+    kukua.datePickerCallback = function(start, end) {
         var startDate = start.startOf('day')
         var endDate   = end.endOf('day')
 

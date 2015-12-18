@@ -49,14 +49,13 @@ class GlobalHelper {
         return $output;
     }
 
-    public static function getForecastMap() {
-        $user = GlobalHelper::getUser();
+    public static function getForecastMap($user) {
         $url = "";
-        switch($user) {
-            case 'kukuang':
+        switch(strtolower($user->country)) {
+            case 'nigeria':
                 $url = "http://vip.foreca.com/kukua/maps-nigeria.html?rain";
                 break;
-            case 'kukuatz':
+            case 'tanzania':
                 $url = "http://vip.foreca.com/kukua/maps-tanzania.html?rain";
                 break;
             default:

@@ -4,7 +4,7 @@ class Index extends MyController {
 
     public function __construct() {
         parent::__construct();
-        GlobalHelper::requireLogin();
+        $this->allow("members");
     }
 
     public function index() {

@@ -128,11 +128,14 @@ class InfluxDbApi {
             $this->_select = $select;
         }
 
+        $ci =& get_instance();
+        $user    = $ci->ion_auth->user()->row();
+        $country = strtolower($user->country);
+
         //from
-        $user = GlobalHelper::getUser();
-        $this->_from = implode(",", Graph::$stations[$user]);
+        $this->_from = implode(",", Graph::$stations[$country]);
         if ($from !== null) {
-            $this->_from = Graph::$stations[$user][$from];
+            $this->_from = Graph::$stations[$country][$from];
         }
 
         //where

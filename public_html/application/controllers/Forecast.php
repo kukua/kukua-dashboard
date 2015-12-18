@@ -4,11 +4,11 @@ class Forecast extends MyController {
 
     public function __construct(){
         parent::__construct();
-        GlobalHelper::requireLogin();
+        $this->allow('members');
     }
 
     public function index() {
-        $this->data["url"] = GlobalHelper::getForecastMap();
+        $this->data["url"] = GlobalHelper::getForecastMap($this->_user);
         $this->load->view("forecast/index", $this->data);
     }
 }

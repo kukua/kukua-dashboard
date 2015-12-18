@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeIgniter
  *
@@ -53,13 +54,12 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-
 if (is_dir("./.environment")) {
-    if (file_exists("./.environment/development.php")) {
-        require_once("./.environment/development.php");
+    if (file_exists("./.environment/config.php")) {
+        require_once("./.environment/config.php");
     }
     else {
-        require_once("./.environment/production.php");
+        require_once("./.environment/default.php");
     }
 } else {
     define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');

@@ -4,12 +4,14 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-4 col-sm-offset-4">
-                <a href="/graph" class="btn btn-primary btn-block" title="Go to the weather per location overview">Weather per location</a><br/>
+                {include file="global/notification.tpl"}
+
+                <a href="/graph" class="btn btn-primary btn-block" title="Go to the weather per location overview">Weather graph</a><br/>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4 col-sm-offset-4">
-                <a href="/forecast" class="btn btn-primary btn-block" title="Go to the weather forecast">Forecast</a><br/>
+                <a href="/forecast" class="btn btn-primary btn-block" title="Go to the weather forecast">Forecast map</a><br/>
             </div>
         </div>
         <div class="row">

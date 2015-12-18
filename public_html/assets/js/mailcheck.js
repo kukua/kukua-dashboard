@@ -2,7 +2,7 @@
     'use strict';
     mailcheck.onDomReady = function() {
         //Initializations
-        //mailcheck.init();
+        mailcheck.init();
     };
 
     mailcheck.init = function() {
