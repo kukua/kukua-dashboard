@@ -119,8 +119,8 @@ class InfluxDbApi {
             $select = "SELECT time, ";
             foreach($type as $column => $name) {
                 $prefix = "mean";
-                if ($column === "rain") {
-                    $prefix = "count";
+                if ($column == "rainTicks") {
+                    $prefix = "sum";
                 }
                 $select .= $prefix . " (" . $column . ") as " . $name . ",";
             }
