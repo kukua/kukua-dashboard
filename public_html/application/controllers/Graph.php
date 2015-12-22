@@ -78,7 +78,31 @@ class Graph extends MyController {
         }
     }
 
-    //Test function for new graph
+    /**
+     * @access public
+     * @return view
+     */
+    public function forecast() {
+        $foreca = $this->foreca_model->request();
+        $result = $foreca->call();
+        foreach($result as $station => $data) {
+            foreach($data->values as $key => $points) {
+                $points[0] = str_replace("Z", "", $points[0]);
+                $points[0] = str_replace("T", " ", $points[0]);
+                $new = DateTime::createFromFormat("Y-m-d H:i:s", $points[0]);
+
+                //multiply by 1000 for javascript
+                $result[$station]->values[$key][0] = $new->getTimestamp() * 1000;
+            }
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+    /**
+     * @access public
+     * @return view
+     */
     public function build($graph = null, $interval= "5m") {
         $type = null;
         $nation = null;

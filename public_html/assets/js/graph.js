@@ -11,6 +11,7 @@
 
         //Render first onDomReady
         kukua.graph()
+        kukua.forecast()
     };
 
     kukua.datePickerInit = function() {
@@ -37,6 +38,28 @@
         kukua.getDateRangePickerSpan().html(startDate.format('DD-MM-YYYY') + ' - ' + endDate.format('DD-MM-YYYY'))
         $('input#dateFrom').val(startDate.format("X"))
         $('input#dateTo').val(endDate.format("X"))
+    };
+
+    kukua.forecast = function() {
+        var graphType       = kukua.getGraphType()
+        var graphTypeText   = kukua.getGraphTypeText()
+        var graphInterval   = kukua.getGraphInterval()
+
+        var options = chart.getOptions()
+        options.chart.zoomType = 'x'
+        options.title.text = graphTypeText
+
+        switch(graphType.val()) {
+            case 'temp':
+                options.chart.type = "line"
+                options.yAxis.title.text = graphTypeText + " (°C)"
+                break
+            case 'rain':
+                options.chart.type = "column"
+                options.yAxis.title.text = graphTypeText + " (mm)"
+                break
+        }
+        chart.temp("#chart-forecast", "/graph/forecast/" + graphType.val(), options)
     };
 
     kukua.graph = function() {

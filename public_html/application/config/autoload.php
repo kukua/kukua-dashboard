@@ -140,5 +140,6 @@ $autoload['language'] = [];
 |	$autoload['model'] = array('first_model' => 'first');
 */
 $autoload['model'] = array(
-    'ion_auth_model'
+    'ion_auth_model',
+    'foreca_model'
 );

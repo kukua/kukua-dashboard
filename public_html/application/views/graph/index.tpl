@@ -51,7 +51,25 @@
 
         <div class="row">
             <div class="col-xs-12">
+                <h1>Historical</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
                 <div id="chart" style="width:100%; height:500px;"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>Forecast (Hourly, one day)</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="chart-forecast" style="width:100%; height:500px;"></div>
             </div>
         </div>
     </div>
