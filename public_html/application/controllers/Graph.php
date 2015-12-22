@@ -82,8 +82,8 @@ class Graph extends MyController {
      * @access public
      * @return view
      */
-    public function forecast() {
-        $foreca = $this->foreca_model->request();
+    public function forecast($type = null) {
+        $foreca = $this->foreca_model->request($type);
         $result = $foreca->call();
         foreach($result as $station => $data) {
             foreach($data->values as $key => $points) {

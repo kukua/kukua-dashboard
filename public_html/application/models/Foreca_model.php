@@ -8,10 +8,18 @@ class Foreca_model extends CI_Model {
         parent::__construct();
     }
 
-    public function request() {
+    public function request($type = 'temp') {
+        $col  = "temp";
+        $name = "Temperature";
+
+        if ($type == "rain") {
+            $col  = "precip";
+            $name = "Rainfall";
+        }
+
         $this->query = urlencode("
             SELECT
-                temp as Temperature
+                " . $col . " as " . $name . "
             FROM Foreca
             WHERE type = 'hourly'
               AND id='02339354'

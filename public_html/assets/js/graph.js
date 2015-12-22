@@ -98,6 +98,7 @@
         })
         kukua.getGraphType().on("change", function() {
             kukua.graph()
+            kukua.forecast()
         })
     };
 

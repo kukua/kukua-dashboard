@@ -83,6 +83,7 @@ gulp.task('watch', function() {
 
     gulp.watch(root + '/assets/js/*.js', ['js']);
     gulp.watch(root + '/assets/less/*.less', ['less']);
+    gulp.watch(root + '/assets/less/*/*.less', ['less']);
 });
 
 gulp.task('lint-less', function() {

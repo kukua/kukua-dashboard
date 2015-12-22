@@ -230,10 +230,11 @@ class User extends MyController {
         $data["base"] = base_url();
 
         $content = $this->load->view("auth/email/activate", $data, true);
+
         $lib = new Email();
         $lib->setFrom("Ollie Smeenk <ollie@kukua.cc>");
         $lib->setTo($user->first_name . " " . $user->last_name . " <" . $user->email . ">");
-        $lib->setSubject("Invitation");
+        $lib->setSubject("Invitation to the new Kukua Dashboard");
         $lib->setContent($content);
         $lib->send();
         return true;

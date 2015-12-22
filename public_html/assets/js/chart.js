@@ -101,7 +101,7 @@
                     })
                     result.push(data)
                 })
-                console.log(result)
+
                 //Add data points to the given options
                 options.series = result
 

@@ -141,5 +141,6 @@ $autoload['language'] = [];
 */
 $autoload['model'] = array(
     'ion_auth_model',
-    'foreca_model'
+    'foreca_model',
+    'feedback_model'
 );
