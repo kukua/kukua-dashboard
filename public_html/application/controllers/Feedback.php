@@ -48,6 +48,63 @@ class Feedback extends MyController {
      * @access protected
      * @return boolean
      */
+    public function complete($id) {
+        $this->allow("admin");
+        $feedback = new Feedback_model();
+        $obj = $feedback->findById($id);
+        if ($obj) {
+            $obj->completed = 1;
+            $feedback->populate((array) $obj);
+            if ($feedback->save() !== false) {
+                redirect("/feedback");
+            }
+        }
+
+        Notification::set(Feedback::DANGER, "NO!");
+        redirect("/feedback");
+    }
+
+    /**
+     * @access protected
+     * @return boolean
+     */
+    public function uncomplete($id) {
+        $this->allow("admin");
+        $feedback = new Feedback_model();
+        $obj = $feedback->findById($id);
+        if ($obj) {
+            $obj->completed = 0;
+            $feedback->populate((array) $obj);
+            if ($feedback->save() !== false) {
+                redirect("/feedback");
+            }
+        }
+
+        Notification::set(Feedback::DANGER, "NO!");
+        redirect("/feedback");
+    }
+
+    /**
+     * @access protected
+     * @return boolean
+     */
+    public function delete($id) {
+        $this->allow("admin");
+        $feedback = new Feedback_model();
+        $obj = $feedback->findById($id);
+        if ($obj) {
+            if ($feedback->delete($id)) {
+                redirect("/feedback");
+            }
+        }
+        Notification::set(Feedback::DANGER, "NEIN NEIN NEIN.");
+        redirect("/feedback");
+    }
+
+    /**
+     * @access protected
+     * @return boolean
+     */
     protected function _validate() {
         $this->form_validation->set_rules("feedback", "Feedback", "required");
         $this->form_validation->set_rules("email", "E-mail", "valid_email");

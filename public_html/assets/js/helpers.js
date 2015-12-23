@@ -2,7 +2,7 @@
     'use strict';
 
     helpers.onDomReady = function() {
-        helpers.confirmDeleteUser()
+        helpers.confirmDelete()
         helpers.confirmRevoke()
         helpers.confirmGrant()
         helpers.feedbackDisplay()
@@ -12,9 +12,9 @@
     /**
      * Display confirm box on user delete
      */
-    helpers.confirmDeleteUser = function() {
+    helpers.confirmDelete = function() {
         $(".js-confirm-delete").on("click", function() {
-            var x = confirm("Are you sure you want to delete this user?")
+            var x = confirm("Are you sure you want to delete this?")
             if (x == true) {
                 return true
             }

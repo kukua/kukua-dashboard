@@ -9,6 +9,7 @@ class Feedback_model extends CI_Model {
     public $email;
     public $feedback;
     public $created;
+    public $completed;
 
     /**
      * @access public
@@ -40,6 +41,9 @@ class Feedback_model extends CI_Model {
         if (isset($data["created"])) {
             $this->created = $data["created"];
         }
+        if (isset($data["completed"])) {
+            $this->completed = $data["completed"];
+        }
         return $this;
     }
 
@@ -66,13 +70,46 @@ class Feedback_model extends CI_Model {
         return false;
     }
 
+    /**
+     * @access public
+     * @return Array
+     */
     public function load() {
         $this->db->select("uf.*, u.first_name, u.last_name");
         $this->db->from("users_feedback uf");
         $this->db->join("users u", "uf.user_id = u.id");
+        $this->db->order_by("uf.completed", "ASC");
+        $this->db->order_by("uf.created", "DESC");
         $get = $this->db->get();
         return $get->result_array();
     }
+
+    /**
+     * @access public
+     * @return Feedback_model
+     */
+    public function findById($id) {
+        $this->db->select("uf.*, u.first_name, u.last_name");
+        $this->db->from("users_feedback uf");
+        $this->db->join("users u", "uf.user_id = u.id");
+        $this->db->where("uf.id", $id);
+        $get = $this->db->get();
+        return $get->row();
+    }
+
+    /**
+     * @access public
+     * @return Feedback_model
+     */
+    public function delete($id) {
+        if ($this->findById($id) !== false) {
+            if ($this->db->delete(self::TABLE, array('id' => $id))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @access private
      * @return boolean
