@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/assets/dist/main.min.css" type="text/css">
 </head>
 <body>
-    {if (ENVIRONMENT == "production")}
+    {if ($smarty.const.ENVIRONMENT == "production")}
         {literal}
             <script>
                 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
