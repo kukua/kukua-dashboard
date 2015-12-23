@@ -63,7 +63,7 @@ class Foreca_model extends CI_Model {
         $this->select = $select;
     }
 
-    public function setSelect($type, $dateFrom, $dateTo) {
+    public function setSelect($type) {
         switch($type) {
             case 'temp':
                 $col1  = "temp";
