@@ -88,14 +88,18 @@ class Graph extends MyController {
 
         $foreca = $this->foreca_model->request($type, $dateFrom, $dateTo);
         $result = $foreca->call();
-        foreach($result as $station => $data) {
-            foreach($data->values as $key => $points) {
-                $points[0] = str_replace("Z", "", $points[0]);
-                $points[0] = str_replace("T", " ", $points[0]);
-                $new = DateTime::createFromFormat("Y-m-d H:i:s", $points[0]);
+        if (count($result)) {
+            foreach($result as $station => $data) {
+                if (count($data->values)) {
+                    foreach($data->values as $key => $points) {
+                        $points[0] = str_replace("Z", "", $points[0]);
+                        $points[0] = str_replace("T", " ", $points[0]);
+                        $new = DateTime::createFromFormat("Y-m-d H:i:s", $points[0]);
 
-                //multiply by 1000 (milliseconds)
-                $result[$station]->values[$key][0] = $new->getTimestamp() * 1000;
+                        //multiply by 1000 (milliseconds)
+                        $result[$station]->values[$key][0] = $new->getTimestamp() * 1000;
+                    }
+                }
             }
         }
         echo json_encode($result);
@@ -111,14 +115,18 @@ class Graph extends MyController {
     public function forecast_daily($type = null) {
         $foreca = $this->foreca_model->requestDaily($type);
         $result = $foreca->call();
-        foreach($result as $station => $data) {
-            foreach($data->values as $key => $points) {
-                $points[0] = str_replace("Z", "", $points[0]);
-                $points[0] = str_replace("T", " ", $points[0]);
-                $new = DateTime::createFromFormat("Y-m-d H:i:s", $points[0]);
+        if (count($result)) {
+            foreach($result as $station => $data) {
+                if (count($data->values)) {
+                    foreach($data->values as $key => $points) {
+                        $points[0] = str_replace("Z", "", $points[0]);
+                        $points[0] = str_replace("T", " ", $points[0]);
+                        $new = DateTime::createFromFormat("Y-m-d H:i:s", $points[0]);
 
-                //multiply by 1000 (milliseconds)
-                $result[$station]->values[$key][0] = $new->getTimestamp() * 1000;
+                        //multiply by 1000 (milliseconds)
+                        $result[$station]->values[$key][0] = $new->getTimestamp() * 1000;
+                    }
+                }
             }
         }
         echo json_encode($result);
