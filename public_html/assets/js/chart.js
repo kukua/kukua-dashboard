@@ -38,10 +38,10 @@
                                 data.data.push(value)
                                 break
                             case 'line':
-                                var points = new Object()
-                                points.x  = value[0]
-                                points.y  = value[1]
-                                data.data.push(points)
+                                data.data.push(value)
+                                break
+                            case 'arearange':
+                                data.data.push(value)
                                 break
                         }
                     })
@@ -186,7 +186,8 @@
                 alternateGridColor: "#f7f7f7"
             },
             tooltip: {
-                shared: true
+                shared: true,
+                valueSuffix: ''
             },
             legend: {
                 align: 'right',
@@ -215,6 +216,9 @@
                     turboThreshold: 100000,
                     lineWidth: 1
                 }
+            },
+            credits: {
+                enabled: false
             }
         });
 
@@ -239,7 +243,8 @@
                 alternateGridColor: "#f7f7f7"
             },
             tooltip: {
-                shared: true
+                shared: true,
+                valueSuffix: ''
             },
             legend: {
                 align: 'right',
@@ -251,7 +256,9 @@
             yAxis: {
                 title: {
                     text: 'Temperature (°C)'
-                }
+                },
+                min: 0,
+                max: 50
             },
             chart: {
                 zoomType: 'x'
@@ -267,8 +274,17 @@
                 line: {
                     turboThreshold: 100000,
                     lineWidth: 1
+                },
+                events: {
+                    afterSetExtremes: function(event){
+
+                    }
                 }
-            }
+            },
+            credits: {
+                enabled: false
+            },
+            colors: ['#FAAC58']
         });
 
         return options;

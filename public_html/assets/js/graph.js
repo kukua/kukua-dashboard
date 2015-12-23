@@ -45,18 +45,25 @@
         var graphTypeText   = kukua.getGraphTypeText()
         var graphInterval   = kukua.getGraphInterval()
 
-        var options = chart.getOptions()
+        var options = chart.getTempOptions()
         options.chart.zoomType = 'x'
         options.title.text = graphTypeText
 
         switch(graphType.val()) {
             case 'temp':
-                options.chart.type = "line"
+                options.chart.type = "arearange"
                 options.yAxis.title.text = graphTypeText + " (°C)"
+                options.yAxis.min = 0
+                options.yAxis.max = 50
+                options.tooltip.valueSuffix = '°C'
                 break
             case 'rain':
                 options.chart.type = "column"
                 options.yAxis.title.text = graphTypeText + " (mm)"
+                options.yAxis.min = null
+                options.yAxis.max = null
+                options.colors = ['#2f7ed8', '#0d233a', '#8bbc21', '#910000', '#1aadce', '#492970', '#f28f43', '#77a1e5', '#c42525', '#a6c96a']
+                options.tooltip.valueSuffix = ' mm'
                 break
         }
         chart.temp("#chart-forecast", "/graph/forecast/" + graphType.val(), options)
@@ -75,10 +82,16 @@
             case 'temp':
                 options.chart.type = "line"
                 options.yAxis.title.text = graphTypeText + " (°C)"
+                options.yAxis.min = 0
+                options.yAxis.max = 50
+                options.tooltip.valueSuffix = '°C'
                 break
             case 'rain':
                 options.chart.type = "column"
                 options.yAxis.title.text = graphTypeText + " (mm)"
+                options.yAxis.min = null
+                options.yAxis.max = null
+                options.tooltip.valueSuffix = ' mm'
                 break
         }
         chart.render("#chart", "/graph/build/" + graphType.val() + "/" + graphInterval.val() + "/", options)

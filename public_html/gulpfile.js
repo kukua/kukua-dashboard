@@ -25,8 +25,9 @@ var js_files = [
     js_plugin_path + 'bootstrap/dist/js/bootstrap.js',
     js_plugin_path + 'moment/min/moment-with-locales.js',
     js_plugin_path + 'bootstrap-daterangepicker/daterangepicker.js',
+    js_plugin_path + 'highcharts/highcharts.src.js',
+    js_plugin_path + 'highcharts/highcharts-more.src.js',
     js_plugin_path + 'mailcheck/src/mailcheck.js',
-    js_plugin_path + 'highcharts/lib/highcharts.src.js',
 
     js_script_path + 'chart.js',
     js_script_path + 'graph.js',

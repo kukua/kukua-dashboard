@@ -63,7 +63,7 @@
 
         <div class="row">
             <div class="col-xs-12">
-                <h1>Forecast (Hourly, one day)</h1>
+                <h1>10 days forecast</h1>
             </div>
         </div>
 

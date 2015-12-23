@@ -1,6 +1,11 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Foreca_model extends CI_Model {
+
+    public $select = "";
+    public $from = "FROM Foreca";
+    public $where = "";
+
     public $query = "";
     public $base = "http://dashboard.kukua.cc:9003/query";
 
@@ -9,24 +14,43 @@ class Foreca_model extends CI_Model {
     }
 
     public function request($type = 'temp') {
-        $col  = "temp";
-        $name = "Temperature";
-
-        if ($type == "rain") {
-            $col  = "precip";
-            $name = "Rainfall";
-        }
+        $this->setSelect($type);
+        $this->setWhere();
 
         $this->query = urlencode("
-            SELECT
-                " . $col . " as " . $name . "
-            FROM Foreca
-            WHERE type = 'hourly'
-              AND id='02339354'
+            " . $this->select . "
+            " . $this->from . "
+            " . $this->where);
+        return $this;
+    }
+
+    public function setSelect($type) {
+        $col1  = "tempLow";
+        $name1 = "Low";
+        $col2  = "tempHigh";
+        $name2 = "High";
+
+        if ($type == "rain") {
+            $col1  = "precip";
+            $name1 = "Rainfall";
+            $col2  = false;
+            $name2 = false;
+        }
+
+        $select = "SELECT $col1 as $name1";
+        if ($col2 !== false) {
+            $select .= ", $col2 as $name2";
+        }
+        $this->select = $select;
+    }
+
+    public function setWhere() {
+        $this->where = "
+            WHERE type = 'daily'
+              AND id='100156918'
               AND time < now() + 10d
               AND time > now()
-        ");
-        return $this;
+        ";
     }
 
     /**
