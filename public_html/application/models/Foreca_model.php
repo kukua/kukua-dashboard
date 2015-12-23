@@ -13,43 +13,87 @@ class Foreca_model extends CI_Model {
         parent::__construct();
     }
 
-    public function request($type = 'temp') {
+    public function request($type = 'temp', $dateFrom = '', $dateTo = '') {
         $this->setSelect($type);
-        $this->setWhere();
 
-        $this->query = urlencode("
-            " . $this->select . "
-            " . $this->from . "
-            " . $this->where);
+        $today = new DateTime();
+        $date  = new DateTime();
+        $date->setTimestamp($dateTo);
+        $interval = $today->diff($date);
+
+        $this->setWhere($interval->format("%d"));
+
+        $query = $this->select . "
+             " . $this->from . "
+             " . $this->where;
+        $this->query = urlencode($query);
         return $this;
     }
 
-    public function setSelect($type) {
-        $col1  = "tempLow";
-        $name1 = "Low";
-        $col2  = "tempHigh";
-        $name2 = "High";
+    public function requestDaily($type = 'temp') {
+        $this->setDailySelect($type);
+        $this->setDailyWhere();
+        $query = $this->select . "
+             " . $this->from . "
+             " . $this->where;
+        $this->query = urlencode($query);
+        return $this;
+    }
 
-        if ($type == "rain") {
-            $col1  = "precip";
-            $name1 = "Rainfall";
-            $col2  = false;
-            $name2 = false;
+    public function setDailySelect($type) {
+        switch($type) {
+            case 'temp':
+                $col1  = "tempLow";
+                $name1 = "Low";
+                $col2  = "tempHigh";
+                $name2 = "High";
+                break;
+            case 'rain':
+                $col1  = "precip";
+                $name1 = "Rainfall";
+                $col2  = false;
+                $name2 = false;
+                break;
         }
 
         $select = "SELECT $col1 as $name1";
-        if ($col2 !== false) {
+        if ($col2 != false) {
             $select .= ", $col2 as $name2";
         }
         $this->select = $select;
     }
 
-    public function setWhere() {
+    public function setSelect($type, $dateFrom, $dateTo) {
+        switch($type) {
+            case 'temp':
+                $col1  = "temp";
+                $name1 = "Temperature";
+                break;
+            case 'rain':
+                $col1  = "precip";
+                $name1 = "Rainfall";
+                break;
+        }
+
+        $select = "SELECT $col1 as $name1";
+        $this->select = $select;
+    }
+
+    public function setWhere($interval = false) {
+        $this->where = "
+            WHERE type = 'hourly'
+              AND id='100156918'
+              AND time < NOW() + " . $interval . "d
+              AND time > NOW()
+        ";
+    }
+
+    public function setDailyWhere() {
         $this->where = "
             WHERE type = 'daily'
               AND id='100156918'
-              AND time < now() + 10d
-              AND time > now()
+              AND time < NOW() + 10d
+              AND time > NOW()
         ";
     }
 

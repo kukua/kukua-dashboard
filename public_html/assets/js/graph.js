@@ -66,7 +66,7 @@
                 options.tooltip.valueSuffix = ' mm'
                 break
         }
-        chart.temp("#chart-forecast", "/graph/forecast/" + graphType.val(), options)
+        chart.temp("#chart-forecast", "/graph/forecast_daily/" + graphType.val(), options)
     };
 
     kukua.graph = function() {

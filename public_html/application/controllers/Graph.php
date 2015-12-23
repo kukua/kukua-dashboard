@@ -83,7 +83,10 @@ class Graph extends MyController {
      * @return view
      */
     public function forecast($type = null) {
-        $foreca = $this->foreca_model->request($type);
+        $dateFrom   = (int) $this->input->post("from");
+        $dateTo     = (int) $this->input->post("to");
+
+        $foreca = $this->foreca_model->request($type, $dateFrom, $dateTo);
         $result = $foreca->call();
         foreach($result as $station => $data) {
             foreach($data->values as $key => $points) {
@@ -91,7 +94,30 @@ class Graph extends MyController {
                 $points[0] = str_replace("T", " ", $points[0]);
                 $new = DateTime::createFromFormat("Y-m-d H:i:s", $points[0]);
 
-                //multiply by 1000 for javascript
+                //multiply by 1000 (milliseconds)
+                $result[$station]->values[$key][0] = $new->getTimestamp() * 1000;
+            }
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+    /**
+     * Temporary
+     *
+     * @access public
+     * @return view
+     */
+    public function forecast_daily($type = null) {
+        $foreca = $this->foreca_model->requestDaily($type);
+        $result = $foreca->call();
+        foreach($result as $station => $data) {
+            foreach($data->values as $key => $points) {
+                $points[0] = str_replace("Z", "", $points[0]);
+                $points[0] = str_replace("T", " ", $points[0]);
+                $new = DateTime::createFromFormat("Y-m-d H:i:s", $points[0]);
+
+                //multiply by 1000 (milliseconds)
                 $result[$station]->values[$key][0] = $new->getTimestamp() * 1000;
             }
         }

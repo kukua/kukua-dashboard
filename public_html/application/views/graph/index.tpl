@@ -51,10 +51,9 @@
 
         <div class="row">
             <div class="col-xs-12">
-                <h1>Historical</h1>
+                <h3>History, plus one day hourly forecast</h3>
             </div>
         </div>
-
         <div class="row">
             <div class="col-xs-12">
                 <div id="chart" style="width:100%; height:500px;"></div>
@@ -63,10 +62,9 @@
 
         <div class="row">
             <div class="col-xs-12">
-                <h1>10 days forecast</h1>
+                <h3>Ten days forecast</h3>
             </div>
         </div>
-
         <div class="row">
             <div class="col-xs-12">
                 <div id="chart-forecast" style="width:100%; height:500px;"></div>

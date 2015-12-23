@@ -31,19 +31,7 @@
                     data.name = "N.E. Tanzania"
                     data.data = []
                     $.each(station.values, function(key, value) {
-
-                        //Handle data differently per chart
-                        switch(options.chart.type) {
-                            case 'column':
-                                data.data.push(value)
-                                break
-                            case 'line':
-                                data.data.push(value)
-                                break
-                            case 'arearange':
-                                data.data.push(value)
-                                break
-                        }
+                        data.data.push(value)
                     })
                     result.push(data)
                 })
@@ -64,6 +52,7 @@
         if ($(container).length >= 1) {
 
             //get dates from daterangepicker
+            var graphType       = kukua.getGraphType()
             var selectedDate = kukua.getDateRangePicker()
             var postdata = {
                 'from': selectedDate.data('daterangepicker').startDate.startOf('day').format('X'),
@@ -80,36 +69,48 @@
             call.done(function(request) {
                 var result = new Array()
 
-                $.each(request, function(id, station) {
-                    var data   = new Object()
-                    data.name = chart.convertName(station.name)
-                    data.data  = []
-                    $.each(station.points, function(key, value) {
-
-                        //Handle data differently per chart
-                        switch(options.chart.type) {
-                            case 'column':
-                                data.data.push(value)
-                                break
-                            case 'line':
-                                var points = new Object()
-                                points.x  = value[0]
-                                points.y  = value[1]
-                                data.data.push(points)
-                                break
-                        }
-                    })
-                    result.push(data)
+                var cali = $.ajax({
+                    type: 'POST',
+                    url: '/graph/forecast/' + graphType.val(),
+                    data: postdata,
+                    dataType: 'json'
                 })
 
-                //Add data points to the given options
-                options.series = result
+                cali.done(function(req2) {
+                    if (req2 != null) {
+                        $.each(req2, function(id, values) {
+                            var data = new Object()
+                            data.name = chart.convertName(values.name)
+                            data.data = []
+                            $.each(values.values, function(k, v) {
+                                data.data.push(v)
+                            });
+                            result.push(data)
+                        })
+                    }
 
-                //Combine given options with default options
-                var opt = $.extend({}, chart.getOptions(), options)
+                    if (request != null) {
+                        $.each(request, function(id, station) {
+                            var data   = new Object()
+                            data.name = chart.convertName(station.name)
+                            data.data  = []
+                            $.each(station.points, function(key, value) {
+                                data.data.push(value)
+                            })
+                            result.push(data)
+                        })
+                    }
 
-                //render
-                $(container).highcharts(opt)
+
+                    //Add data points to the given options
+                    options.series = result
+
+                    //Combine given options with default options
+                    var opt = $.extend({}, chart.getOptions(), options)
+
+                    //render
+                    $(container).highcharts(opt)
+                })
             })
         }
     };
@@ -146,6 +147,10 @@
                 break
             case 'sivad_ndogo_fab23419':
                 text = 'Ibadan'
+                break
+            default:
+            case 'Foreca':
+                text = 'Forecast!';
                 break
         }
         return text;
