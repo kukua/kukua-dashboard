@@ -74,11 +74,11 @@
                 <form method="post" class="js-post-feedback" action="#">
                     <div class="js-feedback-result feedback__content__message"></div>
                     <div class="form-group">
-                        <label for="feedback__message">Feedback</label>
+                        <label for="feedback__message">Feedback for us</label>
                         <textarea class="form-control" name="feedback" rows="4" id="feedback__message" placeholder="You can enter your feedback here"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="feedback__email">Send invitation</label>
+                        <label for="feedback__email">Your invitee</label>
                         <input type="text" class="form-control" name="email" placeholder="info@example.com" id="feedback__email">
                     </div>
                     <button type="submit" class="btn btn-default btn-sm pull-right js-feedback-submit">Submit</button>
