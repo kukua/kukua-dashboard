@@ -63,7 +63,10 @@
                 type: 'POST',
                 url: jsonUrl,
                 data: postdata,
-                dataType: 'json'
+                dataType: 'json',
+                beforeSend: function() {
+                    $(container).html("<div class='loading'></div>");
+                }
             })
 
             call.done(function(request) {
