@@ -23,11 +23,10 @@
     kukua.getDatePickerRanges = function() {
         return {
            'Today': [moment(), moment()],
+           'Tomorrow': [moment().add(1, 'days'), moment().add(1, 'days')],
            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-           'This Month': [moment().startOf('month'), moment().endOf('month')],
-           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+           'Last 30 Days': [moment().subtract(30, 'days'), moment()]
         }
     };
 
@@ -66,7 +65,7 @@
                 options.tooltip.valueSuffix = ' mm'
                 break
         }
-        chart.temp("#chart-forecast", "/graph/forecast_daily/" + graphType.val(), options)
+        chart.temp("#chart-forecast", "/graph/get/forecast_t/" + graphType.val() + "_ten", options)
     };
 
     kukua.graph = function() {
@@ -94,7 +93,7 @@
                 options.tooltip.valueSuffix = ' mm'
                 break
         }
-        chart.render("#chart", "/graph/build/" + graphType.val() + "/" + graphInterval.val() + "/", options)
+        chart.render("#chart", "/graph/get/history/" + graphType.val(), options)
     };
 
     kukua.datePickerChange = function() {

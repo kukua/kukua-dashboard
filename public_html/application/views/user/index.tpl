@@ -6,7 +6,7 @@
             <div class="col-xs-12">
                 <h1>
                     Users
-                    <a href="{$base_url}/user/invite" class="btn btn-primary pull-right">Invite user</a>
+                    <a href="{$baseUrl}user/invite" class="btn btn-primary pull-right">Invite user</a>
                 </h1>
             </div>
         </div>
@@ -42,15 +42,15 @@
                                 <td class="{$class} text-center">
                                     <p>
                                         {if $user->isAdmin}
-                                            <a href="{$base_url}/user/revoke/{$smarty.const.GROUP_ADMIN}/{$user->id}" class="label label-default js-confirm-revoke" title="Revoke admin access">admin</i></a>
+                                            <a href="{$baseUrl}user/revoke/{$smarty.const.GROUP_ADMIN}/{$user->id}" class="label label-default js-confirm-revoke" title="Revoke admin access">admin</i></a>
                                         {else}
-                                            <a href="{$base_url}/user/grant/{$smarty.const.GROUP_ADMIN}/{$user->id}" class="text-danger js-confirm-grant" title="Grant admin access"><i class="glyphicon glyphicon-ok-circle"></i></a>
+                                            <a href="{$baseUrl}user/grant/{$smarty.const.GROUP_ADMIN}/{$user->id}" class="text-danger js-confirm-grant" title="Grant admin access"><i class="glyphicon glyphicon-ok-circle"></i></a>
                                         {/if}
                                     </p>
                                 </td>
                                 <td class="{$class} text-right">
-                                    <a href="{$base_url}/user/update/{$user->id}"><i class="glyphicon glyphicon-pencil"></i></a>
-                                    <a href="{$base_url}/user/delete/{$user->id}" class="text-muted js-confirm-delete"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <a href="{$baseUrl}user/update/{$user->id}"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a href="{$baseUrl}user/delete/{$user->id}" class="text-muted js-confirm-delete"><i class="glyphicon glyphicon-remove"></i></a>
                                 </td>
                             </tr>
                         {/foreach}

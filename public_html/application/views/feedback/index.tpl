@@ -39,11 +39,11 @@
                                 <td class="{$class}">{$fb.created|date_format:"%d-%m-%Y"}</td>
                                 <td class="{$class} text-right">
                                     {if $fb.completed == 1}
-                                        <a href="/feedback/uncomplete/{$fb.id}" title="Mark as undone"><i class="glyphicon glyphicon-heart-empty"></i></a>
+                                        <a href="{$baseUrl}feedback/uncomplete/{$fb.id}" title="Mark as undone"><i class="glyphicon glyphicon-heart-empty"></i></a>
                                     {else}
-                                        <a href="/feedback/complete/{$fb.id}" title="Mark as done"><i class="glyphicon glyphicon-heart"></i></a>
+                                        <a href="{$baseUrl}feedback/complete/{$fb.id}" title="Mark as done"><i class="glyphicon glyphicon-heart"></i></a>
                                     {/if}
-                                    <a href="/feedback/delete/{$fb.id}" title="Remove feedback" class="text-danger js-confirm-delete"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <a href="{$baseUrl}feedback/delete/{$fb.id}" title="Remove feedback" class="text-danger js-confirm-delete"><i class="glyphicon glyphicon-remove"></i></a>
                                 </td>
                             </tr>
                         {/foreach}

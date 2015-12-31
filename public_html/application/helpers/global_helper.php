@@ -4,49 +4,13 @@ class GlobalHelper {
 
     public static $validUsers = ["kukuang", "kukuatz"];
 
-    public static function requireLogin() {
-        if (GlobalHelper::getUser() === False) {
-            redirect("/auth/login", "refresh", 403);
-        }
-    }
-
-    public static function getUser() {
-        if (isset($_SESSION["user"]) && in_array($_SESSION["user"], GlobalHelper::$validUsers)) {
-            return $_SESSION["user"];
-        }
-        return false;
-    }
-
-    public static function getDefaultDate($intval) {
+    public static function getDefaultDate($intval, $midnight = false) {
         $today = new DateTime();
         $today->sub(new DateInterval($intval));
-        return $today->format("Y/m/d");
-    }
-
-    public static function getCountry() {
-        $user = GlobalHelper::getUser();
-        if ($user === 'kukuang') {
-            return "Nigeria";
+        if ($midnight === true) {
+            return $today->format("Y/m/d 00:00:00");
         }
-        if ($user === 'kukuatz') {
-            return 'Tanzania';
-        }
-    }
-
-    public static function curl($request) {
-        $headers = [
-            "Content-type: application/json",
-            "Accept: application/json"
-        ];
-
-        $ch = curl_init($request);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_HEADERS, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        $output = curl_exec($ch);
-        curl_close($ch);
-        return $output;
+        return $today->format("Y/m/d 23:59:59");
     }
 
     public static function getForecastMap($user) {
@@ -92,13 +56,13 @@ class GlobalHelper {
                 }
 
                 ob_start();
-                fputcsv($fp, $station["columns"]);
+                fputcsv($fp, $station->columns);
                 fputcsv($fp, $keys);
-                foreach($station["points"] as $values) {
+                foreach($station->points as $values) {
                     fputcsv($fp, $values);
                 }
                 $string = ob_get_contents();
-                $zip->addFromString($station["name"] . ".csv", $string);
+                $zip->addFromString($station->name . ".csv", $string);
                 ob_clean();
                 fclose($fp);
             }
@@ -116,5 +80,11 @@ class GlobalHelper {
         readfile($zipFile);
         ob_flush();
         unlink($zipFile);
+    }
+
+    public static function debug($var) {
+        echo "<pre class='debug'>";
+        echo print_r($var, true);
+        echo "</pre>";
     }
 }

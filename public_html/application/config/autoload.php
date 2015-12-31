@@ -65,7 +65,6 @@ $autoload['libraries'] = [
     'Smartytpl',
     'form_validation',
     'Notification',
-    'InfluxDbApi',
     'ion_auth',
     'Email'
 ];
@@ -141,6 +140,6 @@ $autoload['language'] = [];
 */
 $autoload['model'] = array(
     'ion_auth_model',
-    'foreca_model',
-    'feedback_model'
+    'feedback_model',
+    'Influxdb',
 );

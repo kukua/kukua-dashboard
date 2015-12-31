@@ -4,13 +4,15 @@
     <div class="container">
         {include file="global/notification.tpl"}
 
-        <form class="form" action="/graph/download" id="js-submit" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" target="_blank">
+        <form class="form" action="/graph/get/download" id="js-submit" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" target="_blank">
             <div class="row">
                 <div class="col-sm-4">
                     <label>Select graph</label>
                     <select id="js-graph-type-swap" class="form-control" name="panelId">
                         <option value="temp">Temperature</option>
                         <option value="rain">Rainfall</option>
+                        <option value="hum">Humidity</option>
+                        <option value="presBMP">PresBMP</option>
                     </select>
                 </div>
                 <div class="col-sm-4">

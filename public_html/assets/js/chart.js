@@ -52,11 +52,14 @@
         if ($(container).length >= 1) {
 
             //get dates from daterangepicker
-            var graphType       = kukua.getGraphType()
+            var graphType    = kukua.getGraphType()
             var selectedDate = kukua.getDateRangePicker()
+            var interval     = kukua.getGraphInterval()
+
             var postdata = {
                 'from': selectedDate.data('daterangepicker').startDate.startOf('day').format('X'),
-                'to': selectedDate.data('daterangepicker').endDate.endOf('day').format('X')
+                'to': selectedDate.data('daterangepicker').endDate.endOf('day').format('X'),
+                'interval': interval.val()
             }
 
             var call = $.ajax({
@@ -71,15 +74,14 @@
 
             call.done(function(request) {
                 var result = new Array()
-
-                var cali = $.ajax({
+                var call2 = $.ajax({
                     type: 'POST',
-                    url: '/graph/forecast/' + graphType.val(),
+                    url: '/graph/get/forecast/' + graphType.val(),
                     data: postdata,
                     dataType: 'json'
                 })
 
-                cali.done(function(req2) {
+                call2.done(function(req2) {
                     if (req2 != null) {
                         $.each(req2, function(id, values) {
                             var data = new Object()
@@ -103,7 +105,6 @@
                             result.push(data)
                         })
                     }
-
 
                     //Add data points to the given options
                     options.series = result
@@ -206,7 +207,7 @@
             },
             yAxis: {
                 title: {
-                    text: 'Temperature (°C)'
+                    text: ''
                 }
             },
             chart: {
@@ -214,6 +215,7 @@
             },
             plotOptions: {
                 series: {
+                    cropTreshhold: 5000,
                     states: {
                         hover: {
                             enabled: false
@@ -221,7 +223,7 @@
                     }
                 },
                 line: {
-                    turboThreshold: 100000,
+                    turboThreshold: 5000,
                     lineWidth: 1
                 }
             },
@@ -263,7 +265,7 @@
             },
             yAxis: {
                 title: {
-                    text: 'Temperature (°C)'
+                    text: ''
                 },
                 min: 0,
                 max: 50

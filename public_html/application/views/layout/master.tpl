@@ -31,31 +31,29 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="/" title="Go to the home screen">
-                    Kukua {$user->country}
+                    Kukua {($user !== false) ? $user->country : ''}
                 </a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 {if $user !== false}
                     <ul class="nav navbar-nav">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/graph">Weather graph</a></li>
-                        <li><a href="/forecast">Forecast map</a></li>
+                        <li><a href="{$baseUrl}">Home</a></li>
+                        <li><a href="{$baseUrl}graph">Weather graph</a></li>
+                        <li><a href="{$baseUrl}forecast">Forecast map</a></li>
                     </ul>
                     <ul class="nav navbar-nav pull-right">
-
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi {$user->first_name}! <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="/user/update/{$user->id}">My account</a></li>
+                                <li><a href="{$baseUrl}user/update/{$user->id}">My account</a></li>
                                 {if $isAdmin}
-                                    <li><a href="/user">Users</a></li>
-                                    <li><a href="/feedback">Feedback</a></li>
+                                    <li><a href="{$baseUrl}user">Users</a></li>
+                                    <li><a href="{$baseUrl}feedback">Feedback</a></li>
                                 {/if}
                                 <li role="separator" class="divider"></li>
-                                <li><a href="/auth/logout">Logout</a></li>
+                                <li><a href="{$baseUrl}auth/logout">Logout</a></li>
                             </ul>
                         </li>
-                        <li><a href="#"></a></li>
                     </ul>
                 {/if}
             </div>

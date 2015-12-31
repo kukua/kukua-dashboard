@@ -53,7 +53,7 @@
                 <div class="col-xs-4 col-xs-offset-4">
                     <div class="">
                         <button type="submit" class="btn btn-primary btn-block">Save</button>
-                        <a href="{$base_url}/user/read/{$user->id}" class="btn btn-link btn-block">Cancel</a>
+                        <a href="{$baseUrl}user/" class="btn btn-link btn-block">Cancel</a>
                     </div>
                 </div>
             </div>

@@ -1,27 +1,40 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined("BASEPATH") OR exit("No direct script access allowed");
+
+use \Curl\Curl;
 
 class Graph extends MyController {
 
+    const GRAPH_HISTORY  = "history";
+    const GRAPH_FORECAST = "forecast";
+    const GRAPH_FORECAST_T = "forecast_t";
+    const GRAPH_DOWNLOAD = "download";
+
     public static $stations = [
         "tanzania" => [
-            'mwangoi'       => 'sivad_ndogo_a5e4d2c1',
-            //'mavumo'        => 'sivad_ndogo_a687dcd8',
-            'migambo'       => 'sivad_ndogo_a468d67c',
-            'mshizii'       => 'sivad_ndogo_9f113b00',
-            'baga'          => 'sivad_ndogo_890d85ba',
-            'makuyuni'      => 'sivad_ndogo_1e2e607e',
-            'rauya'         => 'sivad_ndogo_9f696fb0',
-            'mandakamnono'  => 'sivad_ndogo_841d300b',
-            'sanyo'         => 'sivad_ndogo_7aa19521',
+            "mwangoi"       => "sivad_ndogo_a5e4d2c1",
+            //"mavumo"        => "sivad_ndogo_a687dcd8",
+            "migambo"       => "sivad_ndogo_a468d67c",
+            "mshizii"       => "sivad_ndogo_9f113b00",
+            "baga"          => "sivad_ndogo_890d85ba",
+            "makuyuni"      => "sivad_ndogo_1e2e607e",
+            "rauya"         => "sivad_ndogo_9f696fb0",
+            "mandakamnono"  => "sivad_ndogo_841d300b",
+            "sanyo"         => "sivad_ndogo_7aa19521",
         ],
         "nigeria" => [
-            'ibadan'        => 'sivad_ndogo_fab23419',
+            "ibadan"        => "sivad_ndogo_fab23419",
         ]
     ];
 
+    /**
+     * Class constructor
+     *
+     * @access public
+     * @return void
+     */
     public function __construct() {
         parent::__construct();
-        $this->allow('members');
+        $this->allow("members");
     }
 
     /**
@@ -45,128 +58,235 @@ class Graph extends MyController {
             //Remove session
             $this->session->unset_userdata(array_keys($items));
         }
-
         $this->load->view("graph/index", $this->data);
     }
 
     /**
-     * @access public
-     * @return view
-     */
-    public function download() {
-        if (!$this->input->post()) {
-            redirect("/graph/index");
-        }
-
-        $dateFrom   = (int) $this->input->post("from");
-        $dateTo     = (int) $this->input->post("to");
-
-        try {
-            $influx = new InfluxDbApi();
-            $influx->buildQuery(null, null, $dateFrom, $dateTo, $this->input->post("interval"));
-            $influx->call();
-            $values = $influx->getOutput();
-            GlobalHelper::outputCsv("export-" . $from . "-" . $to . ".csv", json_decode($values, true));
-        } catch (Exception $e) {
-            Notification::set(Graph::INFO, "The selected from-to dates gave zero results.");
-            $sessionData = [
-                "postDateFrom" => $this->input->post("from"),
-                "postDateTo"   => $this->input->post("to"),
-            ];
-            $this->session->set_userdata($sessionData);
-            redirect("/graph/index", "refresh");
-        }
-    }
-
-    /**
-     * @access public
-     * @return view
-     */
-    public function forecast($type = null) {
-        $dateFrom   = (int) $this->input->post("from");
-        $dateTo     = (int) $this->input->post("to");
-
-        $foreca = $this->foreca_model->request($type, $dateFrom, $dateTo);
-        $result = $foreca->call();
-        if (count($result)) {
-            foreach($result as $station => $data) {
-                if (count($data->values)) {
-                    foreach($data->values as $key => $points) {
-                        $points[0] = str_replace("Z", "", $points[0]);
-                        $points[0] = str_replace("T", " ", $points[0]);
-                        $new = DateTime::createFromFormat("Y-m-d H:i:s", $points[0]);
-
-                        //multiply by 1000 (milliseconds)
-                        $result[$station]->values[$key][0] = $new->getTimestamp() * 1000;
-                    }
-                }
-            }
-        }
-        echo json_encode($result);
-        exit;
-    }
-
-    /**
-     * Temporary
+     * Start requesting graph data
      *
      * @access public
+     * @param  String $type
+     * @param  String $graph
      * @return view
      */
-    public function forecast_daily($type = null) {
-        $foreca = $this->foreca_model->requestDaily($type);
-        $result = $foreca->call();
-        if (count($result)) {
-            foreach($result as $station => $data) {
-                if (count($data->values)) {
-                    foreach($data->values as $key => $points) {
+    public function get($type = Graph::GRAPH_HISTORY, $graph = null) {
+        $dates    = $this->_handlePostDates();
+        $interval = $this->_handleInterval();
+        $params = [
+            "from"   => null,
+            "where"  => $dates,
+            "group"  => $interval,
+            "order"  => " ORDER ASC"
+        ];
+
+        switch($type) {
+            default:
+            case Graph::GRAPH_HISTORY:
+                $params["select"] = $this->_handleHistorySelect($graph);
+                $main = InfluxDb::getHistory($params);
+                $opts = [
+                    "u" => $main->getUser(),
+                    "p" => $main->getPassword(),
+                    "q" => $main->getQuery(),
+                ];
+                $request = $this->_curl($main, $opts);
+                echo json_encode($request);
+                break;
+            case Graph::GRAPH_FORECAST:
+                $params["select"] = $this->_handleForecastSelect($graph);
+                $main = InfluxDb::getForecast($params);
+                $opts = [
+                    "q" => $main->getQuery(),
+                    "db" => $main->getDb()
+                ];
+                $request   = $this->_curl($main, $opts, true);
+                $responses = $request->results;
+                if (isset($responses[0]->series) !== false) {
+                    $response = $this->_manipulate($responses[0]->series);
+                    echo json_encode($response);
+                } else {
+                    echo json_encode(Array());
+                }
+                break;
+            case Graph::GRAPH_FORECAST_T:
+                $params["where"] = "";
+                $params["select"] = $this->_handleForecastSelect($graph);
+                $main = InfluxDb::getForecast($params);
+                $opts = [
+                    "q" => $main->getQuery(),
+                    "db" => $main->getDb()
+                ];
+                $request   = $this->_curl($main, $opts, true);
+                $responses = $request->results;
+                if (isset($responses[0]->series) !== false) {
+                    $response = $this->_manipulate($responses[0]->series);
+                    echo json_encode($response);
+                } else {
+                    echo json_encode(Array());
+                }
+                break;
+            case Graph::GRAPH_DOWNLOAD:
+                $params["select"] = $this->_handleDownloadSelect();
+                $main = InfluxDb::getDownload($params);
+                $opts = [
+                    "u" => $main->getUser(),
+                    "p" => $main->getPassword(),
+                    "q" => $main->getQuery(),
+                ];
+                $request = $this->_curl($main);
+                GlobalHelper::outputCsv("export-" . $dates["dateFrom"] . "-" . $dates["dateTo"] . ".csv", $request, true);
+                break;
+        }
+        exit;
+    }
+
+    /**
+     * @access protected
+     * @param  mixed $class
+     * @return Array $result
+     */
+    protected function _curl($class, $opts = Array(), $headers = False) {
+        $curl = new Curl();
+        if ($headers !== false) {
+            $curl->setHeader("Authorization", "Basic " . $class->getToken());
+        }
+
+        $result = $curl->get($class->getUrl(), $opts);
+        return $result;
+    }
+
+    /**
+     * Check if there are posted dates, else use default
+     *
+     * @access protected
+     * @return Array
+     */
+    protected function _handlePostDates() {
+        $from = DateTime::createFromFormat("Y/m/d H:i:s", GlobalHelper::getDefaultDate("P1D", true))->getTimestamp();
+        $to   = DateTime::createFromFormat("Y/m/d H:i:s", GlobalHelper::getDefaultDate("P1D"))->getTimestamp();
+
+        if ($this->input->post("from") || $this->input->post("to")) {
+            $from = (int) $this->input->post("from");
+            $to   = (int) $this->input->post("to");
+        }
+        return ["dateFrom" => $from, "dateTo" => $to];
+    }
+
+    /**
+     * Check if there is a posted interval, else use default
+     *
+     * @access protected
+     * @return Array
+     */
+    protected function _handleInterval() {
+        $interval = "1h";
+        if ($this->input->post("interval")) {
+            $interval = $this->input->post("interval");
+        }
+        return $interval;
+    }
+
+    /**
+     * Select (history)
+     *
+     * @access protected
+     * @param  mixed $graph
+     * @return Array
+     */
+    protected function _handleHistorySelect($graph = null) {
+        $select = null;
+        if ($graph !== null) {
+            if ($graph == "temp") {
+                $select["mean(temp)"] = "Temperature";
+            }
+            if ($graph == "rain") {
+                $select["sum(rainTicks)"] = "Rain";
+            }
+            if ($graph == "hum") {
+                $select["mean(hum)"] = "Humidity";
+            }
+            if ($graph == "presBMP") {
+                $select["mean(presBMP)"] = "PresBMP";
+            }
+        }
+        return $select;
+    }
+
+    /**
+     * @access protected
+     * @param  mixed $graph
+     * @return null
+     */
+    protected function _handleForecastSelect($graph = null) {
+        $select = null;
+        if ($graph !== null) {
+            if ($graph == "temp") {
+                $select["temp"] = "Temperature";
+            }
+            if ($graph == "rain") {
+                $select["precip"] = "Rain";
+            }
+            if ($graph == "hum") {
+                $select["humid"] = "Humidity";
+            }
+            if ($graph == "presBMP") {
+                $select["presBMP"] = "PresBMP";
+            }
+
+            //Ten days forecast
+            if ($graph == "temp_ten") {
+                $select["tempLow"] = "Low";
+                $select["tempHigh"] = "High";
+            }
+            if ($graph == "rain_ten") {
+                $select["precip"] = "Rainfall";
+            }
+        }
+        return $select;
+    }
+
+    /**
+     * Select (download)
+     *
+     * @access protected
+     * @param  mixed $graph
+     * @return Array
+     */
+    protected function _handleDownloadSelect() {
+        $select = [
+            "rainTicks" => "RainTicks",
+            "windTicks" => "WindTicks",
+            "windGustTicks" => "WindGustTicks",
+            "windDir" => "WindDir",
+            "windGustDir" => "WindGustDir",
+            "temp" => "Temperature",
+            "hum" => "Humidity",
+            "presBMP" => "PresBMP"
+        ];
+        return $select;
+    }
+
+    /**
+     * Manipulate forecast time display for highcharts
+     *
+     * @access protected
+     * @return Array
+     */
+    protected function _manipulate($data) {
+        if (count($data)) {
+            foreach($data as $station => $values) {
+                if (count($values->values)) {
+                    foreach($values->values as $key => $points) {
                         $points[0] = str_replace("Z", "", $points[0]);
                         $points[0] = str_replace("T", " ", $points[0]);
                         $new = DateTime::createFromFormat("Y-m-d H:i:s", $points[0]);
 
                         //multiply by 1000 (milliseconds)
-                        $result[$station]->values[$key][0] = $new->getTimestamp() * 1000;
+                        $data[$station]->values[$key][0] = $new->getTimestamp() * 1000;
                     }
                 }
             }
         }
-        echo json_encode($result);
-        exit;
-    }
-
-    /**
-     * @access public
-     * @return view
-     */
-    public function build($graph = null, $interval= "5m") {
-        $type = null;
-        $nation = null;
-        $submit = $interval;
-
-        //default week
-        $fromDate = DateTime::createFromFormat("Y/m/d", GlobalHelper::getDefaultDate("P1D"))->getTimestamp();
-        $toDate   = DateTime::createFromFormat("Y/m/d", GlobalHelper::getDefaultDate("P1D"))->getTimestamp();
-
-        //posted week
-        if ($this->input->post("from") || $this->input->post("to")) {
-            $fromDate = (int) $this->input->post("from");
-            $toDate   = (int) $this->input->post("to");
-        }
-
-        //Temporary
-        if ($graph !== null) {
-            if ($graph == "temp") {
-                $type["temp"] = "Temperature";
-            }
-            if ($graph == "rain") {
-                $type["rainTicks"] = "Rain";
-            }
-        }
-
-        $influx = new InfluxDbApi();
-        $influx->buildQuery($type, $nation, $fromDate, $toDate, $submit);
-        $influx->call();
-        $values = $influx->getOutput();
-        echo $values;
-        exit;
+        return $data;
     }
 }
