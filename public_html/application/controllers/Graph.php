@@ -11,7 +11,7 @@ class Graph extends MyController {
 
     public static $stations = [
         "tanzania" => [
-            "mwangoi"       => "sivad_ndogo_a5e4d2c1",
+            //"mwangoi"       => "sivad_ndogo_a5e4d2c1",
             //"mavumo"        => "sivad_ndogo_a687dcd8",
             "migambo"       => "sivad_ndogo_a468d67c",
             "mshizii"       => "sivad_ndogo_9f113b00",
@@ -254,14 +254,14 @@ class Graph extends MyController {
      */
     protected function _handleDownloadSelect() {
         $select = [
-            "rainTicks" => "RainTicks",
-            "windTicks" => "WindTicks",
-            "windGustTicks" => "WindGustTicks",
-            "windDir" => "WindDir",
-            "windGustDir" => "WindGustDir",
-            "temp" => "Temperature",
-            "hum" => "Humidity",
-            "presBMP" => "PresBMP"
+            "sum(rainTicks)" => "RainTicks",
+            "mean(windTicks)" => "WindTicks",
+            "mean(windGustTicks)" => "WindGustTicks",
+            "mean(windDir)" => "WindDir",
+            "mean(windGustDir)" => "WindGustDir",
+            "mean(temp)" => "Temperature",
+            "mean(hum)" => "Humidity",
+            "mean(presBMP)" => "PresBMP"
         ];
         return $select;
     }
