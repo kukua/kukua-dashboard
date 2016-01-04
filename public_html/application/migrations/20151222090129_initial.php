@@ -60,7 +60,7 @@ class Migration_initial extends CI_Migration {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 
         $this->db->query("INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `country`, `salt`, `email`, `first_name`, `last_name`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`) VALUES
-            (1, '127.0.0.1', 'sbrn', '$2y$08$Uzs3UV5tf9k4S9CPPP2GH.XenXSZL6V1W3mYVQUidAnc73NYM0aPK', 'Tanzania', '', 'siebren@kukua.cc', 'Siebren', 'Kranenburg', '', NULL, NULL, NULL, 1268889823, 1450773051, 1)");
+            (1, '127.0.0.1', 'sbrn', '$2y$08\$Uzs3UV5tf9k4S9CPPP2GH.XenXSZL6V1W3mYVQUidAnc73NYM0aPK', 'Tanzania', '', 'siebren@kukua.cc', 'Siebren', 'Kranenburg', '', NULL, NULL, NULL, 1268889823, 1450773051, 1)");
 
         $this->db->query("CREATE TABLE `users_groups` (
               `id` int(11) UNSIGNED NOT NULL,
