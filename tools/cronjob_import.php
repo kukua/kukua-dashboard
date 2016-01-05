@@ -47,21 +47,29 @@ function convert (array & $item) {
 }
 
 function insert ($deviceId, array $columns, array $points) {
-	$data = [[
-		'name' => $deviceId,
-		'columns' => $columns,
-		'points' => $points,
-	]];
-	$json = json_encode($data);
+	$data = '';
+	foreach ($points as & $point) {
+		$timeKey = 0;
+		$i = 0;
+		$data .= $deviceId . ' ' . implode(',', array_filter(array_map(function ($key, $val) use ( & $i, & $timeKey) {
+			if ($key === 'time') {
+				$timeKey = $i;
+				return null;
+			}
+			$i += 1;
+			return $key . '=' . json_encode($val);
+		}, $columns, $point))) . ' ' . ($point[$timeKey] * 1000000) . "\n";
+	}
 	$ch = curl_init();
-	$url = str_replace('tcp://', 'http://', $_ENV['DASHBOARD_INFLUXDB_1_PORT_8086_TCP']) . '/db/' . $_ENV['PRE_CREATE_DB'] . '/series';
+	$url = str_replace('tcp://', 'http://', $_ENV['DASHBOARD_INFLUXDB_1_PORT_8086_TCP']) . '/write?db=' . $_ENV['PRE_CREATE_DB'] . '&precision=ns';
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	//curl_setopt($ch, CURLOPT_UPLOAD, 1);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, [
-		'Content-Type: application/json',
-		'Content-Length: ' . strlen($json),
+		'Content-Type: application/octet-stream',
+		'Content-Length: ' . strlen($data),
 		'Authorization: Basic ' . base64_encode($_ENV['ADMIN_USER'] . ':' . $_ENV['INFLUXDB_INIT_PWD']),
 	]);
 
@@ -71,7 +79,7 @@ function insert ($deviceId, array $columns, array $points) {
 
 	$info = curl_getinfo($ch);
 
-	if ($info['http_code'] !== 200) {
+	if ($info['http_code'] !== 204) {
 		return 'Response code: ' . $info['http_code'];
 	}
 
@@ -94,7 +102,7 @@ foreach ($result as $device) {
 	}, array_keys((array) $result[0])));
 	$points = [];
 
-	foreach ($result as $row) {
+	foreach ($result as & $row) {
 		$item = (array) $row;
 		unset($item['ts']);
 		foreach ($item as & $val) {
