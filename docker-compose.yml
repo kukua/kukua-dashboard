@@ -1,5 +1,5 @@
 influxdb:
-    image: tutum/influxdb:0.8.8
+    image: tutum/influxdb:0.9
     env_file: .env
     volumes:
         - ./config/influxdb.toml:/config/config.toml:ro
