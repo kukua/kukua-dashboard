@@ -4,6 +4,7 @@ class History extends Influxdb {
 
     protected $_user;
     protected $_password;
+    protected $_token;
 
     /**
      * Class constructor
@@ -14,10 +15,12 @@ class History extends Influxdb {
     public function __construct() {
         parent::__construct();
 
-        $this->_user = "";
-        $this->_password = "";
+        $this->_token = "";
     }
 
+    public function getToken() {
+        return $this->_token;
+    }
     /**
      * Returns user
      *
@@ -62,7 +65,7 @@ class History extends Influxdb {
      * @return void
      */
     public function setSelect($select = Array()) {
-        $query = "SELECT time,";
+        $query = "SELECT ";
         foreach($select as $column => $name) {
             $query .= " " . $column . " as " . $name . ",";
         }

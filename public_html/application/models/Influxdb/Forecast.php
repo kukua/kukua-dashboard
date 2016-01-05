@@ -47,7 +47,7 @@ class Forecast extends Influxdb {
      * @return void
      */
     public function setSelect($select = Array()) {
-        $query = "SELECT time, ";
+        $query = "SELECT ";
         foreach($select as $column => $name) {
             $query .= " " . $column . " as " . $name . ",";
         }

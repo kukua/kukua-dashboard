@@ -58,7 +58,7 @@ class GlobalHelper {
                 ob_start();
                 fputcsv($fp, $station->columns);
                 fputcsv($fp, $keys);
-                foreach($station->points as $values) {
+                foreach($station->values as $values) {
                     fputcsv($fp, $values);
                 }
                 $string = ob_get_contents();

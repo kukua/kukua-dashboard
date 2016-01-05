@@ -99,7 +99,7 @@
                             var data   = new Object()
                             data.name = chart.convertName(station.name)
                             data.data  = []
-                            $.each(station.points, function(key, value) {
+                            $.each(station.values, function(key, value) {
                                 data.data.push(value)
                             })
                             result.push(data)
@@ -255,11 +255,9 @@
                 valueSuffix: ''
             },
             legend: {
-                align: 'right',
-                verticalAlign: 'top',
-                layout: 'vertical',
-                x: 0,
-                y: 20
+                align: 'center',
+                verticalAlign: 'bottom',
+                layout: 'horizontal'
             },
             yAxis: {
                 title: {
@@ -292,7 +290,6 @@
             credits: {
                 enabled: false
             },
-            colors: ['#FAAC58']
         });
 
         return options;

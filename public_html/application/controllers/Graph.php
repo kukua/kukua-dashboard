@@ -76,7 +76,7 @@ class Graph extends MyController {
             "from"   => null,
             "where"  => $dates,
             "group"  => $interval,
-            "order"  => " ORDER ASC"
+            "order"  => " ORDER BY time ASC"
         ];
 
         switch($type) {
@@ -84,62 +84,46 @@ class Graph extends MyController {
             case Graph::GRAPH_HISTORY:
                 $params["select"] = $this->_handleHistorySelect($graph);
                 $main = InfluxDb::getHistory($params);
-                $opts = [
-                    "u" => $main->getUser(),
-                    "p" => $main->getPassword(),
-                    "q" => $main->getQuery(),
-                ];
-                $request = $this->_curl($main, $opts);
-                echo json_encode($request);
                 break;
             case Graph::GRAPH_FORECAST:
                 $params["select"] = $this->_handleForecastSelect($graph);
                 $main = InfluxDb::getForecast($params);
-                $opts = [
-                    "q" => $main->getQuery(),
-                    "db" => $main->getDb()
-                ];
-                $request   = $this->_curl($main, $opts, true);
-                $responses = $request->results;
-                if (isset($responses[0]->series) !== false) {
-                    $response = $this->_manipulate($responses[0]->series);
-                    echo json_encode($response);
-                } else {
-                    echo json_encode(Array());
-                }
                 break;
             case Graph::GRAPH_FORECAST_T:
                 $params["where"] = "";
                 $params["select"] = $this->_handleForecastSelect($graph);
                 $main = InfluxDb::getForecast($params);
-                $opts = [
-                    "q" => $main->getQuery(),
-                    "db" => $main->getDb()
-                ];
-                $request   = $this->_curl($main, $opts, true);
-                $responses = $request->results;
-                if (isset($responses[0]->series) !== false) {
-                    $response = $this->_manipulate($responses[0]->series);
-                    echo json_encode($response);
-                } else {
-                    echo json_encode(Array());
-                }
                 break;
             case Graph::GRAPH_DOWNLOAD:
                 $params["select"] = $this->_handleDownloadSelect();
                 $main = InfluxDb::getDownload($params);
                 $opts = [
-                    "u" => $main->getUser(),
-                    "p" => $main->getPassword(),
                     "q" => $main->getQuery(),
+                    "db" => $main->getDb(),
                 ];
-                $request   = $this->_curl($main, $opts);
-                if (!empty($request)) {
-                    GlobalHelper::outputCsv("export-" . $dates["dateFrom"] . "-" . $dates["dateTo"] . ".csv", $request, true);
+                $request = $this->_curl($main, $opts, true);
+                $responses = $request->results;
+                if (isset($responses[0]->series) !== false) {
+                    $response = $this->_manipulate($responses[0]->series);
+                    GlobalHelper::outputCsv("export-" . $dates["dateFrom"] . "-" . $dates["dateTo"] . ".csv", $response, true);
                 } else {
                     echo "Sorry, no results";
                 }
+                exit;
                 break;
+        }
+
+        $opts = [
+            "q" => $main->getQuery(),
+            "db" => $main->getDb(),
+        ];
+        $request = $this->_curl($main, $opts, true);
+        $responses = $request->results;
+        if (isset($responses[0]->series) !== false) {
+            $response = $this->_manipulate($responses[0]->series);
+            echo json_encode($response);
+        } else {
+            echo json_encode(Array());
         }
         exit;
     }

@@ -75,14 +75,12 @@ class Influxdb extends CI_Model {
      */
     public static function getHistory($params = Array()) {
         require_once(APPPATH . "models/Influxdb/History.php");
-        $db = "data";
         $data = [
-            "db"  => $db,
+            "db"  => "data",
             "url" => "http://dashboard.kukua.cc",
             "port" => "8086",
-            "user" => "kukua",
-            "password" => "pZhkvQwfP5",
-            "suffix" => "/db/" . $db . "/series",
+            "token" => "cm9vdDprMWsxbTB0MA==",
+            "suffix" => "/query",
         ];
         $history = History::populate($data);
         $history->find($params);
@@ -117,14 +115,12 @@ class Influxdb extends CI_Model {
      */
     public static function getDownload($params = Array()) {
         require_once(APPPATH . "models/Influxdb/History.php");
-        $db = "data";
         $data = [
-            "db"  => $db,
+            "db"  => "data",
             "url" => "http://dashboard.kukua.cc",
             "port" => "8086",
-            "user" => "kukua",
-            "password" => "pZhkvQwfP5",
-            "suffix" => "/db/" . $db . "/series",
+            "token" => "cm9vdDprMWsxbTB0MA==",
+            "suffix" => "/query",
         ];
         $history = History::populate($data);
         $history->find($params);
