@@ -38,14 +38,3 @@ $ sudo cp tools/cronjob /etc/cron.d/import_sensor_data
 $ sudo chown root:root /etc/cron.d/import_sensor_data
 $ sudo service cron restart
 ```
-
-# Notes
-
-## Tools
-
-Import tab separated values into InfluxDB:
-
-```bash
-env TSV_TS_KEY=ts ./tools/import_tsv.sh /folder/with/tsv/files/* /another/file.tsv
-# TSV_TS_KEY is the key used for the timestamp (default: ts)
-```
