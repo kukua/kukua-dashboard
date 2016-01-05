@@ -133,8 +133,12 @@ class Graph extends MyController {
                     "p" => $main->getPassword(),
                     "q" => $main->getQuery(),
                 ];
-                $request = $this->_curl($main);
-                GlobalHelper::outputCsv("export-" . $dates["dateFrom"] . "-" . $dates["dateTo"] . ".csv", $request, true);
+                $request   = $this->_curl($main, $opts);
+                if (!empty($request)) {
+                    GlobalHelper::outputCsv("export-" . $dates["dateFrom"] . "-" . $dates["dateTo"] . ".csv", $request, true);
+                } else {
+                    echo "Sorry, no results";
+                }
                 break;
         }
         exit;
