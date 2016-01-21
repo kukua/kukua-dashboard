@@ -48,8 +48,10 @@ class Forecast extends Influxdb {
      */
     public function setSelect($select = Array()) {
         $query = "SELECT ";
-        foreach($select as $column => $name) {
-            $query .= " " . $column . " as " . $name . ",";
+        if (is_array($select)) {
+            foreach($select as $column => $name) {
+                $query .= " " . $column . " as " . $name . ",";
+            }
         }
         $query = rtrim($query, ",");
         $this->_select = $query;

@@ -117,7 +117,7 @@ class History extends Influxdb {
         $query = "time(1h)";
         if (!is_null($group)) {
             $query = "time(" . $group . ")";
+            $this->_group = " GROUP BY " . $query;
         }
-        $this->_group = " GROUP BY " . $query;
     }
 }

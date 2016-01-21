@@ -13,6 +13,7 @@
                         <option value="rain">Rainfall</option>
                         <option value="hum">Humidity</option>
                         <option value="presBMP">PresBMP</option>
+                        <option value="wind">Wind</option>
                     </select>
                 </div>
                 <div class="col-sm-4">

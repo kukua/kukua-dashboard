@@ -83,6 +83,9 @@ class Graph extends MyController {
             default:
             case Graph::GRAPH_HISTORY:
                 $params["select"] = $this->_handleHistorySelect($graph);
+                if ($graph == "wind") {
+                    $params["group"] = "5m";
+                }
                 $main = InfluxDb::getHistory($params);
                 break;
             case Graph::GRAPH_FORECAST:
@@ -200,6 +203,9 @@ class Graph extends MyController {
             if ($graph == "presBMP") {
                 $select["mean(presBMP)"] = "PresBMP";
             }
+            if ($graph == "wind") {
+                $select["mean(windTicks)"] = "WindTicks";
+            }
         }
         return $select;
     }
@@ -223,6 +229,9 @@ class Graph extends MyController {
             }
             if ($graph == "presBMP") {
                 $select["presBMP"] = "PresBMP";
+            }
+            if ($graph == "wind") {
+                $select["windGust"] = "wind";
             }
 
             //Ten days forecast
