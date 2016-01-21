@@ -6,7 +6,7 @@ class Migration_extend_feedback extends CI_Migration {
     public function up() {
         $fields = [
             'completed' => [
-                'type' => INT,
+                'type' => "INT",
                 'constraint' => 1,
                 'default' => 0
             ]

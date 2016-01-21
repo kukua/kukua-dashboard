@@ -118,10 +118,14 @@ class Graph extends MyController {
             "db" => $main->getDb(),
         ];
         $request = $this->_curl($main, $opts, true);
-        $responses = $request->results;
-        if (isset($responses[0]->series) !== false) {
-            $response = $this->_manipulate($responses[0]->series);
-            echo json_encode($response);
+        if ($request !== false) {
+            $responses = $request->results;
+            if (isset($responses[0]->series) !== false) {
+                $response = $this->_manipulate($responses[0]->series);
+                echo json_encode($response);
+            } else {
+                echo json_encode(Array());
+            }
         } else {
             echo json_encode(Array());
         }
