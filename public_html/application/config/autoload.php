@@ -142,4 +142,5 @@ $autoload['model'] = array(
     'ion_auth_model',
     'feedback_model',
     'Influxdb',
+    'Eseye',
 );

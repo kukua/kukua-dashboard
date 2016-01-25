@@ -2,16 +2,16 @@
 
 use \Curl\Curl;
 
-class Graph extends MyController {
+class Sim extends MyController {
 
     public function __construct() {
-        public function __construct();
+        parent::__construct();
         $this->allow("admin");
     }
 
     public function index() {
-        $sims = new Sim();
-        $sims->getSims();
+        $sims = new Eseye();
+        GlobalHelper::debug($sims->getSims());
 
         $this->load->view("sim/index", $this->data);
     }
