@@ -19,9 +19,9 @@ class Eseye extends CI_Model {
         $this->username = ESEYE_USERNAME;
         $this->password = ESEYE_PASSWORD;
 
-        $this->url = "https://tigrillostaging.eseye.com/Japi/Tigrillo";
+        $this->url = "https://siam.eseye.com/Japi/Tigrillo";
         if (ENVIRONMENT === "development") {
-            $this->url = "https://siam.eseye.com/Japi/Tigrillo";
+            $this->url = "https://tigrillostaging.eseye.com/Japi/Tigrillo";
         }
     }
 
