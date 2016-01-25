@@ -9,9 +9,24 @@
     </div>
     
     <div class="container">
+        {if is_array($availableCountries)}
+            <div class="row" style="margin-bottom: 40px;">
+                <div class="col-sm-4">
+                    <label>Select country</label>
+                    <select name="js-country" id="js-forecast-country" id="js-graph-country" class="form-control">
+                        {foreach $availableCountries as $country}
+                            <option value="{$country}">{$country}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        {else}
+            <input type="hidden" name="js-country" id="js-forecast-country" value="{$availableCountries}">
+        {/if}
         <div class="row">
             <div class="col-sm-12">
-                <iframe src="{$url}" frameborder="0" width="802px" height="802px" class="pull-left"></iframe>
+                <div class="pull-left js-iframe">
+                </div>
                 <div class="pull-right">
                     <small>mm = millimeter</small>
                     <table class="table table-condensed">

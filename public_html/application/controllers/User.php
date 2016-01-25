@@ -103,11 +103,12 @@ class User extends MyController {
     public function invite() {
         $this->allow("admin");
         if ($this->input->post("email")) {
+            $country = $this->input->post("country") ? $this->input->post("country") : 'Tanzania';
             $username = "";
             $password = "";
             $email    = $this->input->post("email");
             $data     = [
-                "country"    => $this->input->post("country"),
+                "country"    => serialize($country),
                 "first_name" => $this->input->post("first_name"),
                 "last_name"  => $this->input->post("last_name")
             ];

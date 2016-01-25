@@ -2,12 +2,32 @@
     'use strict';
 
     helpers.onDomReady = function() {
+        helpers.forecast();
+
         helpers.confirmDelete()
         helpers.confirmRevoke()
         helpers.confirmGrant()
         helpers.feedbackDisplay()
         helpers.feedbackPost()
     };
+
+    helpers.forecast = function() {
+        $("#js-forecast-country").on('change', function () {
+            var postCountry = {
+                "country": $(this).val()
+            }
+            var call = $.ajax({
+                type: 'POST',
+                url: '/forecast/get/',
+                data: postCountry,
+                dataType: 'json'
+            })
+
+            call.done(function(request) {
+                $(".js-iframe").html('<iframe src="' + request.url + '" frameborder="0" width="802px" height="802px"></iframe>');
+            })
+        }).trigger("change");
+    }
 
     /**
      * Display confirm box on user delete

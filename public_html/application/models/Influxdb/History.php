@@ -18,9 +18,16 @@ class History extends Influxdb {
         $this->_token = "";
     }
 
+    /**
+     * Returns auth token
+     *
+     * @access public
+     * @return string $token
+     */
     public function getToken() {
         return $this->_token;
     }
+
     /**
      * Returns user
      *
@@ -80,15 +87,15 @@ class History extends Influxdb {
      * @param  String $from
      * @return void
      */
-    public function setFrom($from = null) {
-        //Get the country a user registered to
-        $user    = $this->ion_auth->user()->row();
-        $country = strtolower($user->country);
+    public function setFrom($params = Array()) {
+        $country  = $params["country"];
+        $stations = $params["stations"];
 
         $query = implode(",", Graph::$stations[$country]);
-        if ($from !== null) {
+        if ($stations !== null) {
             $query = Graph::$stations[$country][$from];
         }
+
         $this->_from = " FROM " . $query;
     }
 

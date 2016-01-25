@@ -40,6 +40,7 @@
     };
 
     kukua.forecast = function() {
+        var graphCountry    = kukua.getGraphCountry()
         var graphType       = kukua.getGraphType()
         var graphTypeText   = kukua.getGraphTypeText()
         var graphInterval   = kukua.getGraphInterval()
@@ -73,6 +74,7 @@
     };
 
     kukua.graph = function() {
+        var graphCountry    = kukua.getGraphCountry()
         var graphType       = kukua.getGraphType()
         var graphTypeText   = kukua.getGraphTypeText()
         var graphInterval   = kukua.getGraphInterval()
@@ -123,8 +125,14 @@
             kukua.graph()
             kukua.forecast()
         })
+        kukua.getGraphCountry().on("change", function() {
+            kukua.graph()
+        })
     };
 
+    kukua.getGraphCountry = function() {
+        return $("#js-graph-country")
+    };
     kukua.getGraphInterval = function() {
         return $('#js-graph-show-per')
     };

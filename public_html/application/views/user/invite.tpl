@@ -11,22 +11,25 @@
             </div>
             <div class="row">
                 <div class="col-xs-6 col-xs-offset-3">
-
-                    <div class="input-group" style="width: 100%">
+                    <div class="input-group">
                         <input type="text" name="first_name" placeholder="First name" class="form-control input-lg input-group-custom" id="first-name">
                         <span class="input-group-btn input-group-btn-none"></span>
                         <input type="text" name="last_name" placeholder="Last name" class="form-control input-lg input-group-custom input-group-custom-outer" id="last-name">
                     </div>
-
-                    <div class="input-group">
-                        <input type="text" name="email" class="form-control input-lg" aria-label="Enter email" placeholder="info@example.cc">
-                        <span class="input-group-btn">
-                            <select class="btn input-lg" name="country">
-                                <option value="Tanzania">Tanzania</option>
-                                <option value="Nigeria">Nigeria</option>
-                            </select>
-                        </span>
-                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-3">
+                    <input type="text" name="email" class="form-control input-lg" aria-label="Enter email" placeholder="info@example.cc">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-3">
+                    <select class="form-control" name="country[]" multiple="multiple">
+                        <option value="Tanzania">Tanzania</option>
+                        <option value="Nigeria">Nigeria</option>
+                        <option value="Test">Test</option>
+                    </select>
                 </div>
             </div>
             <div class="row">

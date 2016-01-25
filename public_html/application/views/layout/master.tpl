@@ -31,7 +31,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="/" title="Go to the home screen">
-                    Kukua {($user !== false) ? $user->country : ''}
+                    Kukua Weather Service
                 </a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">

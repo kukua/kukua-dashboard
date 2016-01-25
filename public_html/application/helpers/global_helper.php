@@ -13,18 +13,27 @@ class GlobalHelper {
         return $today->format("Y/m/d 23:59:59");
     }
 
-    public static function getForecastMap($user) {
+    public static function getForecastMap($countries) {
         $url = "";
-        switch(strtolower($user->country)) {
-            case 'nigeria':
-                $url = "http://vip.foreca.com/kukua/maps-nigeria.html?rain";
-                break;
-            case 'tanzania':
-                $url = "http://vip.foreca.com/kukua/maps-tanzania.html?rain";
-                break;
-            default:
-                $url = "";
-                break;
+        $list = Array();
+        if (!is_array($countries)) {
+            $list[] = $countries;
+        } else {
+            $list = $countries;
+        }
+
+        foreach($list as $country) {
+            switch($country) {
+                case 'Nigeria':
+                    $url = "http://vip.foreca.com/kukua/maps-nigeria.html?rain";
+                    break;
+                case 'Tanzania':
+                    $url = "http://vip.foreca.com/kukua/maps-tanzania.html?rain";
+                    break;
+                default:
+                    $url = "";
+                    break;
+            }
         }
         return $url;
     }

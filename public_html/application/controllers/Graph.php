@@ -58,6 +58,16 @@ class Graph extends MyController {
             //Remove session
             $this->session->unset_userdata(array_keys($items));
         }
+
+        $this->data["availableCountries"] = $this->_user->country;
+        if (@unserialize($this->_user->country)) {
+            $countries = unserialize($this->_user->country);
+            if (count($countries) > 1) {
+                $this->data["availableCountries"] = $countries;
+            } else {
+                $this->data["availableCountries"] = $countries[0];
+            }
+        }
         $this->load->view("graph/index", $this->data);
     }
 
@@ -72,11 +82,12 @@ class Graph extends MyController {
     public function get($type = Graph::GRAPH_HISTORY, $graph = null) {
         $dates    = $this->_handlePostDates();
         $interval = $this->_handleInterval();
+        $country  = $this->input->post("country");
         $params = [
-            "from"   => null,
+            "from"   => ["country" => $country, "stations" => null],
             "where"  => $dates,
             "group"  => $interval,
-            "order"  => " ORDER BY time ASC"
+            "order"  => " ORDER BY time ASC",
         ];
 
         switch($type) {
