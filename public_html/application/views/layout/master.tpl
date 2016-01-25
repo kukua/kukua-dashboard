@@ -49,6 +49,7 @@
                                 {if $isAdmin}
                                     <li><a href="{$baseUrl}user">Users</a></li>
                                     <li><a href="{$baseUrl}feedback">Feedback</a></li>
+                                    <li><a href="{$baseUrl}sim">SIM</a></li>
                                 {/if}
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{$baseUrl}auth/logout">Logout</a></li>
