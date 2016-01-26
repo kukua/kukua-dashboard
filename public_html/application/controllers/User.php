@@ -65,9 +65,12 @@ class User extends MyController {
         $this->allow("members", $id);
 
         if ($this->input->post("first_name")) {
+            $isAdmin = $this->ion_auth->in_group("admin");
+
             $this->form_validation->set_rules("first_name", "First name", "required");
             $this->form_validation->set_rules("last_name", "Last name", "required");
             $postPw = $this->input->post("new") ? true : false;
+            $postCountry = $this->input->post("country") ? $this->input->post("country") : false;
             if ($postPw) {
                 $this->form_validation->set_rules('new', 'Password', 'required|matches[new_confirm]');
                 $this->form_validation->set_rules('new_confirm', 'Password confirmation', 'required');
@@ -80,6 +83,10 @@ class User extends MyController {
                     $userData["password"] = $this->input->post("new");
                 }
 
+                if ($isAdmin === true && $postCountry !== false) {
+                    $userData["country"] = serialize($postCountry);
+                }
+
                 if ($this->ion_auth->update($id, $userData) === true) {
                     Notification::set(User::SUCCESS, "Your profile has been updated");
                 } else {
@@ -90,7 +97,17 @@ class User extends MyController {
             }
         }
 
-        $this->data["user"] = $this->ion_auth->user($id)->row();
+        $usr = $this->ion_auth->user($id)->row();
+        if (@unserialize($usr->country)) {
+            foreach(unserialize($usr->country) as $key => $country) {
+                $countries[$country] = $country;
+            }
+        } else {
+            $countries = Array($usr->country => $usr->country);
+        }
+
+        $this->data["user"] = $usr;
+        $this->data["currentCountries"] = $countries;
         $this->load->view("user/update", $this->data);
     }
 

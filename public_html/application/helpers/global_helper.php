@@ -13,6 +13,13 @@ class GlobalHelper {
         return $today->format("Y/m/d 23:59:59");
     }
 
+    public static function getCountries() {
+        return [
+            "Tanzania" => "Tanzania",
+            "Nigeria"  => "Nigeria",
+            "Test"     => "Test",
+        ];
+    }
     public static function getForecastMap($countries) {
         $url = "";
         $list = Array();
