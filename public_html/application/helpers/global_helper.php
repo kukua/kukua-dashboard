@@ -20,6 +20,36 @@ class GlobalHelper {
             "Test"     => "Test",
         ];
     }
+
+    public static function getStations() {
+        return [
+            "Tanzania" => [
+                //"mwangoi"       => "sivad_ndogo_a5e4d2c1",
+                //"mavumo"        => "sivad_ndogo_a687dcd8",
+                "migambo"       => "sivad_ndogo_a468d67c",
+                "mshizii"       => "sivad_ndogo_9f113b00",
+                "baga"          => "sivad_ndogo_890d85ba",
+                "makuyuni"      => "sivad_ndogo_1e2e607e",
+                "rauya"         => "sivad_ndogo_9f696fb0",
+                "mandakamnono"  => "sivad_ndogo_841d300b",
+                "sanyo"         => "sivad_ndogo_7aa19521",
+            ],
+            "Nigeria" => [
+                "ibadan"        => "sivad_ndogo_fab23419",
+            ]
+        ];
+    }
+
+    public static function getStationNameById($stationId) {
+        foreach(GlobalHelper::getStations() as $country => $stations) {
+            foreach($stations as $city => $id) {
+                if ($stationId == $id) {
+                    return $city;
+                }
+            }
+        }
+    }
+
     public static function getForecastMap($countries) {
         $url = "";
         $list = Array();
@@ -78,7 +108,7 @@ class GlobalHelper {
                     fputcsv($fp, $values);
                 }
                 $string = ob_get_contents();
-                $zip->addFromString($station->name . ".csv", $string);
+                $zip->addFromString(GlobalHelper::getStationNameById($station->name) . ".csv", $string);
                 ob_clean();
                 fclose($fp);
             }
@@ -90,7 +120,7 @@ class GlobalHelper {
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
         header('Content-Type: application/zip');
-        header('Content-Disposition: attachment;filename=export-stations-' . microtime() . '.zip');
+        header('Content-Disposition: attachment;filename=export-stations-csv.zip');
         header('Content-Length: ' . filesize($zipFile));
         header("Content-Transfer-Encoding: binary");
         readfile($zipFile);

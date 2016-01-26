@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined("BASEPATH") OR exit("No direct script access allowed");
 
 class History extends Influxdb {
 
@@ -88,12 +88,14 @@ class History extends Influxdb {
      * @return void
      */
     public function setFrom($params = Array()) {
+        $availableStations = GlobalHelper::getStations();
+
         $country  = $params["country"];
         $stations = $params["stations"];
 
-        $query = implode(",", Graph::$stations[$country]);
+        $query = implode(",", $availableStations[$country]);
         if ($stations !== null) {
-            $query = Graph::$stations[$country][$from];
+            $query = $availableStations[$country][$from];
         }
 
         $this->_from = " FROM " . $query;

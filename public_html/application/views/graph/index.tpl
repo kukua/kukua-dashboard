@@ -11,7 +11,7 @@
                         <label>Select country</label>
                         <select name="country" id="js-graph-country" class="form-control">
                             {foreach $availableCountries as $country}
-                                <option value="{$country|strtolower}">{$country}</option>
+                                <option value="{$country}">{$country}</option>
                             {/foreach}
                         </select>
                     </div>

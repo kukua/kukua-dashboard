@@ -9,23 +9,6 @@ class Graph extends MyController {
     const GRAPH_FORECAST_T = "forecast_t";
     const GRAPH_DOWNLOAD = "download";
 
-    public static $stations = [
-        "tanzania" => [
-            //"mwangoi"       => "sivad_ndogo_a5e4d2c1",
-            //"mavumo"        => "sivad_ndogo_a687dcd8",
-            "migambo"       => "sivad_ndogo_a468d67c",
-            "mshizii"       => "sivad_ndogo_9f113b00",
-            "baga"          => "sivad_ndogo_890d85ba",
-            "makuyuni"      => "sivad_ndogo_1e2e607e",
-            "rauya"         => "sivad_ndogo_9f696fb0",
-            "mandakamnono"  => "sivad_ndogo_841d300b",
-            "sanyo"         => "sivad_ndogo_7aa19521",
-        ],
-        "nigeria" => [
-            "ibadan"        => "sivad_ndogo_fab23419",
-        ]
-    ];
-
     /**
      * Class constructor
      *
