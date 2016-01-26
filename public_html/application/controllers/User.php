@@ -111,6 +111,42 @@ class User extends MyController {
         $this->load->view("user/update", $this->data);
     }
 
+    public function disable($id) {
+        $this->allow("admin");
+        $user = $this->ion_auth->user($id)->row();
+
+        if ($id == $this->ion_auth->user()->row()->id) {
+            Notification::set(User::DANGER, "You can't lock yourself out!");
+            redirect("user", "refresh");
+        }
+
+        if ($this->ion_auth->deactivate($id)) {
+            Notification::set(User::SUCCESS, "The user has been deactivated");
+            redirect("user", "refresh");
+        }
+
+        Notification::set(User::WARNING, "Something went wrong, please try agian");
+        redirect("user", "refresh");
+    }
+
+    public function enable($id) {
+        $this->allow("admin");
+        $user = $this->ion_auth->user($id)->row();
+
+        if ($id == $this->ion_auth->user()->row()->id) {
+            Notification::set(User::DANGER, "You can't enable yourself");
+            redirect("user", "refresh");
+        }
+
+        if ($this->ion_auth->activate($id)) {
+            Notification::set(User::SUCCESS, "The user has been activated");
+            redirect("user", "refresh");
+        }
+
+        Notification::set(User::WARNING, "Something went wrong, please try agian");
+        redirect("user", "refresh");
+    }
+
     /**
      * Invite a user to the dashboard
      *

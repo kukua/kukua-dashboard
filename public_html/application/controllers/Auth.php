@@ -181,7 +181,13 @@ class Auth extends MyController {
             return true;
         }
 
-        Notification::set(Auth::DANGER, "You have entered a wrong username or password.");
+        //Check if the error returned contained a not_active string
+        if (stristr($this->ion_auth->errors(), "not_active") == false) {
+            Notification::set(Auth::DANGER, "You have entered a wrong username or password.");
+        } else {
+            Notification::set(Auth::DANGER, "Your account has been deactivated. Contact ollie@kukua.cc");
+        }
+            
         return false;
     }
 

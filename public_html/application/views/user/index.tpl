@@ -32,7 +32,10 @@
                         {foreach $users as $user}
                             {$class = ""}
                             {if $user->isAdmin}
-                                {$class = "bg-success"}
+                                {$class = "bg-info"}
+                            {/if}
+                            {if $user->active == "0"}
+                                {$class = "bg-danger"}
                             {/if}
                             <tr>
                                 <td class="{$class}">{$user->first_name} {$user->last_name}</td>
@@ -44,13 +47,18 @@
                                         {if $user->isAdmin}
                                             <a href="{$baseUrl}user/revoke/{$smarty.const.GROUP_ADMIN}/{$user->id}" class="label label-default js-confirm-revoke" title="Revoke admin access">admin</i></a>
                                         {else}
-                                            <a href="{$baseUrl}user/grant/{$smarty.const.GROUP_ADMIN}/{$user->id}" class="text-danger js-confirm-grant" title="Grant admin access"><i class="glyphicon glyphicon-ok-circle"></i></a>
+                                            <a href="{$baseUrl}user/grant/{$smarty.const.GROUP_ADMIN}/{$user->id}" class="text-danger js-confirm-grant" title="Grant admin access"><i class="glyphicon glyphicon-fire"></i></a>
                                         {/if}
                                     </p>
                                 </td>
                                 <td class="{$class} text-right">
-                                    <a href="{$baseUrl}user/update/{$user->id}"><i class="glyphicon glyphicon-pencil"></i></a>
-                                    <a href="{$baseUrl}user/delete/{$user->id}" class="text-muted js-confirm-delete"><i class="glyphicon glyphicon-remove"></i></a>
+                                    {if $user->active == "1"}
+                                        <a href="{$baseUrl}user/disable/{$user->id}" title="Disable this account"><i class="text-muted glyphicon glyphicon-eye-close"></i></a>
+                                    {else}
+                                        <a href="{$baseUrl}user/enable/{$user->id}" title="Enable this account"><i class="text-success glyphicon glyphicon-eye-open"></i></a>
+                                    {/if}
+                                    <a href="{$baseUrl}user/update/{$user->id}"><i class="text-warning glyphicon glyphicon-pencil"></i></a>
+                                    <a href="{$baseUrl}user/delete/{$user->id}" class="text-danger js-confirm-delete"><i class="glyphicon glyphicon-remove"></i></a>
                                 </td>
                             </tr>
                         {/foreach}
