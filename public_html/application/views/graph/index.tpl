@@ -17,7 +17,7 @@
                     </div>
                 </div>
             {else}
-                <input type="hidden" name="country" id="js-graph-country" value="{$availableCountries|strtolower}">
+                <input type="hidden" name="country" id="js-graph-country" value="{$availableCountries}">
             {/if}
             <div class="row">
                 <div class="col-sm-4">

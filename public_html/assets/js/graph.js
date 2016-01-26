@@ -100,10 +100,10 @@
                 break
             case 'wind':
                 options.chart.type = "line"
-                options.yAxis.title.text = graphTypeText
+                options.yAxis.title.text = graphTypeText + " (km/h)"
                 options.yAxis.min = null
                 options.yAxis.max = null
-                options.tooltip.valueSuffix = ''
+                options.tooltip.valueSuffix = ' km/h'
                 break;
         }
         chart.render("#chart", "/graph/get/history/" + graphType.val(), options)
