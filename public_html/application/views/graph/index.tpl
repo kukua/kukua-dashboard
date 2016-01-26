@@ -9,7 +9,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <label>Select country</label>
-                        <select name="js-country" id="js-graph-country" class="form-control">
+                        <select name="country" id="js-graph-country" class="form-control">
                             {foreach $availableCountries as $country}
                                 <option value="{$country|strtolower}">{$country}</option>
                             {/foreach}
@@ -17,7 +17,7 @@
                     </div>
                 </div>
             {else}
-                <input type="hidden" name="js-country" id="js-graph-country" value="{$availableCountries|strtolower}">
+                <input type="hidden" name="country" id="js-graph-country" value="{$availableCountries|strtolower}">
             {/if}
             <div class="row">
                 <div class="col-sm-4">
