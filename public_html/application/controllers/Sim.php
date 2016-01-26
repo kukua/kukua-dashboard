@@ -11,8 +11,9 @@ class Sim extends MyController {
 
     public function index() {
         $sims = new Eseye();
-        GlobalHelper::debug($sims->getSims());
+	$simCards = $sims->getSims();
 
+	$this->data["simcards"] = $simCards;
         $this->load->view("sim/index", $this->data);
     }
 }
