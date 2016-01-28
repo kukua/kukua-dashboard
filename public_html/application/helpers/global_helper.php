@@ -13,64 +13,20 @@ class GlobalHelper {
         return $today->format("Y/m/d 23:59:59");
     }
 
-    public static function getCountries() {
-        return [
-            "Tanzania" => "Tanzania",
-            "Nigeria"  => "Nigeria",
-            "Test"     => "Test",
-        ];
-    }
-
-    public static function getStations() {
-        return [
-            "Tanzania" => [
-                //"mwangoi"       => "sivad_ndogo_a5e4d2c1",
-                //"mavumo"        => "sivad_ndogo_a687dcd8",
-                "migambo"       => "sivad_ndogo_a468d67c",
-                "mshizii"       => "sivad_ndogo_9f113b00",
-                "baga"          => "sivad_ndogo_890d85ba",
-                "makuyuni"      => "sivad_ndogo_1e2e607e",
-                "rauya"         => "sivad_ndogo_9f696fb0",
-                "mandakamnono"  => "sivad_ndogo_841d300b",
-                "sanyo"         => "sivad_ndogo_7aa19521",
-            ],
-            "Nigeria" => [
-                "ibadan"        => "sivad_ndogo_fab23419",
-            ]
-        ];
-    }
-
-    public static function getStationNameById($stationId) {
-        foreach(GlobalHelper::getStations() as $country => $stations) {
-            foreach($stations as $city => $id) {
-                if ($stationId == $id) {
-                    return $city;
-                }
-            }
-        }
-    }
-
-    public static function getForecastMap($countries) {
-        $url = "";
-        $list = Array();
-        if (!is_array($countries)) {
-            $list[] = $countries;
-        } else {
-            $list = $countries;
-        }
-
-        foreach($list as $country) {
-            switch($country) {
-                case 'Nigeria':
-                    $url = "http://vip.foreca.com/kukua/maps-nigeria.html?rain";
-                    break;
-                case 'Tanzania':
-                    $url = "http://vip.foreca.com/kukua/maps-tanzania.html?rain";
-                    break;
-                default:
-                    $url = "";
-                    break;
-            }
+    /**
+     *
+     */
+    public static function getForecastMap($country) {
+        switch($country) {
+            case 'Nigeria':
+                $url = "http://vip.foreca.com/kukua/maps-nigeria.html?rain";
+                break;
+            case 'Tanzania':
+                $url = "http://vip.foreca.com/kukua/maps-tanzania.html?rain";
+                break;
+            default:
+                $url = "";
+                break;
         }
         return $url;
     }

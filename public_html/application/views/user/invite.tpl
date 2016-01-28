@@ -26,8 +26,8 @@
             <div class="row">
                 <div class="col-xs-6 col-xs-offset-3">
                     <select class="form-control" name="country[]" multiple="multiple">
-                        {foreach GlobalHelper::getCountries() as $key => $country}
-                            <option value="{$key}">{$country}</option>
+                        {foreach $countries as $country}
+                            <option value="{$country->id}">{$country->name}</option>
                         {/foreach}
                     </select>
                 </div>

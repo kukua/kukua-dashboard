@@ -7,21 +7,19 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container">
-        {if is_array($availableCountries)}
+        {if is_array($userCountries)}
             <div class="row" style="margin-bottom: 40px;">
                 <div class="col-sm-4">
                     <label>Select country</label>
                     <select name="js-country" id="js-forecast-country" id="js-graph-country" class="form-control">
-                        {foreach $availableCountries as $country}
-                            <option value="{$country}">{$country}</option>
+                        {foreach $userCountries as $uc}
+                            <option value="{$uc.country->name}">{$uc.country->name}</option>
                         {/foreach}
                     </select>
                 </div>
             </div>
-        {else}
-            <input type="hidden" name="js-country" id="js-forecast-country" value="{$availableCountries}">
         {/if}
         <div class="row">
             <div class="col-sm-12">

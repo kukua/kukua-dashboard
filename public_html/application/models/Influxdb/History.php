@@ -88,16 +88,16 @@ class History extends Influxdb {
      * @return void
      */
     public function setFrom($params = Array()) {
-        $availableStations = GlobalHelper::getStations();
+        $stations = new Stations();
+        $result = $stations->findByCountryId($params["country"]);
 
-        $country  = $params["country"];
-        $stations = $params["stations"];
-
-        $query = implode(",", $availableStations[$country]);
-        if ($stations !== null) {
-            $query = $availableStations[$country][$from];
+        $query = "";
+        if (!empty($result)) {
+            foreach($result as $station) {
+                $query .= $station->station_id . ",";
+            }
+            $query = rtrim($query, ",");
         }
-
         $this->_from = " FROM " . $query;
     }
 

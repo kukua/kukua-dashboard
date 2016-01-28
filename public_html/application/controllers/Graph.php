@@ -42,15 +42,8 @@ class Graph extends MyController {
             $this->session->unset_userdata(array_keys($items));
         }
 
-        $this->data["availableCountries"] = $this->_user->country;
-        if (@unserialize($this->_user->country)) {
-            $countries = unserialize($this->_user->country);
-            if (count($countries) > 1) {
-                $this->data["availableCountries"] = $countries;
-            } else {
-                $this->data["availableCountries"] = $countries[0];
-            }
-        }
+        $userCountries = new UserCountries();
+        $this->data["userCountries"] = $userCountries->findByUserId($this->_user->id, true);
         $this->load->view("graph/index", $this->data);
     }
 

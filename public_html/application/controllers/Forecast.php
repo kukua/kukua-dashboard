@@ -8,19 +8,9 @@ class Forecast extends MyController {
     }
 
     public function index() {
-        $this->data["availableCountries"] = $this->_user->country;
-        if (@unserialize($this->_user->country)) {
-            $countries = unserialize($this->_user->country);
-            $this->data["availableCountries"] = $countries[0];
-            $this->data["url"] = GlobalHelper::getForecastMap($countries[0]);
-            if (count($countries) > 1) {
-                $this->data["availableCountries"] = $countries;
-                $this->data["url"] = GlobalHelper::getForecastMap($countries);
-            }
-        } else {
-            $this->data["availableCountries"] = $this->_user->country;
-            $this->data["url"] = GlobalHelper::getForecastMap($this->_user->country);
-        }
+        $uc = new UserCountries();
+        $userCountries = $uc->findByUserId($this->_user->id, true);
+        $this->data["userCountries"] = $userCountries;
         $this->load->view("forecast/index", $this->data);
     }
 

@@ -143,4 +143,7 @@ $autoload['model'] = array(
     'feedback_model',
     'Influxdb',
     'Eseye',
+    'Countries',
+    'UserCountries',
+    'Stations',
 );

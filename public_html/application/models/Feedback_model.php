@@ -36,7 +36,7 @@ class Feedback_model extends CI_Model {
             $this->email = $data["email"];
         }
         if (isset($data["feedback"])) {
-            $this->feedback = $data["feedback"];
+            $this->feedback = $this->db->escape_str($data["feedback"]);
         }
         if (isset($data["created"])) {
             $this->created = $data["created"];

@@ -70,7 +70,8 @@ class User extends MyController {
             $this->form_validation->set_rules("first_name", "First name", "required");
             $this->form_validation->set_rules("last_name", "Last name", "required");
             $postPw = $this->input->post("new") ? true : false;
-            $postCountry = $this->input->post("country") ? $this->input->post("country") : false;
+            $postCountries = $this->input->post("country") ? $this->input->post("country") : false;
+
             if ($postPw) {
                 $this->form_validation->set_rules('new', 'Password', 'required|matches[new_confirm]');
                 $this->form_validation->set_rules('new_confirm', 'Password confirmation', 'required');
@@ -83,8 +84,12 @@ class User extends MyController {
                     $userData["password"] = $this->input->post("new");
                 }
 
-                if ($isAdmin === true && $postCountry !== false) {
-                    $userData["country"] = serialize($postCountry);
+                /**
+                 * update user countries
+                 */
+                if ($isAdmin === true && $postCountries !== false) {
+                    $updateUserCountry = new UserCountries();
+                    $updateUserCountry->save($id, $postCountries);
                 }
 
                 if ($this->ion_auth->update($id, $userData) === true) {
@@ -97,20 +102,19 @@ class User extends MyController {
             }
         }
 
-        $usr = $this->ion_auth->user($id)->row();
-        if (@unserialize($usr->country)) {
-            foreach(unserialize($usr->country) as $key => $country) {
-                $countries[$country] = $country;
-            }
-        } else {
-            $countries = Array($usr->country => $usr->country);
-        }
+        $user = $this->ion_auth->user($id)->row();
+        $countries = new Countries();
+        $userCountries = new UserCountries();
 
-        $this->data["user"] = $usr;
-        $this->data["currentCountries"] = $countries;
+        $this->data["user"] = $user;
+        $this->data["countries"] = $countries->load();
+        $this->data["userCountries"] = $userCountries->findByUserId($user->id);
         $this->load->view("user/update", $this->data);
     }
 
+    /**
+     *
+     */
     public function disable($id) {
         $this->allow("admin");
         $user = $this->ion_auth->user($id)->row();
@@ -156,12 +160,10 @@ class User extends MyController {
     public function invite() {
         $this->allow("admin");
         if ($this->input->post("email")) {
-            $country = $this->input->post("country") ? $this->input->post("country") : 'Tanzania';
             $username = "";
             $password = "";
             $email    = $this->input->post("email");
             $data     = [
-                "country"    => serialize($country),
                 "first_name" => $this->input->post("first_name"),
                 "last_name"  => $this->input->post("last_name")
             ];
@@ -178,12 +180,19 @@ class User extends MyController {
                 redirect("user/invite", "refresh");
             }
 
+            //Save selected countries
+            $userCountries = new UserCountries();
+            $postCountries = $this->input->post("country");
+            $userCountries->save($user["id"], $postCountries);
+
             if ($this->_send_user_invitation($user["id"])) {
                 Notification::set(User::SUCCESS, "The user has been invited");
                 redirect("user/invite", "refresh");
             }
         }
 
+        $countries = new Countries();
+        $this->data["countries"] = $countries->load();
         $this->load->view("user/invite", $this->data);
     }
 

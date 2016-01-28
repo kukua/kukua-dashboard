@@ -30,30 +30,30 @@ class Eseye extends CI_Model {
      */
     public function getSims() {
         $curl = new Curl();
-	$curl->setHeader("Content-type", "application/json");
-	$curl->post($this->url . "/getCookieName");
+        $curl->setHeader("Content-type", "application/json");
+        $curl->post($this->url . "/getCookieName");
 
-	$cookieName = $curl->response;
+        $cookieName = $curl->response;
         $cookieValue = $this->_login_eseye();
 
         try {
-	    $curl->setCookie($cookieName, $cookieValue);
-	    $curl->post($this->url . "/getSIMs", [
+            $curl->setCookie($cookieName, $cookieValue);
+            $curl->post($this->url . "/getSIMs", [
                 'sortOrder' => "I",
                 'startRec' => 0,
                 'numRecs' => 50,
-	    ]);
-	    $simcards = $curl->response->sims;
+            ]);
+            $simcards = isset($curl->response->sims) ? $curl->response->sims : Array();
 
-	    $result = Array();
-	    foreach($simcards as $sim) {
-		$result[] = $this->getSim($sim, $cookieName, $cookieValue);
+            $result = Array();
+            foreach($simcards as $sim) {
+                $result[] = $this->getSim($sim, $cookieName, $cookieValue);
             }
             return $result;
 
         } catch (Exception $e) {
-		throw $e;
-		exit;
+            throw $e;
+            exit;
         }
     }
 
@@ -61,7 +61,7 @@ class Eseye extends CI_Model {
         $curl = new Curl();
         $curl->setHeader("Content-type", "application/json");
         try {
-	    $curl->setCookie($cookieName, $cookieValue);
+            $curl->setCookie($cookieName, $cookieValue);
             $curl->post($this->url . "/getSIMLastActivity", [
                 "ICCID" => $sim->ICCID
             ]);
@@ -84,11 +84,11 @@ class Eseye extends CI_Model {
             if ($difference >= 48 && $difference < 96)
                 $status = "warning";
 
-	    $sim->Status = $status;
+            $sim->Status = $status;
             return $sim;
-	} catch (Exception $e) {
-		throw $e;
-	}
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
     /**
@@ -100,17 +100,18 @@ class Eseye extends CI_Model {
             $curl->setHeader("Content-type", "application/json");
             try {
                 $curl->post($this->url. "/login", [
-		    'username' => $this->username,
-		    'password' => $this->password,
-		    'portfolioId' => $this->portfolioId
-		]);
+                    'username' => $this->username,
+                    'password' => $this->password,
+                    'portfolioId' => $this->portfolioId
+                ]);
 
-		#set login in session
-                $this->session->set_userdata("eseye/login", $curl->response->cookie);
+                $cookie = isset($curl->response->cookie) ? $curl->response->cookie : false;
+                #set login in session
+                $this->session->set_userdata("eseye/login", $cookie);
             } catch (Exception $e) {
-		throw $e;
+                throw $e;
             }
         }
-	return $this->session->userdata("eseye/login");
+        return $this->session->userdata("eseye/login");
     }
 }

@@ -34,19 +34,24 @@
                             </div>
                         </div>
                     </div>
+
                     {if $isAdmin}
                         <div class="form-group">
                             <select class="form-control" name="country[]" multiple="multiple">
-                                {foreach GlobalHelper::getCountries() as $key => $country}
+                                {foreach $countries as $country}
                                     {$selected = ""}
-                                    {if isset($currentCountries[$country])}
-                                        {$selected = "selected='selected'"}
-                                    {/if}
-                                    <option value="{$key}" {$selected}>{$country}</option>
+                                    {foreach $userCountries as $userCountry}
+                                        {if $userCountry.uc->country_id == $country->id}
+                                            {$selected = "selected='selected'"}
+                                            {continue}
+                                        {/if}
+                                    {/foreach}
+                                    <option value="{$country->id}" {$selected}>{$country->name}</option>
                                 {/foreach}
                             </select>
                         </div>
                     {/if}
+
                 </div>
                 <div class="col-sm-6">
                     <h4><i class="glyphicon glyphicon-credit-card"></i> Payment info</h4>

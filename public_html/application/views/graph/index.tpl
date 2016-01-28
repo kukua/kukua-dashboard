@@ -5,20 +5,17 @@
         {include file="global/notification.tpl"}
 
         <form class="form" action="/graph/get/download" id="js-submit" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" target="_blank">
-            {if is_array($availableCountries)}
                 <div class="row">
                     <div class="col-sm-4">
                         <label>Select country</label>
                         <select name="country" id="js-graph-country" class="form-control">
-                            {foreach $availableCountries as $country}
-                                <option value="{$country}">{$country}</option>
+                            {foreach $userCountries as $object}
+                                <option value="{$object.country->id}">{$object.country->name}</option>
                             {/foreach}
                         </select>
                     </div>
                 </div>
-            {else}
-                <input type="hidden" name="country" id="js-graph-country" value="{$availableCountries}">
-            {/if}
+
             <div class="row">
                 <div class="col-sm-4">
                     <label>Select graph</label>
