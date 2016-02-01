@@ -9,41 +9,14 @@
 
 //Extends
 @import (less) "@{bower-path}/bootstrap-daterangepicker/daterangepicker.css";
-.daterangepicker .calendar th, .daterangepicker .calendar td {
-    min-width: 25px;
-    font-size: 90%;
-}
 
 //Components
+@import "components/datepicker.less";
 @import "components/typography.less";
 @import "components/feedback.less";
 @import "components/loading.less";
-@import "components/debug.less";
+@import "components/debug.less"; 
+@import "components/input.less";
+@import "components/table.less";
+@import "components/defaults.less";
 
-//Utilities
-
-//Base overwrites
-body {
-    padding-bottom: 70px;
-    padding-top: 70px;
-}
-
-.input-group-custom {
-    border-bottom: 0;
-    &-outer{
-        border-left: 0;
-    }
-}
-
-.input-group-btn-none {
-    border: 0;
-    width: 0!important;
-}
-
-table.table-condensed td {
-    font-size: 12px;
-}
-
-.pointer {
-    cursor: pointer;
-}

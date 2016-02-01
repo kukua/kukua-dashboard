@@ -41,7 +41,7 @@ gulp.task('js', function() {
         .pipe(plumber({errorHandler: onError}))
         .pipe(sourcemaps.init())
         .pipe(concat('main.js'))
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(rename({suffix: '.min'}))
         .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest(dist_path));
