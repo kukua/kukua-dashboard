@@ -170,7 +170,8 @@
 
     helpers.removeStation = function() {
         var item = $(".js-remove-station");
-        item.on("click", function() {
+        item.on("click", function(e) {
+            var $this = $(this);
             var x = confirm("Are you sure you want to delete this station?")
             if (x == true) {
                 $.ajax({
@@ -179,7 +180,7 @@
                     data: $("#stationForm").serialize(),
                     postData: "json",
                     success: function(data) {
-                        item.parent("td").parent("tr").fadeOut()
+                        $this.parent("td").parent("tr").fadeOut()
                     }
                 });
             }

@@ -89,7 +89,7 @@
                     if (req2 != null) {
                         $.each(req2, function(id, values) {
                             var data = new Object()
-                            data.name = chart.convertName(values.name)
+                            data.name = "Forecast"
                             data.data = []
                             $.each(values.values, function(k, v) {
                                 data.data.push(v)
@@ -101,7 +101,7 @@
                     if (request != null) {
                         $.each(request, function(id, station) {
                             var data   = new Object()
-                            data.name = chart.convertName(station.name)
+                            data.name = station.name
                             data.data  = []
                             $.each(station.values, function(key, value) {
                                 data.data.push(value)
@@ -121,47 +121,6 @@
                 })
             })
         }
-    };
-
-    chart.convertName = function(id) {
-        var text = '';
-        switch(id) {
-            case 'sivad_ndogo_a5e4d2c1':
-                text = 'Mwangoi'
-                break
-            case 'sivad_ndogo_a687dcd8':
-                text = 'Mavumo'
-                break
-            case 'sivad_ndogo_a468d67c':
-                text = 'Migambo'
-                break
-            case 'sivad_ndogo_9f113b00':
-                text = 'Mshizii'
-                break
-            case 'sivad_ndogo_890d85ba':
-                text = 'Baga'
-                break
-            case 'sivad_ndogo_1e2e607e':
-                text = 'Makuyuni'
-                break
-            case 'sivad_ndogo_9f696fb0':
-                text = 'Rauya'
-                break
-            case 'sivad_ndogo_841d300b':
-                text = 'Mandakamnono'
-                break
-            case 'sivad_ndogo_7aa19521':
-                text = 'Sanyo'
-                break
-            case 'sivad_ndogo_fab23419':
-                text = 'Ibadan'
-                break
-            default:
-            case 'Foreca':
-                text = 'Forecast!';
-                break
-        }
-        return text;
     };
 
     chart.getOptions = function() {

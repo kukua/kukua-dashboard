@@ -166,6 +166,7 @@ class Graph extends MyController {
             $interval = $this->input->post("interval");
         }
         return $interval;
+                    //Set correct name
     }
 
     /**
@@ -264,6 +265,12 @@ class Graph extends MyController {
         if (count($data)) {
             foreach($data as $station => $values) {
                 if (count($values->values)) {
+
+                    //Set correct name
+                    $niceName = (new Stations())->findByStationId($values->name)->name;
+                    $values->name = ucfirst($niceName);
+
+                    //Set correct date
                     foreach($values->values as $key => $points) {
                         $points[0] = str_replace("Z", "", $points[0]);
                         $points[0] = str_replace("T", " ", $points[0]);

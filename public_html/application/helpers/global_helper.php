@@ -64,7 +64,7 @@ class GlobalHelper {
                     fputcsv($fp, $values);
                 }
                 $string = ob_get_contents();
-                $zip->addFromString(GlobalHelper::getStationNameById($station->name) . ".csv", $string);
+                $zip->addFromString($station->name . ".csv", $string);
                 ob_clean();
                 fclose($fp);
             }

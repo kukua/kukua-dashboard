@@ -99,6 +99,14 @@ class Stations extends CI_Model {
         return $result;
     }
 
+    public function findByStationId($stationId) {
+        $this->db->select("*");
+        $this->db->from(self::TABLE);
+        $this->db->where("station_id", $stationId);
+        $get = $this->db->get();
+        return $this->populate($get->row_array());
+    }
+
     /**
      * @access public
      * @return Countries
