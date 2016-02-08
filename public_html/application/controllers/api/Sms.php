@@ -19,11 +19,12 @@ class Sms extends MyController {
     }
 
     public function get() {
+        $data = $this->input->post();
         echo '<?xml version="1.0" encoding="UTF-8" ?>
         <Response>
-            <Message>' . print_r($this->input->post()) . '</Message>
+            <Message>' . print_r($data, true) . '</Message>
         </Response>
         ';
-        exit;
+        die();
     }
 }
