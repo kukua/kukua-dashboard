@@ -33,30 +33,36 @@ class Foreca extends Source {
      *
      */
     public function get($source) {
-        if ($source->getRange() == "temp") {
-            $dates = false;
-            $this->setSelect([
-                "tempLow" => "MinTemp",
-                "tempHigh"=> "MaxTemp"
-            ]);
-        }
-        elseif ($source->getRange() == "rain") {
-            $dates = false; 
-            $this->setSelect(["precip" => "Rainfall"]);
-        }
-        elseif ($source->getRange() == "hum") {
-            $dates = false;
-            $this->setSelect(["humid" => "Humidity"]);
-        }
-        elseif ($source->getRange() == "wind") {
-            $dates = false;
-            $this->setSelect(["windSpeed" => "Wind"]);
-        }
-        else {
-            $dates["dateFrom"] = $source->getDateFrom();
+	if ($source->getWeatherType() == "all") {
+       	    $dates["dateFrom"] = $source->getDateFrom();
             $dates["dateTo"]   = $source->getDateTo();
-            $this->setSelect([$source->getWeathertype() => "Temperature"]);
-        }
+            $this->setSelect($this->selectAll());
+	} else {
+        	if ($source->getRange() == "temp") {
+        	    $dates = false;
+        	    $this->setSelect([
+        	        "tempLow" => "MinTemp",
+        	        "tempHigh"=> "MaxTemp"
+        	    ]);
+        	}
+        	elseif ($source->getRange() == "rain") {
+        	    $dates = false; 
+        	    $this->setSelect(["precip" => "Rainfall"]);
+        	}
+        	elseif ($source->getRange() == "hum") {
+        	    $dates = false;
+        	    $this->setSelect(["humid" => "Humidity"]);
+        	}
+        	elseif ($source->getRange() == "wind") {
+        	    $dates = false;
+        	    $this->setSelect(["windSpeed" => "Wind"]);
+        	}
+        	else {
+        	    $dates["dateFrom"] = $source->getDateFrom();
+        	    $dates["dateTo"]   = $source->getDateTo();
+        	    $this->setSelect([$source->getWeathertype() => "Temperature"]);
+        	}
+	}
 
         $this->setFrom();
         $this->setWhere($dates);
@@ -99,6 +105,19 @@ class Foreca extends Source {
         $url = $this->_url . $this->_port . $this->_suffix;
         $result = $curl->get($url, $opts);
         return $result;
+    }
+
+    public function selectAll() {
+        return [
+            "precip" => "RainTicks",
+            "windSpeed" => "WindTicks",
+            "gustSpeed" => "WindGustTicks",
+            "windDir" => "WindDir",
+            "symbol" => "WindGustDir",
+            "temp" => "Temperature",
+            "humid" => "Humidity",
+            "symbol" => "PresBMP"
+        ];
     }
 
     /**
