@@ -141,9 +141,9 @@ $autoload['language'] = [];
 $autoload['model'] = array(
     'ion_auth_model',
     'feedback_model',
-    'Influxdb',
     'Eseye',
     'Countries',
     'UserCountries',
     'Stations',
+    'Source',
 );

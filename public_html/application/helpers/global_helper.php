@@ -76,7 +76,7 @@ class GlobalHelper {
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
         header('Content-Type: application/zip');
-        header('Content-Disposition: attachment;filename=export-stations-csv.zip');
+        header('Content-Disposition: attachment;filename=' . $fileName . '.zip');
         header('Content-Length: ' . filesize($zipFile));
         header("Content-Transfer-Encoding: binary");
         readfile($zipFile);

@@ -4,7 +4,11 @@
     <div class="container">
         {include file="global/notification.tpl"}
 
-        <form class="form" action="/graph/get/download" id="js-submit" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" target="_blank">
+        <form class="form" action="/graph/download" id="js-submit" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" target="_blank">
+
+            <div class="js-test"></div>
+
+            {if count($userCountries) > 1}
                 <div class="row">
                     <div class="col-sm-4">
                         <label>Select country</label>
@@ -15,7 +19,9 @@
                         </select>
                     </div>
                 </div>
-
+            {else}
+                <input type="hidden" name="country" id="js-graph-country" class="hidden" value="{$userCountries.0.country->id}">
+            {/if}
             <div class="row">
                 <div class="col-sm-4">
                     <label>Select graph</label>
