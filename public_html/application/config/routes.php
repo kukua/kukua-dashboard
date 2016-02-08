@@ -51,6 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 $route['api/v1/sensordata']['post'] = 'api/sensordata/get';
 $route['api/v1/sensordata']['get']  = 'api/sensordata/get';
+$route['api/sms/get']['get'] = 'api/sms/get';
 
 $route['default_controller'] = 'index/index';
 $route['404_override'] = '';
