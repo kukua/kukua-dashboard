@@ -9,12 +9,14 @@
         if ($(container).length >= 1) {
 
             //get dates from daterangepicker
-            var selectedDate = kukua.getDateRangePicker()
-            var country = kukua.getGraphCountry().val()
+            var graphType    = kukua.getGraphType()
+            var country      = kukua.getGraphCountry()
             var postdata = {
-                'from': selectedDate.data('daterangepicker').startDate.startOf('day').format('X'),
-                'to': selectedDate.data('daterangepicker').endDate.endOf('day').format('X'),
-                'country': country
+                'country': country.val(),
+                'type': graphType.val(),
+                'dateFrom': moment().format('X'),
+                'dateTo': moment().add(10,'days').format('X'),
+                'range': graphType.val()
             }
 
             var call = $.ajax({
@@ -28,7 +30,6 @@
                 var result = new Array()
 
                 $.each(request, function(id, station) {
-
                     var data  = new Object()
                     data.name = "N.E. Tanzania"
                     data.data = []
@@ -57,13 +58,14 @@
             var graphType    = kukua.getGraphType()
             var selectedDate = kukua.getDateRangePicker()
             var interval     = kukua.getGraphInterval()
-            var country = kukua.getGraphCountry().val()
+            var country = kukua.getGraphCountry()
 
             var postdata = {
-                'from': selectedDate.data('daterangepicker').startDate.startOf('day').format('X'),
-                'to': selectedDate.data('daterangepicker').endDate.endOf('day').format('X'),
-                'interval': interval.val(),
-                'country': country
+                'country': country.val(),
+                'type': graphType.val(),
+                'dateFrom': selectedDate.data('daterangepicker').startDate.startOf('day').format('X'),
+                'dateTo': selectedDate.data('daterangepicker').endDate.endOf('day').format('X'),
+                'interval': interval.val()
             }
 
             var call = $.ajax({
@@ -78,47 +80,26 @@
 
             call.done(function(request) {
                 var result = new Array()
-                var call2 = $.ajax({
-                    type: 'POST',
-                    url: '/graph/get/forecast/' + graphType.val(),
-                    data: postdata,
-                    dataType: 'json'
-                })
-
-                call2.done(function(req2) {
-                    if (req2 != null) {
-                        $.each(req2, function(id, values) {
-                            var data = new Object()
-                            data.name = "Forecast"
-                            data.data = []
-                            $.each(values.values, function(k, v) {
-                                data.data.push(v)
-                            });
-                            result.push(data)
+                if (request != null) {
+                    $.each(request, function(id, station) {
+                        var data  = new Object()
+                        data.name = station.name
+                        data.data = []
+                        $.each(station.values, function(key, value) {
+                            data.data.push(value)
                         })
-                    }
+                        result.push(data)
+                    })
+                }
 
-                    if (request != null) {
-                        $.each(request, function(id, station) {
-                            var data   = new Object()
-                            data.name = station.name
-                            data.data  = []
-                            $.each(station.values, function(key, value) {
-                                data.data.push(value)
-                            })
-                            result.push(data)
-                        })
-                    }
+                //Add data points to the given options
+                options.series = result
 
-                    //Add data points to the given options
-                    options.series = result
+                //Combine given options with default options
+                var opt = $.extend({}, chart.getOptions(), options)
 
-                    //Combine given options with default options
-                    var opt = $.extend({}, chart.getOptions(), options)
-
-                    //render
-                    $(container).highcharts(opt)
-                })
+                //render
+                $(container).highcharts(opt)
             })
         }
     };

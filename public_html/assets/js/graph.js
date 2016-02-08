@@ -11,7 +11,7 @@
 
         //Render first onDomReady
         kukua.graph()
-        kukua.forecast()
+        kukua.forecast();
     };
 
     kukua.datePickerInit = function() {
@@ -59,18 +59,31 @@
                 options.colors = ['#2f7ed8', '#0d233a', '#8bbc21', '#910000', '#1aadce', '#492970', '#f28f43', '#77a1e5', '#c42525', '#a6c96a']
                 options.tooltip.valueSuffix = ' mm'
                 break
-            //if other than rain
+            case 'hum':
+                options.chart.type = "line"
+                options.yAxis.title.text = graphTypeText + " (%)"
+                options.yAxis.min = null
+                options.yAxis.max = null
+                options.tooltip.valueSuffix = ' (%)'
+                break
+            case 'wind':
+                options.chart.type = "line"
+                options.yAxis.title.text = graphTypeText + " (km/h)"
+                options.yAxis.min = null
+                options.yAxis.max = null
+                options.tooltip.valueSuffix = ' (km/h)'
+                break
+            //if other
             default:
                 options.title.text = "Temperature"
-                graphTypeValue = 'temp'
                 options.chart.type = "arearange"
                 options.yAxis.title.text = "Temperature (°C)"
                 options.yAxis.min = 0
                 options.yAxis.max = 50
                 options.tooltip.valueSuffix = '°C'
-                break;
+                break
         }
-        chart.temp("#chart-forecast", "/graph/get/forecast_t/" + graphTypeValue + "_ten", options)
+        chart.temp("#chart-forecast", "/api/sensordata/get", options)
     };
 
     kukua.graph = function() {
@@ -106,11 +119,10 @@
                 options.tooltip.valueSuffix = ' km/h'
                 break;
         }
-        chart.render("#chart", "/graph/get/history/" + graphType.val(), options)
+        chart.render("#chart", "/api/sensordata/get/", options)
     };
 
     kukua.datePickerChange = function() {
-        //Date range select
         kukua.getDateRangePicker().on("apply.daterangepicker", function(ev, picker) {
             kukua.graph()
         })
