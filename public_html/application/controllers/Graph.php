@@ -51,12 +51,12 @@ class Graph extends MyController {
      */
     public function download() {
         $data["country"] = $this->input->post("country");
-        $data["type"] = $this->input->post("panelId");
+        $data["type"] = "all";
         $data["dateFrom"] = $this->input->post("from");
         $data["dateTo"] = $this->input->post("to");
-        $result = $this->_call($data);
+        $result = json_decode($this->_call($data));
 
-        //GlobalHelper::outputCsv("Export stations", $result);
+        GlobalHelper::outputCsv("export-stations", $result);
         exit;
     }
 
@@ -66,7 +66,7 @@ class Graph extends MyController {
      */
     protected function _call($data = Array()) {
         $curl = new \Curl\Curl();
-        $curl->post(base_url() . "api/sensordata/get",
+        $curl->post("http://dashboard.kukua.cc/api/sensordata/get",
             $data
         );
         return $curl->response;

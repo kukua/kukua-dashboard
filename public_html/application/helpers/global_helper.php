@@ -44,7 +44,7 @@ class GlobalHelper {
             "hectopascal"
         ];
 
-        $zipFile = '/tmp/stations-' . microtime() . '.zip';
+        $zipFile = '/tmp/' . $fileName . '.zip';
         $zip = new ZipArchive;
         if ($zip->open($zipFile, ZipArchive::CREATE) !== true) {
             throw new Exception("Cannot open zip archive");

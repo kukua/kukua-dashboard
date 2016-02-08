@@ -74,9 +74,13 @@ class Dashboard extends Source {
      *
      */
     public function get($source) {
-        $weatherType = $source->getWeatherType();
-        $select["mean(" . $this->getColumnName($weatherType)  . ")"] = $this->getNiceName($weatherType);
-        $this->setSelect($select);
+        if ($source->getWeatherType() == "all") {
+            $this->setSelect($this->selectAll());
+        } else {
+            $weatherType = $source->getWeatherType();
+            $select["mean(" . $this->getColumnName($weatherType)  . ")"] = $this->getNiceName($weatherType);
+            $this->setSelect($select);
+        }
         $this->setFrom($source->getCountry());
 
         $dates["dateFrom"] = $source->getDateFrom();
@@ -122,6 +126,19 @@ class Dashboard extends Source {
         $url = $this->_url . $this->_port . $this->_suffix;
         $result = $curl->get($url, $opts);
         return $result;
+    }
+
+    public function selectAll() {
+        return [
+            "sum(rainTicks)" => "RainTicks",
+            "mean(windTicks)" => "WindTicks",
+            "mean(windGustTicks)" => "WindGustTicks",
+            "mean(windDir)" => "WindDir",
+            "mean(windGustDir)" => "WindGustDir",
+            "mean(temp)" => "Temperature",
+            "mean(hum)" => "Humidity",
+            "mean(presBMP)" => "PresBMP"
+        ];
     }
 
     /**
