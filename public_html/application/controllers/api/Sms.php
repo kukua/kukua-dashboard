@@ -20,11 +20,16 @@ class Sms extends MyController {
 
     public function get() {
         $data = $this->input->post();
+        if (isset($data["Body"])) {
+            $wap = file_get_contents("http://wap.weather.fi/peek?param1=" . $data["Body"] . "&lang=en&format=text1");
+        } else {
+            $wap = "Please reply only a name i.e. 'Hilversum'";
+        }
+        $content = $wap;
         echo '<?xml version="1.0" encoding="UTF-8" ?>
         <Response>
-            <Message>' . print_r($data, true) . '</Message>
-        </Response>
-        ';
+            <Message>' . $content . '</Message>
+        </Response>';
         die();
     }
 }
