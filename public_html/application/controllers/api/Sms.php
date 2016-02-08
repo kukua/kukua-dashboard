@@ -19,7 +19,6 @@ class Sms extends MyController {
     }
 
     public function get() {
-        echo "hi";
-        var_dump($this->input->post());
+        print_r($this->input->post());
     }
 }
