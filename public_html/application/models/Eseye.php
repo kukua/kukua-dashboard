@@ -72,17 +72,20 @@ class Eseye extends CI_Model {
             $difference = 96;
             if (!empty($sim->LastRadiusStop)) {
                 $date = DateTime::createFromFormat("Y-m-d H:i:s", $sim->LastRadiusStop);
-                $difference = $date->diff(new DateTime())->format("%h");
+		$difference = ($date->getTimestamp() / 3600);
             }
-            $status = "danger"; 
+            $status = "red"; 
             if ($difference <= 1)
-                $status = "success";
+                $status = "green";
 
-            if ($difference > 1 && $difference < 48)
-                $status = "info";
+            if ($difference > 1 && $difference < 24)
+                $status = "blue";
 
+            if ($difference >= 24 && $difference < 48)
+		$status = "yellow";
+            
             if ($difference >= 48 && $difference < 96)
-                $status = "warning";
+                $status = "orange";
 
             $sim->Status = $status;
             return $sim;
