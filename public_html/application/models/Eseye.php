@@ -40,8 +40,8 @@ class Eseye extends CI_Model {
             $curl->setCookie($cookieName, $cookieValue);
             $curl->post($this->url . "/getSIMs", [
                 'sortOrder' => "I",
-                'startRec' => null,
-                'numRecs' => null,
+                'startRec' => 0,
+                'numRecs' => 0,
             ]);
             $simcards = isset($curl->response->sims) ? $curl->response->sims : Array();
 
@@ -54,7 +54,7 @@ class Eseye extends CI_Model {
                 if ($a->LastRadiusStop == $b->LastRadiusStop) {
                     return 0;
                 }
-                return ($a->LastRadiusStop > $b->LastRadiusStop) ? -1 : 1;
+                return ($a->LastRadiusStop < $b->LastRadiusStop) ? -1 : 1;
             });
 
             return $result;
