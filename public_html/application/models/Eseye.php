@@ -41,7 +41,7 @@ class Eseye extends CI_Model {
             $curl->post($this->url . "/getSIMs", [
                 'sortOrder' => "I",
                 'startRec' => 0,
-                'numRecs' => 0,
+                'numRecs' => 50,
             ]);
             $simcards = isset($curl->response->sims) ? $curl->response->sims : Array();
 
