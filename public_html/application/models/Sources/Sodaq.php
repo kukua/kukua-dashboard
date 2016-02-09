@@ -290,6 +290,10 @@ class Sodaq extends Source {
                     $niceName = (new Stations())->findByStationId($values->name)->name;
                     $values->name = ucfirst($niceName);
 
+                    if (empty($values->name)) {
+                        $values->name = "SensorData";
+                    }
+
                     //Set correct date
                     foreach($values->values as $key => $points) {
                         $points[0] = str_replace("Z", "", $points[0]);
