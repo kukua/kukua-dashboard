@@ -40,8 +40,8 @@ class Eseye extends CI_Model {
             $curl->setCookie($cookieName, $cookieValue);
             $curl->post($this->url . "/getSIMs", [
                 'sortOrder' => "I",
-                'startRec' => 0,
-                'numRecs' => 50,
+                'startRec' => null,
+                'numRecs' => null,
             ]);
             $simcards = isset($curl->response->sims) ? $curl->response->sims : Array();
 
@@ -49,6 +49,14 @@ class Eseye extends CI_Model {
             foreach($simcards as $sim) {
                 $result[] = $this->getSim($sim, $cookieName, $cookieValue);
             }
+
+            usort($result, function($a, $b) {
+                if ($a->LastRadiusStop == $b->LastRadiusStop) {
+                    return 0;
+                }
+                return ($a->LastRadiusStop > $b->LastRadiusStop) ? -1 : 1;
+            });
+
             return $result;
 
         } catch (Exception $e) {
@@ -72,8 +80,9 @@ class Eseye extends CI_Model {
             $difference = 96;
             if (!empty($sim->LastRadiusStop)) {
                 $date = DateTime::createFromFormat("Y-m-d H:i:s", $sim->LastRadiusStop);
-		$difference = ($date->getTimestamp() / 3600);
+                $difference = ($date->getTimestamp() / 3600);
             }
+
             $status = "red"; 
             if ($difference <= 1)
                 $status = "green";
@@ -82,8 +91,8 @@ class Eseye extends CI_Model {
                 $status = "blue";
 
             if ($difference >= 24 && $difference < 48)
-		$status = "yellow";
-            
+                $status = "yellow";
+
             if ($difference >= 48 && $difference < 96)
                 $status = "orange";
 
