@@ -22,8 +22,8 @@ class Foreca extends Source {
     public function __construct() {
         parent::__construct();
 
-        $this->_token  = "cm9vdDo1NTdhYTg1NDVjYmM2MTE1ZWY0Yjk1OTYz";
-        $this->_url = "http://dashboard.kukua.cc";
+        $this->_token  = "cm9vdDo2NjhiYjg1NDVjYmM2MTE1ZWY0Yjk1OTYz"; 
+        $this->_url = "http://d.kukua.cc";
         $this->_port = ":9003";
         $this->_db = "data";
         $this->_suffix = "/query";
@@ -33,36 +33,36 @@ class Foreca extends Source {
      *
      */
     public function get($source) {
-	if ($source->getWeatherType() == "all") {
-       	    $dates["dateFrom"] = $source->getDateFrom();
+        if ($source->getWeatherType() == "all") {
+            $dates["dateFrom"] = $source->getDateFrom();
             $dates["dateTo"]   = $source->getDateTo();
             $this->setSelect($this->selectAll());
-	} else {
-        	if ($source->getRange() == "temp") {
-        	    $dates = false;
-        	    $this->setSelect([
-        	        "tempLow" => "MinTemp",
-        	        "tempHigh"=> "MaxTemp"
-        	    ]);
-        	}
-        	elseif ($source->getRange() == "rain") {
-        	    $dates = false; 
-        	    $this->setSelect(["precip" => "Rainfall"]);
-        	}
-        	elseif ($source->getRange() == "hum") {
-        	    $dates = false;
-        	    $this->setSelect(["humid" => "Humidity"]);
-        	}
-        	elseif ($source->getRange() == "wind") {
-        	    $dates = false;
-        	    $this->setSelect(["windSpeed" => "Wind"]);
-        	}
-        	else {
-        	    $dates["dateFrom"] = $source->getDateFrom();
-        	    $dates["dateTo"]   = $source->getDateTo();
-        	    $this->setSelect([$source->getWeathertype() => "Temperature"]);
-        	}
-	}
+        } else {
+            if ($source->getRange() == "temp") {
+                $dates = false;
+                $this->setSelect([
+                    "tempLow" => "MinTemp",
+                    "tempHigh"=> "MaxTemp"
+                ]);
+            }
+            elseif ($source->getRange() == "rain") {
+                $dates = false; 
+                $this->setSelect(["precip" => "Rainfall"]);
+            }
+            elseif ($source->getRange() == "hum") {
+                $dates = false;
+                $this->setSelect(["humid" => "Humidity"]);
+            }
+            elseif ($source->getRange() == "wind") {
+                $dates = false;
+                $this->setSelect(["windSpeed" => "Wind"]);
+            }
+            else {
+                $dates["dateFrom"] = $source->getDateFrom();
+                $dates["dateTo"]   = $source->getDateTo();
+                $this->setSelect([$source->getWeathertype() => "Temperature"]);
+            }
+        }
 
         $this->setFrom();
         $this->setWhere($dates);

@@ -22,9 +22,9 @@ class Dashboard extends Source {
     public function __construct() {
         parent::__construct();
 
-        $this->_token  = "cm9vdDprMWsxbTB0MA==";
-        $this->_url = "http://dashboard.kukua.cc";
-        $this->_port = ":8086";
+        $this->_token  = "cm9vdDo2NjhiYjg1NDVjYmM2MTE1ZWY0Yjk1OTYz";
+        $this->_url = "http://d.kukua.cc";
+        $this->_port = ":9003";
         $this->_db = "data";
         $this->_suffix = "/query";
     }
