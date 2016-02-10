@@ -295,9 +295,9 @@ class User extends MyController {
         $content = $this->load->view("auth/email/activate", $data, true);
 
         $lib = new Email();
-        $lib->setFrom("Ollie Smeenk <ollie@kukua.cc>");
+        $lib->setFrom("Kukua B.V. <info@kukua.cc>");
         $lib->setTo($user->first_name . " " . $user->last_name . " <" . $user->email . ">");
-        $lib->setSubject("Invitation to the new Kukua Dashboard");
+        $lib->setSubject("Welcome to the Kukua Dashboard");
         $lib->setContent($content);
         $lib->send();
         return true;
