@@ -15,11 +15,13 @@
     <p>Kind regards,</p>
     <p>
         The Kukua Team<br>
+    </p>
+    <p>
         <img src="{$base}/assets/img/kukua-logo-small.png"><br>
         Kukua B.V.<br>
         info@kukua.cc<br>
-        <a href="https://facebook.com/kukuaweather">Facebook</a>
-        <a href="https://twitter.com/kukuaweather">Twitter</a>
+        <a href="https://facebook.com/kukuaweather">Facebook</a><br>
+        <a href="https://twitter.com/kukuaweather">Twitter</a><br>
         <a href="https://github.com/kukua">GitHub</a>
     </p>
 </body>
