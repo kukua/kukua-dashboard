@@ -53,6 +53,7 @@
      * Display confirm box on disable
      */
     helpers.confirmDisable = function() {
+        $(".js-confirm-disable").unbind("click");
         $(".js-confirm-disable").on("click", function() {
             var x = confirm("Are you sure you want to disable this?")
             if (x == true) {
@@ -175,10 +176,8 @@
             var x = confirm("Are you sure you want to delete this station?")
             if (x == true) {
                 $.ajax({
-                    type: "POST",
+                    type: "GET",
                     url: "/locations/delete_station/" + item.data("station_id"),
-                    data: $("#stationForm").serialize(),
-                    postData: "json",
                     success: function(data) {
                         $this.parent("td").parent("tr").fadeOut()
                     }

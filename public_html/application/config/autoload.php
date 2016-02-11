@@ -146,4 +146,5 @@ $autoload['model'] = array(
     'UserCountries',
     'Stations',
     'Source',
+    'Smsclient',
 );
