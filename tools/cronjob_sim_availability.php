@@ -85,10 +85,10 @@ function getSim($sim, $cookieName, $cookieValue) {
         $sim->LastRadiusStop  = $response->info->LastRadiusStop;
         $sim->LastRadiusBytes = $response->info->LastRadiusBytes;
 
-        $difference = 0;
+        $difference = 96;
         if (!empty($sim->LastRadiusStop)) {
             $date = DateTime::createFromFormat("Y-m-d H:i:s", $sim->LastRadiusStop);
-            $difference = $date->diff(new DateTime())->format("%h");
+            $difference = ($date->getTimestamp() / 3600);
         }
 
         if ($difference >= 48 && $difference < 96) {
