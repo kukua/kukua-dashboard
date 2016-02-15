@@ -71,6 +71,7 @@ class Dashboard extends Source {
         $query["from"]   = $this->getFrom($station->station_id);
         if (!empty($query["select"]) && !empty($query["from"])) {
             $q = $query["select"] . " " . $query["from"] . " " . $query["where"] . " " . $query["group"];
+            log_message('error', $q);
             $values = $this->_parse($q);
             if (count($values) >= 1) {
                 return $values;
