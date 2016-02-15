@@ -65,7 +65,7 @@ if (is_dir("./.environment")) {
     define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
 }
 
-date_default_timezone_set("Europe/Amsterdam");
+date_default_timezone_set("UTC");
 
 /*
  *---------------------------------------------------------------

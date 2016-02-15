@@ -46,6 +46,41 @@ class GlobalHelper {
         return $url;
     }
 
+    public static function meaningOf($values) {
+        $return = null;
+
+        switch($values) {
+            case 'time':
+                $return = "UTC (d-m-Y)";
+            break;
+            case 'Temperature':
+                $return = "Celcius";
+                break;
+            case 'Rainfall':
+                $return = "mm";
+                break;
+            case 'Humidity':
+                $return = "%";
+                break;
+            case 'Wind':
+                $return = "km/h";
+                break;
+            case 'WindGust':
+                $return = "km/h";
+                break;
+            case 'WindDirection':
+                $return = "degrees";
+                break;
+            case 'WindGustDirection':
+                $return = "degrees";
+                break;
+            case 'Battery':
+                $return = "Voltage";
+                break;
+        }
+        return $return;
+    }
+
     public static function outputCsv($fileName, $assocDataArray) {
         $zipFile = '/tmp/' . $fileName . '.zip';
         $zip = new ZipArchive;
@@ -62,17 +97,32 @@ class GlobalHelper {
             ob_start();
             $arr = [];
 
+            $timeKey = null;
             foreach($station->columns as $columnKey => $column) {
-                $type[$columnKey] = "Epoch"; //some convert function
+                if ($column == "time") {
+                    $timeKey = $columnKey;
+                }
+                $types[$columnKey] = GlobalHelper::meaningOf($column);
             }
 
             /* Header */
             fputcsv($fp, $station->columns);
 
             /* Second header */
-            /* fputcsv($fp, $type); */
+            fputcsv($fp, $types);
 
+            /* Content */
             foreach($station->values as $values) {
+                if ($timeKey !== null) {
+                    if (isset($values[$timeKey])) {
+                        $miliseconds = $values[$timeKey];
+                        $seconds = $miliseconds / 1000;
+
+                        $now = DateTime::createFromFormat('U', $seconds);
+                        $values[$timeKey] = $now->format("d-m-Y H:i:s");
+                    }
+                }
+
                 fputcsv($fp, $values);
             }
 
