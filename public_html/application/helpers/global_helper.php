@@ -47,60 +47,41 @@ class GlobalHelper {
     }
 
     public static function outputCsv($fileName, $assocDataArray) {
-		GlobalHelper::debug($assocDataArray);
-		die;
-
-		foreach($assocDataArray as $object) {
-			foreach($object->columns as $key => $column) {
-				switch($column) {
-					case "Temperature":
-						$arr[$key] = "Temperature";
-					break;
-				}
-			}
-		}
-
-
-
-
-        $keys = [
-            "Epoch",
-            "mm",
-            "*3.6/300 = m/s",
-            "*3.6/100 = m/s",
-            "degrees",
-            "degrees",
-            "celcius",
-            "%",
-            "hectopascal"
-        ];
-
         $zipFile = '/tmp/' . $fileName . '.zip';
         $zip = new ZipArchive;
         if ($zip->open($zipFile, ZipArchive::CREATE) !== true) {
             throw new Exception("Cannot open zip archive");
         }
 
-        if (count($assocDataArray)) {
-            foreach($assocDataArray as $key => $station) {
-                $fp = fopen('php://output', 'w');
-                if ($fp === false) {
-                    throw new Exception("unable to open php's output buffer");
-                }
-
-                ob_start();
-                fputcsv($fp, $station->columns);
-                fputcsv($fp, $keys);
-                foreach($station->values as $values) {
-                    fputcsv($fp, $values);
-                }
-                $string = ob_get_contents();
-                $zip->addFromString($station->name . ".csv", $string);
-                ob_clean();
-                fclose($fp);
+        foreach($assocDataArray as $station) {
+            $fp = fopen('php://output', 'w');
+            if ($fp === false) {
+                throw new Exception("unable to open php's output buffer");
             }
-            $zip->close();
+
+            ob_start();
+            $arr = [];
+
+            foreach($station->columns as $columnKey => $column) {
+                $type[$columnKey] = "Epoch"; //some convert function
+            }
+
+            /* Header */
+            fputcsv($fp, $station->columns);
+
+            /* Second header */
+            /* fputcsv($fp, $type); */
+
+            foreach($station->values as $values) {
+                fputcsv($fp, $values);
+            }
+
+            $string = ob_get_contents();
+            $zip->addFromString($station->name . ".csv", $string);
+            ob_clean();
+            fclose($fp);
         }
+        $zip->close();
 
         header('Pragma: public');
         header('Expires: 0');
