@@ -47,6 +47,22 @@ class GlobalHelper {
     }
 
     public static function outputCsv($fileName, $assocDataArray) {
+		GlobalHelper::debug($assocDataArray);
+		die;
+
+		foreach($assocDataArray as $object) {
+			foreach($object->columns as $key => $column) {
+				switch($column) {
+					case "Temperature":
+						$arr[$key] = "Temperature";
+					break;
+				}
+			}
+		}
+
+
+
+
         $keys = [
             "Epoch",
             "mm",

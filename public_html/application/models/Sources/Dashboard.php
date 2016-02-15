@@ -49,12 +49,30 @@ class Dashboard extends Source {
         } else {
             foreach($stations as $station) {
                 $columns = (new StationColumns())->findByStationId($station->id);
-                foreach($columns as $stationColumn) {
-                    $build = $this->_build($query, $station, $column);
-                    if ($build !== null) {
-                        $result[] = $build;
-                    }
-                }
+
+        		#temp hack to add a where clause
+        		if (strpos($station->name, ";") !== false) {
+        		    $query["where"] = $this->andWhere($query["where"], $station);
+					if ($station->station_id == "Foreca") {
+        		    	$query["group"] = $this->getGroup("1h");
+					}
+        		}
+
+        		$query["from"]   = $this->getFrom($station->station_id);
+				$query["select"] = "SELECT ";
+				foreach($columns as $column) {
+					$query["select"] = $this->addSelect($query["select"], $column);
+				}
+
+				$query["select"] = rtrim($query["select"], ",");
+				if (!empty($query["select"])) {
+            		$q = $query["select"] . " " . $query["from"] . " " . $query["where"] . " " . $query["group"];
+					log_message('error', $q);
+					$values = $this->_parse($q);
+					if (count($values) > 0) {
+                		$result[] = $values;
+					}
+				}
             }
         }
         return $result;
@@ -87,6 +105,17 @@ class Dashboard extends Source {
 
         $translate = GlobalHelper::allWeatherTypes();
         return "SELECT " . $prefix . $column->getValue() . ") as " . $translate[$column->getKey()];
+    }
+
+    public function addSelect($select, $column) {
+        $prefix = "mean(";
+        if ($column->getKey() == "rain") {
+            $prefix = "sum(";
+        }
+
+		$translate = GlobalHelper::allWeatherTypes();
+		$select .= " " . $prefix . $column->getValue() . ") as " . $translate[$column->getKey()] . ",";
+		return $select;
     }
 
     public function getFrom($stationId) {
