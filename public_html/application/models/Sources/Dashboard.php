@@ -72,7 +72,7 @@ class Dashboard extends Source {
         if (!empty($query["select"]) && !empty($query["from"])) {
             $q = $query["select"] . " " . $query["from"] . " " . $query["where"] . " " . $query["group"];
             $values = $this->_parse($q);
-            if (!empty($values)) {
+            if (count($values) >= 1) {
                 return $values;
             }
         }
@@ -100,9 +100,18 @@ class Dashboard extends Source {
     }
 
     public function getGroup($interval) {
-        return "GROUP BY time(" . $interval . ");";
+        return "GROUP BY time(" . $interval . ")";
     }
 
+    /**
+     * @access  public
+     * @param   string $where
+     * @param   Stations
+     * @return  string
+     *
+     * @example data;deviceId=abc
+     * @example foreca;id=abc;column=value
+     */
     public function andWhere($where, $station) {
         $extra = explode(";", $station->name);
         foreach($extra as $k => $keyval) {
@@ -111,7 +120,10 @@ class Dashboard extends Source {
             $res = explode("=", $keyval);
             $where .= " AND " . $res[0] . " = '" . $res[1] . "'";
         }
-        $where .= " AND time > now()";
+
+        if ($extra[0] == "forecast") {
+            $where .= " AND time > now()";
+        }
         return $where;
     }
 
