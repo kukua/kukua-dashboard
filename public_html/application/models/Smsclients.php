@@ -220,8 +220,6 @@ class Smsclient extends CI_Model {
     }
 
     /**
-     * Saves current object state
-     *
      * @access public
      * @return boolean | Smsclient
      */
@@ -244,8 +242,6 @@ class Smsclient extends CI_Model {
     }
 
     /**
-     * Convert object to array
-     *
      * @access public
      * @return Array
      */
@@ -260,8 +256,6 @@ class Smsclient extends CI_Model {
     }
 
     /**
-     * Validate object
-     *
      * @access protected
      * @return boolean
      */

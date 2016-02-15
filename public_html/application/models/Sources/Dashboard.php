@@ -14,11 +14,6 @@ class Dashboard extends Source {
     protected $_group;
     protected $_order;
 
-    protected $_query;
-
-    /**
-     *
-     */
     public function __construct() {
         parent::__construct();
 
@@ -29,76 +24,100 @@ class Dashboard extends Source {
         $this->_suffix = "/query";
     }
 
-    /**
-     *
-     */
-    public function getColumnName($type) {
-        switch($type) {
-            case 'rain':
-                return "rainTicks";
-                break;
-            case 'wind':
-                return "windTicks";
-                break;
-            default:
-                return $type;
-                break;
-        }
-    }
-
-    /**
-     *
-     */
-    public function getNiceName($type) {
-        switch($type) {
-            default:
-            case 'temp':
-                return "Temperature";
-                break;
-            case 'rain':
-                return "Rainfall";
-                break;
-            case 'hum':
-                return "Humidity";
-                break;
-            case 'presBMP':
-                return "Pressure";
-                break;
-            case 'wind':
-                return "Wind";
-                break;
-        }
-    }
-
-    /**
-     *
-     */
     public function get($source) {
-        if ($source->getWeatherType() == "all") {
-            $this->setSelect($this->selectAll());
-        } else {
-            $weatherType = $source->getWeatherType();
-            $select["mean(" . $this->getColumnName($weatherType)  . ")"] = $this->getNiceName($weatherType);
-            $this->setSelect($select);
-        }
-        $this->setFrom($source->getCountry());
-
+        $stations = (new Stations())->findByCountryId($source->getCountry());
         $dates["dateFrom"] = $source->getDateFrom();
         $dates["dateTo"]   = $source->getDateTo();
-        $this->setWhere($dates);
-        $this->setGroup($source->getInterval());
 
-        $this->_query = $this->getSelect() . $this->getFrom() . $this->getWhere() . $this->getGroup() . $this->getOrder();
-        return $this->_parse();
+        $query = [];
+        $query["where"] = $this->getWhere($dates);
+        $query["group"] = $this->getGroup($source->getInterval());
+
+        $result = [];
+
+        if (strtolower($source->getWeatherType()) != "all") {
+            foreach($stations as $key => $station) {
+                $column = (new StationColumns())->find($station->id, $source->getWeatherType());
+
+                if ($column !== false) {
+                    $build = $this->_build($query, $station, $column);
+                    if ($build !== null) {
+                        $result[] = $build;
+                    }
+                }
+            }
+        } else {
+            foreach($stations as $station) {
+                $columns = (new StationColumns())->findByStationId($station->id);
+                foreach($columns as $stationColumn) {
+                    $build = $this->_build($query, $station, $column);
+                    if ($build !== null) {
+                        $result[] = $build;
+                    }
+                }
+            }
+        }
+        return $result;
     }
 
-    /**
-     * @access protected
-     * @return Array
-     */
-    protected function _parse() {
+    protected function _build($query, $station, $column) {
+        #temp hack to add a where clause
+        if (strpos($station->name, ";") !== false) {
+            $query["where"] = $this->andWhere($query["where"], $station);
+            $query["group"] = $this->getGroup("1h");
+        }
+
+        $query["select"] = $this->getSelect($column);
+        $query["from"]   = $this->getFrom($station->station_id);
+        if (!empty($query["select"]) && !empty($query["from"])) {
+            $q = $query["select"] . " " . $query["from"] . " " . $query["where"] . " " . $query["group"];
+            $values = $this->_parse($q);
+            if (!empty($values)) {
+                return $values;
+            }
+        }
+    }
+
+    public function getSelect($column) {
+        $prefix = "mean(";
+        if ($column->getKey() == "rain") {
+            $prefix = "sum(";
+        }
+
+        $translate = GlobalHelper::allWeatherTypes();
+        return "SELECT " . $prefix . $column->getValue() . ") as " . $translate[$column->getKey()];
+    }
+
+    public function getFrom($stationId) {
+        return " FROM " . $stationId;
+    }
+
+    public function getWhere($where) {
+        if (isset($where["dateFrom"]) && isset($where["dateTo"])) {
+            $query = "time > " . $where["dateFrom"] . "s AND time < " . $where["dateTo"] . "s";
+        }
+        return "WHERE " . $query;
+    }
+
+    public function getGroup($interval) {
+        return "GROUP BY time(" . $interval . ");";
+    }
+
+    public function andWhere($where, $station) {
+        $extra = explode(";", $station->name);
+        foreach($extra as $k => $keyval) {
+            if ($k == 0) continue;
+
+            $res = explode("=", $keyval);
+            $where .= " AND " . $res[0] . " = '" . $res[1] . "'";
+        }
+        $where .= " AND time > now()";
+        return $where;
+    }
+
+    protected function _parse($q) {
         $opts = [
-            "q" => $this->_query,
+            "q" => $q,
             "db" => $this->_db,
         ];
         $request = $this->_curl($opts, true);
@@ -106,17 +125,12 @@ class Dashboard extends Source {
             $responses = $request->results;
             if (isset($responses[0]->series) !== false) {
                 $response = $this->_manipulate($responses[0]->series);
-                return $response;
+                return $response[0];
             }
         }
         return [];
     }
 
-    /**
-     * @access protected
-     * @param  mixed $class
-     * @return Array $result
-     */
     protected function _curl($opts = [], $headers = False) {
         $curl = new \Curl\Curl();
         if ($headers !== false) {
@@ -128,142 +142,6 @@ class Dashboard extends Source {
         return $result;
     }
 
-    public function selectAll() {
-        return [
-            "sum(rainTicks)" => "RainTicks",
-            "mean(windTicks)" => "WindTicks",
-            "mean(windGustTicks)" => "WindGustTicks",
-            "mean(windDir)" => "WindDir",
-            "mean(windGustDir)" => "WindGustDir",
-            "mean(temp)" => "Temperature",
-            "mean(hum)" => "Humidity",
-            "mean(presBMP)" => "PresBMP"
-        ];
-    }
-
-    /**
-     * Set select clause
-     *
-     * @access public
-     * @param  Array $select
-     * @return void
-     */
-    public function setSelect($select = []) {
-        $query = "SELECT ";
-        foreach($select as $column => $name) {
-            $query .= " " . $column . " as " . $name . ",";
-        }
-        $query = rtrim($query, ",");
-        $this->_select = $query;
-    }
-
-    /**
-     * @access public
-     * @return string
-     */
-    public function getSelect() {
-        return $this->_select;
-    }
-
-    /**
-     * Set from clause
-     *
-     * @access public
-     * @param  String $from
-     * @return void
-     */
-    public function setFrom($country) {
-        $stations = new Stations();
-        $result = $stations->findByCountryId($country);
-
-        $query = "";
-        if (!empty($result)) {
-            foreach($result as $station) {
-                $query .= $station->station_id . ",";
-            }
-            $query = rtrim($query, ",");
-        }
-        $this->_from = " FROM " . $query;
-    }
-
-    /**
-     * @access public
-     * @return string
-     */
-    public function getFrom() {
-        return $this->_from;
-    }
-
-    /**
-     * Set where clause
-     *
-     * @access public
-     * @param  Array $where
-     * @return void
-     */
-    public function setWhere($where) {
-        if (isset($where["dateFrom"]) && isset($where["dateTo"])) {
-            $query = "time > " . $where["dateFrom"] . "s AND time < " . $where["dateTo"] . "s";
-        }
-        $this->_where = " WHERE " . $query;
-    }
-
-    /**
-     * @access public
-     * @return string
-     */
-    public function getWhere() {
-        return $this->_where;
-    }
-
-    /**
-     * Set group clause
-     *
-     * @access public
-     * @param  String
-     * @return void
-     */
-    public function setGroup($group = "1h") {
-        $query = "time(1h)";
-        if (!is_null($group)) {
-            $query = "time(" . $group . ")";
-            $this->_group = " GROUP BY " . $query;
-        }
-    }
-
-    /**
-     * @access public
-     * @return string
-     */
-    public function getGroup() {
-        return $this->_group;
-    }
-
-    /**
-     * Set order clause
-     *
-     * @access public
-     * @param  String
-     * @return void
-     */
-    public function setOrder($order) {
-        $this->_order = " ORDER BY time ASC";
-    }
-
-    /**
-     * @access public
-     * @return string
-     */
-    public function getOrder() {
-        return $this->_order;
-    }
-
-    /**
-     * Manipulate forecast time display for highcharts
-     *
-     * @access protected
-     * @return Array
-     */
     protected function _manipulate($data) {
         if (count($data)) {
             foreach($data as $station => $values) {
@@ -271,7 +149,12 @@ class Dashboard extends Source {
 
                     //Set correct name
                     $niceName = (new Stations())->findByStationId($values->name)->name;
-                    $values->name = ucfirst($niceName);
+                    if (strpos($niceName, ";") !== false) {
+                        $extra = explode(";", $niceName);
+                        $values->name = ucfirst($extra[0]);
+                    } else {
+                        $values->name = ucfirst($niceName);
+                    }
 
                     //Set correct date
                     foreach($values->values as $key => $points) {

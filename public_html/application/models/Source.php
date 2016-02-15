@@ -33,39 +33,32 @@ class Source extends CI_Model {
      */
     public function gather() {
         $result = [];
-
-        if ($this->getCountry() == "7") {
-            require_once(APPPATH . "models/Sources/Sodaq.php");
-            $sodaq = new Sodaq();
-            $sodaResult = $sodaq->get($this);
-
-            if (isset($sodaResult[0])) {
-                foreach($sodaResult as $sodaque) {
-                    $result[] = $sodaque;
-                }
+        require_once(APPPATH . "models/Sources/Dashboard.php");
+        $dashboard = new Dashboard();
+        $dashResult = $dashboard->get($this);
+        if (isset($dashResult[0])) {
+            foreach($dashResult as $dash) {
+                $result[] = $dash;
             }
-            return $result;
-
-        } else {
-            require_once(APPPATH . "models/Sources/Dashboard.php");
-            $dashboard = new Dashboard();
-            $dashResult = $dashboard->get($this);
-            if (isset($dashResult[0])) {
-                foreach($dashResult as $dash) {
-                    $result[] = $dash;
-                }
-            }
-
-            require_once(APPPATH . "models/Sources/Foreca.php");
-            $foreca = new Foreca();
-            $forecaResult = $foreca->get($this);
-            if (isset($forecaResult[0])) {
-                foreach($forecaResult as $for) {
-                    array_push($result, $for);
-                }
-            }
-            return $result;
         }
+        return $result;
+    }
+
+    /**
+     * @access public
+     * @return Array
+     */
+    public function gatherForecast() {
+        $result = [];
+        require_once(APPPATH . "models/Sources/Foreca.php");
+        $object = new Foreca();
+        $objResult = $object->get($this);
+        if (isset($objResult[0])) {
+            foreach($objResult as $dash) {
+                $result[] = $dash;
+            }
+        }
+        return $result;
     }
 
     /**

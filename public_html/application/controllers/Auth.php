@@ -22,7 +22,7 @@ class Auth extends MyController {
     public function login() {
         if ($this->input->post()) {
             if ($this->_authenticate() === True) {
-                redirect("index", "refresh");
+                redirect("graph", "refresh");
             }
         }
 

@@ -26,11 +26,9 @@
                 <div class="col-sm-4">
                     <label>Select graph</label>
                     <select id="js-graph-type-swap" class="form-control" name="panelId">
-                        <option value="temp">Temperature</option>
-                        <option value="rain">Rainfall</option>
-                        <option value="hum">Humidity</option>
-                        <option value="presBMP">PresBMP</option>
-                        <option value="wind">Wind</option>
+                        {foreach GlobalHelper::graphWeathertypes() as $key => $value}
+                            <option value="{$key}">{$value}</option>
+                        {/foreach}
                     </select>
                 </div>
                 <div class="col-sm-4">

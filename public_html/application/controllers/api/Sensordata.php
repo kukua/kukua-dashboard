@@ -26,6 +26,16 @@ class Sensordata extends MyController {
         }
     }
 
+    public function forecast() {
+        if ($this->_validateRequest() !== False) {
+            $this->_populate($this->input->post());
+
+            $source = new Source($this->_request);
+            echo json_encode($source->gatherForecast());
+            exit;
+        }
+    }
+
     /**
      * @access private
      * @param  Array $data

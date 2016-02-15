@@ -23,7 +23,7 @@ class Sms extends MyController {
         if (isset($data["Body"])) {
             $wap = file_get_contents("http://wap.weather.fi/peek?param1=" . $data["Body"] . "&lang=en&format=text1");
         } else {
-            $wap = "Please reply only a name i.e. 'Hilversum'";
+            $wap = "Please reply only a name i.e. 'Amsterdam'";
         }
         $content = $wap;
         echo '<?xml version="1.0" encoding="UTF-8" ?>

@@ -132,8 +132,8 @@
 
                         //Rebind
                         kukua.datePickerChange()
-                        kukua.datePickerCallback(moment(extremes.userMin), moment(extremes.max));
-
+                        kukua.datePickerCallback(moment(extremes.min), moment(extremes.max));
+                        console.log(extremes);
                     }
                 },
                 alternateGridColor: "#f7f7f7"

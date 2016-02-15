@@ -133,4 +133,43 @@ class Locations extends MyController {
             redirect("/locations");
         }
     }
+
+    public function edit_station($id) {
+        $station = (new Stations())->findById($id);
+        $columns = (new StationColumns())->findByStationId($id);
+
+        $this->data["weatherTypes"] = GlobalHelper::allWeathertypes();
+        $this->data["station"] = $station;
+        $this->data["columns"] = $columns;
+        $this->load->view("locations/edit_station", $this->data);
+    }
+
+    /**
+     * Add key / value to station column
+     * 
+     * @access public
+     * @return void
+     */
+    public function add_station_column($id) {
+        if ($this->input->post()) {
+            $column = new StationColumns();
+            $column->populate($this->input->post());
+            $column->setStationId($id);
+            $column->save();
+        }
+        redirect("/locations/edit_station/" . $id);
+    }
+
+    /**
+     * @access public
+     * @return void
+     */
+    public function delete_station_column($id, $stationId) {
+        if ((new StationColumns())->delete($id)) {
+            Notification::set(Locations::SUCCESS, "Column deleted");
+        } else {
+            Notification::set(Locations::DANGER, "Something went wrong");
+        }
+        redirect("/locations/edit_station/" . $stationId);
+    }
 }

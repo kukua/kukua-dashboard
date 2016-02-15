@@ -22,11 +22,11 @@
 
     kukua.getDatePickerRanges = function() {
         return {
-           'Today': [moment(), moment()],
-           'Tomorrow': [moment().add(1, 'days'), moment().add(1, 'days')],
-           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-           'Last 30 Days': [moment().subtract(30, 'days'), moment()]
+           'Today': [moment().startOf('day'), moment().endOf('day')],
+           'Tomorrow': [moment().add(1, 'days').startOf('day'), moment().add(1, 'days').endOf('day')],
+           'Yesterday': [moment().subtract(1, 'day').startOf('day'), moment().subtract(1, 'day').endOf('day')],
+           'Last 7 Days': [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+           'Last 30 Days': [moment().subtract(30, 'days').startOf('day'), moment().endOf('day')]
         }
     };
 
@@ -83,7 +83,7 @@
                 options.tooltip.valueSuffix = '°C'
                 break
         }
-        chart.temp("#chart-forecast", "/api/sensordata/get", options)
+        chart.temp("#chart-forecast", "/api/sensordata/forecast", options)
     };
 
     kukua.graph = function() {

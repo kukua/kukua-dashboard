@@ -2,8 +2,6 @@
 
 class GlobalHelper {
 
-    public static $validUsers = ["kukuang", "kukuatz"];
-
     public static function getDefaultDate($intval, $midnight = false) {
         $today = new DateTime();
         $today->sub(new DateInterval($intval));
@@ -13,9 +11,26 @@ class GlobalHelper {
         return $today->format("Y/m/d 23:59:59");
     }
 
-    /**
-     *
-     */
+    public static function graphWeatherTypes() {
+        return [
+            "temp" => "Temperature",
+            "rain" => "Rainfall",
+            "hum"  => "Humidity",
+            "pres" => "Pressure",
+            "wind" => "Wind"
+        ];
+    }
+
+    public static function allWeatherTypes() {
+        $types = GlobalHelper::graphWeatherTypes();
+        $types["winddir"] = "WindDirection";
+        $types["windgust"] = "WindGusts";
+        $types["windgustdir"] = "WindGustDirection";
+        $types["bat"] = "Battery";
+
+        return $types;
+    }
+
     public static function getForecastMap($country) {
         switch($country) {
             case 'Nigeria':

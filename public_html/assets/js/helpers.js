@@ -158,6 +158,7 @@
                                 "<td class='text-right'>" +
                                     enable_or_disable +
                                     "<span data-station_id='" + value.id + "' class='js-remove-station text-danger pointer'><i class='glyphicon glyphicon-remove'></i></span> " +
+                                    "<a href='/locations/edit_station/" + value.id + "/' class='text-success'><i class='glyphicon glyphicon-pencil'></i></a> " +
                                 "</td>" +
                             "</tr>"
                         )

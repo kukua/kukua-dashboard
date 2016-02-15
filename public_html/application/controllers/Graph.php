@@ -54,6 +54,7 @@ class Graph extends MyController {
         $data["type"] = "all";
         $data["dateFrom"] = $this->input->post("from");
         $data["dateTo"] = $this->input->post("to");
+        $data["interval"] = $this->input->post("interval");
         $result = json_decode($this->_call($data));
 
         GlobalHelper::outputCsv("export-stations", $result);
