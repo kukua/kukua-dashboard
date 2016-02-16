@@ -31,7 +31,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="/" title="Go to the home screen">
-                    Kukua Weather Service
+					<img src="/assets/img/kukua-logo-white.png" alt="Kukua logo" style="margin-top:4px;">
                 </a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">

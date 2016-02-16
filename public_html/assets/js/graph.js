@@ -78,8 +78,8 @@
                 options.title.text = "Temperature"
                 options.chart.type = "arearange"
                 options.yAxis.title.text = "Temperature (°C)"
-                options.yAxis.min = 0
-                options.yAxis.max = 50
+                options.yAxis.min = null 
+                options.yAxis.max = null
                 options.tooltip.valueSuffix = '°C'
                 break
         }
@@ -100,8 +100,8 @@
             case 'temp':
                 options.chart.type = "line"
                 options.yAxis.title.text = graphTypeText + " (°C)"
-                options.yAxis.min = 0
-                options.yAxis.max = 50
+                options.yAxis.min = null
+                options.yAxis.max = null
                 options.tooltip.valueSuffix = '°C'
                 break
             case 'rain':

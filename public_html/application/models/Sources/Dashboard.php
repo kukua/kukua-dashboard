@@ -82,8 +82,11 @@ class Dashboard extends Source {
         #temp hack to add a where clause
         if (strpos($station->name, ";") !== false) {
             $query["where"] = $this->andWhere($query["where"], $station);
+		}
+
+		if ($station->station_id == "Foreca") {
             $query["group"] = $this->getGroup("1h");
-        }
+		}
 
         $query["select"] = $this->getSelect($column);
         $query["from"]   = $this->getFrom($station->station_id);
