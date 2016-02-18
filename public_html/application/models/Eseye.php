@@ -79,8 +79,9 @@ class Eseye extends CI_Model {
 
             $difference = 96;
             if (!empty($sim->LastRadiusStop)) {
+		$now = new DateTime();
                 $date = DateTime::createFromFormat("Y-m-d H:i:s", $sim->LastRadiusStop);
-                $difference = ($date->getTimestamp() / 3600);
+		$difference = abs($now->getTimestamp() - $date->getTimestamp()) / 60 / 60;
             }
 
             $status = "red"; 
