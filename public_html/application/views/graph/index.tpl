@@ -80,12 +80,12 @@
 
         <div class="row">
             <div class="col-xs-12">
-                <h3>Ten days forecast</h3>
+                <h3 class="js-chart-forecast-title">Ten days forecast</h3>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <div id="chart-forecast" style="width:100%; height:500px;"></div>
+                <div id="chart-forecast"></div>
             </div>
         </div>
     </div>

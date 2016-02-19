@@ -45,6 +45,15 @@
         var graphTypeText   = kukua.getGraphTypeText()
         var graphInterval   = kukua.getGraphInterval()
 
+		/* Don't execute when other than tanzania */
+		if (graphCountry.val() != "1") {
+			$("#chart-forecast").html("")
+			$(".js-chart-forecast-title").html("")
+			return;
+		} else {
+			$(".js-chart-forecast-title").html("Ten day forecast")
+		}
+
         var options = chart.getTempOptions()
         options.chart.zoomType = 'x'
 
@@ -139,6 +148,7 @@
         })
         kukua.getGraphCountry().on("change", function() {
             kukua.graph()
+            kukua.forecast()
         })
     };
 

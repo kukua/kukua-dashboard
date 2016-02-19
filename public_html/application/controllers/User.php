@@ -180,7 +180,7 @@ class User extends MyController {
                 redirect("user/invite", "refresh");
             }
 
-            //Save selected countries
+			/* Save selected countries */
             $userCountries = new UserCountries();
             $postCountries = $this->input->post("country");
             $userCountries->save($user["id"], $postCountries);

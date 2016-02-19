@@ -141,9 +141,6 @@ class Email {
             "subject" => $this->_subject,
             "html"    => $this->_content
         ];
-        if (ENVIRONMENT === "production") {
-            $data["bcc"] = "1870363@bcc.hubspot.com";
-        }
         $result = $client->sendMessage($this->domain, $data);
     }
 }
