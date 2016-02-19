@@ -26,7 +26,7 @@ class Cronjobs extends CI_Controller {
 
         $smsClients = new SmsClient();
         $clients = $smsClients->load();
-        $number = "+447400200078";
+        $number = TWILIO_NUMBER;
 
         foreach($clients as $client) {
             $content = file_get_contents("http://wap.weather.fi/peek?param1=" . $client->getLocation() . "&lang=en&format=text1");
