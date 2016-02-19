@@ -5,7 +5,9 @@ class Cronjobs extends CI_Controller {
     public function __construct() {
         parent::__construct();
 
+		log_message("error", "Starting SMS service");
         if (!$this->input->is_cli_request()) {
+			log_message("error", "SMS service didn't get a CLI request");
             throw new Exception("Only accessable through CLI");
         }
     }
@@ -16,7 +18,8 @@ class Cronjobs extends CI_Controller {
      * @access public
      * @return void
      */
-    public function smsForecast() {
+    public function smsForecast() { 
+		log_message("error", "Gathering...");
         $sId     = TWILIO_SID;
         $token   = TWILIO_TOKEN;
         $twilio  = new Services_Twilio($sId, $token);
@@ -31,7 +34,11 @@ class Cronjobs extends CI_Controller {
                 $number,
                 $client->getNumber(),
                 $content
-            );
-        }
+			);
+			log_message("error", "SMS send to " . $client->getNumber());
+		}
+
+		log_message("error", "I should be done.");
+		exit;
     }
 }
