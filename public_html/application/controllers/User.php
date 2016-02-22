@@ -168,6 +168,11 @@ class User extends MyController {
                 "last_name"  => $this->input->post("last_name")
             ];
 
+			if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+				Notification::set(User::WARNING, "This is not a valid e-mail address");
+				redirect("user/invite", "refresh");
+			}
+
             // Check if e-mail already exists
             if ($this->ion_auth->email_check($email) === true) {
                 Notification::set(User::WARNING, "This e-mail address is already registered");
