@@ -19,12 +19,12 @@ class Cronjobs extends CI_Controller {
      * @return void
      */
     public function smsForecast() { 
-		log_message("error", "Gathering...");
+		log_message("error", "Gathering users...");
         $sId     = TWILIO_SID;
         $token   = TWILIO_TOKEN;
         $twilio  = new Services_Twilio($sId, $token);
 
-        $smsClients = new SmsClient();
+        $smsClients = new Smsclient();
         $clients = $smsClients->load();
         $number = TWILIO_NUMBER;
 
