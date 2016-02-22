@@ -1,5 +1,11 @@
 <?php defined("BASEPATH") OR exit("No direct script access allowed");
 
+/**
+ * @package Models
+ * @since	22-02-2016
+ * @version 1.0
+ * @author	Siebren Kranenburg <siebren@kukua.cc>
+ */
 class Smsclient extends CI_Model {
 
     const TABLE = "smsclients";

@@ -1,5 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * @package Models
+ * @subpackage Sources
+ * @since	22-02-2016
+ * @version 1.0
+ * @author	Siebren Kranenburg <siebren@kukua.cc>
+ */
 class Dashboard extends Source {
 
     private $_token;
@@ -14,6 +21,12 @@ class Dashboard extends Source {
     protected $_group;
     protected $_order;
 
+	/**
+	 * Constructor
+	 *
+	 * @access public
+	 * @return void
+	 */
     public function __construct() {
         parent::__construct();
 
@@ -24,6 +37,11 @@ class Dashboard extends Source {
         $this->_suffix = "/query";
     }
 
+	/**
+	 * @access public
+	 * @param  Source
+	 * @return Array
+	 */
     public function get($source) {
         $stations = (new Stations())->findByCountryId($source->getCountry());
         $dates["dateFrom"] = $source->getDateFrom();
@@ -37,7 +55,7 @@ class Dashboard extends Source {
 
         if (strtolower($source->getWeatherType()) != "all") {
             foreach($stations as $key => $station) {
-                $column = (new StationColumns())->find($station->id, $source->getWeatherType());
+                $column = (new StationColumns())->find($station->getId(), $source->getWeatherType());
 
                 if ($column !== false) {
                     $build = $this->_build($query, $station, $column);
@@ -48,17 +66,17 @@ class Dashboard extends Source {
             }
         } else {
             foreach($stations as $station) {
-                $columns = (new StationColumns())->findByStationId($station->id);
+                $columns = (new StationColumns())->findByStationId($station->getId());
 
         		#temp hack to add a where clause
-        		if (strpos($station->name, ";") !== false) {
+        		if (strpos($station->getName(), ";") !== false) {
         		    $query["where"] = $this->andWhere($query["where"], $station);
-					if ($station->station_id == "Foreca") {
+					if ($station->getStationId() == "Foreca") {
         		    	$query["group"] = $this->getGroup("1h");
 					}
         		}
 
-        		$query["from"]   = $this->getFrom($station->station_id);
+        		$query["from"]   = $this->getFrom($station->getStationId());
 				$query["select"] = "SELECT ";
 				foreach($columns as $column) {
 					$query["select"] = $this->addSelect($query["select"], $column);
@@ -78,18 +96,28 @@ class Dashboard extends Source {
         return $result;
     }
 
+	/**
+	 * Building the query
+	 *
+	 * @access protected
+	 * @param  string $query
+	 * @param  Station $station
+	 * @param  string $column
+	 * @return string json
+	 */
     protected function _build($query, $station, $column) {
-        #temp hack to add a where clause
-        if (strpos($station->name, ";") !== false) {
+		/* temp hack to add a where clause */
+        if (strpos($station->getName(), ";") !== false) {
             $query["where"] = $this->andWhere($query["where"], $station);
 		}
 
-		if ($station->station_id == "Foreca") {
+		/* temp hack to check if forecast (only 1h grouping available) */
+		if ($station->getStationId() == "Foreca") {
             $query["group"] = $this->getGroup("1h");
 		}
 
         $query["select"] = $this->getSelect($column);
-        $query["from"]   = $this->getFrom($station->station_id);
+        $query["from"]   = $this->getFrom($station->getStationId());
         if (!empty($query["select"]) && !empty($query["from"])) {
             $q = $query["select"] . " " . $query["from"] . " " . $query["where"] . " " . $query["group"];
             log_message('error', $q);
@@ -100,6 +128,13 @@ class Dashboard extends Source {
         }
     }
 
+	/**
+	 * Get select (query)
+	 *
+	 * @access public
+	 * @param  string $column
+	 * @return string
+	 */
     public function getSelect($column) {
         $prefix = "mean(";
         if ($column->getKey() == "rain") {
@@ -110,6 +145,14 @@ class Dashboard extends Source {
         return "SELECT " . $prefix . $column->getValue() . ") as " . $translate[$column->getKey()];
     }
 
+	/**
+	 * Add to select (query)
+	 *
+	 * @access public
+	 * @param  string $select
+	 * @param  string $column
+	 * @return string
+	 */
     public function addSelect($select, $column) {
         $prefix = "mean(";
         if ($column->getKey() == "rain") {
@@ -121,10 +164,22 @@ class Dashboard extends Source {
 		return $select;
     }
 
+	/**
+	 * Get from clause (query)
+	 *
+	 * @access public
+	 * @return string
+	 */
     public function getFrom($stationId) {
         return " FROM " . $stationId;
     }
 
+	/**
+	 * Get where clause (query)
+	 *
+	 * @access public
+	 * @return string
+	 */
     public function getWhere($where) {
         if (isset($where["dateFrom"]) && isset($where["dateTo"])) {
             $query = "time > " . $where["dateFrom"] . "s AND time < " . $where["dateTo"] . "s";
@@ -132,6 +187,12 @@ class Dashboard extends Source {
         return "WHERE " . $query;
     }
 
+	/**
+	 * Get group clause (query)
+	 *
+	 * @access public
+	 * @return string
+	 */
     public function getGroup($interval) {
         return "GROUP BY time(" . $interval . ")";
     }
@@ -146,7 +207,7 @@ class Dashboard extends Source {
      * @example foreca;id=abc;column=value
      */
     public function andWhere($where, $station) {
-        $extra = explode(";", $station->name);
+        $extra = explode(";", $station->getName());
         foreach($extra as $k => $keyval) {
             if ($k == 0) continue;
 
@@ -160,6 +221,13 @@ class Dashboard extends Source {
         return $where;
     }
 
+	/**
+	 * Query the database and manipulate data
+	 *
+	 * @access protected
+	 * @param  string $q
+	 * @return Array
+	 */
     protected function _parse($q) {
         $opts = [
             "q" => $q,
@@ -176,6 +244,12 @@ class Dashboard extends Source {
         return [];
     }
 
+	/**
+	 * Curl request
+	 *
+	 * @access protected
+	 * @return Array
+	 */
     protected function _curl($opts = [], $headers = False) {
         $curl = new \Curl\Curl();
         if ($headers !== false) {
@@ -187,13 +261,20 @@ class Dashboard extends Source {
         return $result;
     }
 
+	/**
+	 * Manipulating data to get a format we can work with
+	 *
+	 * @access protected
+	 * @param  Array $data
+	 * @return Array
+	 */
     protected function _manipulate($data) {
         if (count($data)) {
             foreach($data as $station => $values) {
                 if (count($values->values)) {
 
-                    //Set correct name
-                    $niceName = (new Stations())->findByStationId($values->name)->name;
+					/* Set correct name */
+                    $niceName = (new Stations())->findByStationId($values->name)->getName();
                     if (strpos($niceName, ";") !== false) {
                         $extra = explode(";", $niceName);
                         $values->name = ucfirst($extra[0]);
@@ -201,13 +282,13 @@ class Dashboard extends Source {
                         $values->name = ucfirst($niceName);
                     }
 
-                    //Set correct date
+					/* Set correct date */
                     foreach($values->values as $key => $points) {
                         $points[0] = str_replace("Z", "", $points[0]);
                         $points[0] = str_replace("T", " ", $points[0]);
                         $new = DateTime::createFromFormat("Y-m-d H:i:s", $points[0]);
 
-                        //multiply by 1000 (milliseconds)
+						/* multiply by 1000 (milliseconds) */
                         $data[$station]->values[$key][0] = $new->getTimestamp() * 1000;
                     }
                 }

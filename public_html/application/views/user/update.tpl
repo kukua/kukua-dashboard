@@ -41,7 +41,7 @@
                                 {foreach $countries as $country}
                                     {$selected = ""}
                                     {foreach $userCountries as $userCountry}
-                                        {if $userCountry.uc->country_id == $country->getId()}
+                                        {if $userCountry.uc->getCountryId() == $country->getId()}
                                             {$selected = "selected='selected'"}
                                             {continue}
                                         {/if}

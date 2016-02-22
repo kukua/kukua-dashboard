@@ -1,5 +1,11 @@
 <?php defined("BASEPATH") OR exit("No direct script access allowed");
 
+/**
+ * @package Models
+ * @since	22-02-2016
+ * @version 1.0
+ * @author	Siebren Kranenburg <siebren@kukua.cc>
+ */
 use Curl\Curl;
 
 class Eseye extends CI_Model {
@@ -10,7 +16,8 @@ class Eseye extends CI_Model {
 	protected $_password;
 
 	/**
-	 *
+	 * @access public
+	 * @return void
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -26,7 +33,11 @@ class Eseye extends CI_Model {
 	}
 
 	/**
+	 * Get sim cards from Eseye API
 	 *
+	 * @access public
+	 * @throws Exception
+	 * @return Array
 	 */
 	public function getSims() {
 		$curl = new Curl();
@@ -65,6 +76,13 @@ class Eseye extends CI_Model {
 		}
 	}
 
+	/**
+	 * Get single SIM card details
+	 *
+	 * @access public
+	 * @throws Exception
+	 * @return StdClass
+	 */
 	public function getSim($sim, $cookieName, $cookieValue) {
 		$curl = new Curl();
 		$curl->setHeader("Content-type", "application/json");
@@ -105,9 +123,13 @@ class Eseye extends CI_Model {
 	}
 
 	/**
+	 * Login eseye, save token in session
 	 *
+	 * @access protected
+	 * @throws Exception
+	 * @return string
 	 */
-	public function _login_eseye() {
+	protected function _login_eseye() {
 		if (!$this->session->userdata("eseye/login")) {
 			$curl = new Curl;
 			$curl->setHeader("Content-type", "application/json");

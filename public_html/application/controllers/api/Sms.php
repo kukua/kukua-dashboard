@@ -2,8 +2,8 @@
 
 class Sms extends MyController {
 
-    public $sId;
-    public $token;
+    protected $_sId;
+    protected $_token;
 
     private $_number;
     private $_client;
@@ -11,11 +11,11 @@ class Sms extends MyController {
     public function __construct() {
         parent::__construct();
 
-        $this->sId     = TWILIO_SID;
-        $this->token   = TWILIO_TOKEN;
+        $this->_sId     = TWILIO_SID;
+        $this->_token   = TWILIO_TOKEN;
 
-        $this->_number = TWILIO_NUMBER;
-        $this->_client = new Services_Twilio($this->sId, $this->token);
+        $this->_number	= TWILIO_NUMBER;
+        $this->_client	= new Services_Twilio($this->_sId, $this->_token);
     }
 
     public function get() {

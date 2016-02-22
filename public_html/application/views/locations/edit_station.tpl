@@ -6,14 +6,14 @@
             <div class="col-sm-12">
                 <a href="/locations">go back</a> 
                 <h1>
-                    Station details {$station->name} <small>{$station->station_id}</small>
+                    Station details {$station->getName()} <small>{$station->getStationId()}</small>
                 </h1>
                 {include file="global/notification.tpl"}
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <form method="post" action="/locations/add_station_column/{$station->id}">
+                <form method="post" action="/locations/add_station_column/{$station->getId()}">
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
@@ -27,7 +27,7 @@
                                 <tr>
                                     <td>{$weatherTypes[$column->getKey()]}</td>
                                     <td>{$column->getValue()}</td>
-                                    <td><a href="/locations/delete_station_column/{$column->getId()}/{$station->id}" class="text-danger pull-right"><i class="glyphicon glyphicon-remove"></i></a></td>
+                                    <td><a href="/locations/delete_station_column/{$column->getId()}/{$station->getId()}" class="text-danger pull-right"><i class="glyphicon glyphicon-remove"></i></a></td>
                                 </tr>
                             {/foreach}
                             <tr>

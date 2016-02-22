@@ -1,5 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * @package Models
+ * @subpackage Sources
+ * @since	22-02-2016
+ * @version 1.0
+ * @author	Siebren Kranenburg <siebren@kukua.cc>
+ */
 class Foreca extends Source {
 
     private $_token;
@@ -17,7 +24,8 @@ class Foreca extends Source {
     protected $_query;
 
     /**
-     *
+	 * @access public
+	 * @return void
      */
     public function __construct() {
         parent::__construct();
@@ -29,9 +37,11 @@ class Foreca extends Source {
         $this->_suffix = "/query";
     }
 
-    /**
-     *
-     */
+	/**
+	 * @access public
+	 * @param  Source
+	 * @return Array
+	 */
     public function get($source) {
         if ($source->getWeatherType() == "all") {
             $dates["dateFrom"] = $source->getDateFrom();
@@ -71,10 +81,13 @@ class Foreca extends Source {
         return $this->_parse();
     }
 
-    /**
-     * @access protected
-     * @return Array
-     */
+	/**
+	 * Query the database and manipulate data
+	 *
+	 * @access protected
+	 * @param  string $q
+	 * @return Array
+	 */
     protected function _parse() {
         $opts = [
             "q" => $this->_query,
@@ -91,11 +104,14 @@ class Foreca extends Source {
         return [];
     }
 
-    /**
-     * @access protected
-     * @param  mixed $class
-     * @return Array $result
-     */
+	/**
+	 * Curl request
+	 *
+	 * @access protected
+	 * @param  array $opts
+	 * @param  boolean $headers
+	 * @return Array
+	 */
     protected function _curl($opts = [], $headers = False) {
         $curl = new \Curl\Curl();
         if ($headers !== false) {
@@ -107,6 +123,12 @@ class Foreca extends Source {
         return $result;
     }
 
+	/**
+	 * Select all (download)
+	 *
+	 * @access public
+	 * @return Array
+	 */
     public function selectAll() {
         return [
             "precip" => "RainTicks",
@@ -197,19 +219,20 @@ class Foreca extends Source {
         return $this->_where;
     }
 
-    /**
-     * Manipulate forecast time display for highcharts
-     *
-     * @access protected
-     * @return Array
-     */
+	/**
+	 * Manipulating data to get a format we can work with
+	 *
+	 * @access protected
+	 * @param  Array $data
+	 * @return Array
+	 */
     protected function _manipulate($data) {
         if (count($data)) {
             foreach($data as $station => $values) {
                 if (count($values->values)) {
 
                     //Set correct name
-                    $niceName = (new Stations())->findByStationId($values->name)->name;
+                    $niceName = (new Stations())->findByStationId($values->name)->getName();
                     if (empty($niceName)) {
                         $niceName = "forecast";
                     }

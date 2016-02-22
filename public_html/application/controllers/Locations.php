@@ -20,8 +20,12 @@ class Locations extends MyController {
      */
     public function get() {
         $countryId = $this->input->post("country");
-        $stations = (new Stations())->findByCountryId($countryId, true);
-        echo json_encode($stations);
+		$stations = (new Stations())->findByCountryId($countryId, true);
+		$result = [];
+		foreach($stations as $station) {
+			$result[] =$station->toArray();
+		}
+		echo json_encode($result);
         exit;
     }
 
@@ -30,8 +34,8 @@ class Locations extends MyController {
      */
     public function disable($id) {
         $station = (new Stations())->findById($id);
-        if ($station->id !== null) {
-            $station->active = 0;
+        if ($station->getId() !== null) {
+            $station->setActive(0);
             if ($station->save()) {
                 Notification::set(Locations::SUCCESS, "The station is de-activated");
             } else {
@@ -46,8 +50,8 @@ class Locations extends MyController {
      */
     public function enable($id) {
         $station = (new Stations())->findById($id);
-        if ($station->id !== null) {
-            $station->active = 1;
+        if ($station->getId() !== null) {
+            $station->setActive(1);
             if ($station->save() !== false) {
                 Notification::set(Locations::SUCCESS, "The station is activated");
             } else {
@@ -82,13 +86,13 @@ class Locations extends MyController {
             $countryId = $country->getId();
             if ($country->delete()) {
 
-                //users_countries
+                //users_countries where country_id = $countryId
                 $userCountries = new UserCountries();
                 $userCountries->deleteWhere("country_id", $countryId);
 
-                //stations, remove where country_id = id
+                //stations, remove where country_id = $countryId (recursive)
                 $stations = new Stations();
-                $stations->deleteWhere("country_id", $countryId);
+                $stations->deleteWhere("country_id", $countryId, true);
 
                 Notification::set(Locations::SUCCESS, "The country has been deleted");
             } else {
@@ -103,8 +107,8 @@ class Locations extends MyController {
      */
     public function delete_station($id) {
         $station = (new Stations())->findById($id);
-        if ($station->id !== null) {
-            if ($station->delete($station->id)) {
+        if ($station->getId() !== null) {
+            if ($station->delete($station->getId())) {
                 return true;
             }
         }

@@ -1,5 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * @package Models
+ * @since	22-02-2016
+ * @version 1.0
+ * @author	Siebren Kranenburg <siebren@kukua.cc>
+ */
 class Source extends CI_Model {
 
     protected $_country;
@@ -22,43 +28,6 @@ class Source extends CI_Model {
 
         if (is_array($request))
             $this->populate($request);
-    }
-
-    /**
-     * Gathering data from different sources
-     * for display
-     *
-     * @access public
-     * @return Array
-     */
-    public function gather() {
-        $result = [];
-        require_once(APPPATH . "models/Sources/Dashboard.php");
-        $dashboard = new Dashboard();
-        $dashResult = $dashboard->get($this);
-        if (isset($dashResult[0])) {
-            foreach($dashResult as $dash) {
-                $result[] = $dash;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * @access public
-     * @return Array
-     */
-    public function gatherForecast() {
-        $result = [];
-        require_once(APPPATH . "models/Sources/Foreca.php");
-        $object = new Foreca();
-        $objResult = $object->get($this);
-        if (isset($objResult[0])) {
-            foreach($objResult as $dash) {
-                $result[] = $dash;
-            }
-        }
-        return $result;
     }
 
     /**
@@ -218,5 +187,42 @@ class Source extends CI_Model {
             $this->setRange($data["range"]);
 
         return $this;
+	}
+
+    /**
+     * Gathering data from different sources
+     * for display
+     *
+     * @access public
+     * @return Array
+     */
+    public function gather() {
+        $result = [];
+        require_once(APPPATH . "models/Sources/Dashboard.php");
+        $dashboard = new Dashboard();
+        $dashResult = $dashboard->get($this);
+        if (isset($dashResult[0])) {
+            foreach($dashResult as $dash) {
+                $result[] = $dash;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @access public
+     * @return Array
+     */
+    public function gatherForecast() {
+        $result = [];
+        require_once(APPPATH . "models/Sources/Foreca.php");
+        $object = new Foreca();
+        $objResult = $object->get($this);
+        if (isset($objResult[0])) {
+            foreach($objResult as $dash) {
+                $result[] = $dash;
+            }
+        }
+        return $result;
     }
 }
