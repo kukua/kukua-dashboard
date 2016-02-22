@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <form method="post" action="/locations/add_station_column/{$station->id}">
-                    <table class="table table-condensed table-striped table-hover">
+                    <table class="table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th>Key</th>

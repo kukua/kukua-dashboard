@@ -41,12 +41,12 @@
                                 {foreach $countries as $country}
                                     {$selected = ""}
                                     {foreach $userCountries as $userCountry}
-                                        {if $userCountry.uc->country_id == $country->id}
+                                        {if $userCountry.uc->country_id == $country->getId()}
                                             {$selected = "selected='selected'"}
                                             {continue}
                                         {/if}
                                     {/foreach}
-                                    <option value="{$country->id}" {$selected}>{$country->name}</option>
+                                    <option value="{$country->getId()}" {$selected}>{$country->getName()}</option>
                                 {/foreach}
                             </select>
                         </div>

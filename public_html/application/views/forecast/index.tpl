@@ -15,7 +15,7 @@
                     <label>Select country</label>
                     <select name="js-country" id="js-forecast-country" id="js-graph-country" class="form-control">
                         {foreach $userCountries as $uc}
-                            <option value="{$uc.country->name}">{$uc.country->name}</option>
+                            <option value="{$uc.country->getName()}">{$uc.country->getName()}</option>
                         {/foreach}
                     </select>
                 </div>

@@ -3,10 +3,10 @@
 {block name="content"}
     <div class="container">
         <form method="post" action="{$baseUrl}locations/add_station">
-            <input type="hidden" name="country_id" value="{$country->id}">
+            <input type="hidden" name="country_id" value="{$country->getId()}">
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-3">
-                    <h1 class="text-center">Add a station to {$country->name}</h1>
+                    <h1 class="text-center">Add a station to {$country->getName()}</h1>
                 </div>
             </div>
             <div class="row">

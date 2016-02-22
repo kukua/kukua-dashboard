@@ -14,7 +14,7 @@
                 <label>Select country</label>
                 <select name="country" id="js-location-post" class="form-control">
                     {foreach $countries as $country}
-                        <option value="{$country->id}">{$country->name}</option>
+                        <option value="{$country->getId()}">{$country->getName()}</option>
                     {/foreach}
                 </select>
             </div>

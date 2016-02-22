@@ -27,7 +27,7 @@
                 <div class="col-xs-6 col-xs-offset-3">
                     <select class="form-control" name="country[]" multiple="multiple">
                         {foreach $countries as $country}
-                            <option value="{$country->id}">{$country->name}</option>
+                            <option value="{$country->getId()}">{$country->getName()}</option>
                         {/foreach}
                     </select>
                 </div>

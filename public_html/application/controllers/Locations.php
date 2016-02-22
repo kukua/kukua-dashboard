@@ -78,8 +78,8 @@ class Locations extends MyController {
     public function delete_country() {
         $countryId = is_numeric($this->input->post("country_id")) ? $this->input->post("country_id") : false;
         $country = (new Countries())->findById($countryId);
-        if ($country->id !== null) {
-            $countryId = $country->id;
+        if ($country->getId() !== null) {
+            $countryId = $country->getId();
             if ($country->delete()) {
 
                 //users_countries
@@ -117,13 +117,13 @@ class Locations extends MyController {
     public function add_station() {
         $countryId = is_numeric($this->input->post("country_id")) ? $this->input->post("country_id") : false;
         $country = (new Countries())->findById($countryId);
-        if ($country->id !== null) {
+        if ($country->getId() !== null) {
             $this->data["country"] = $country;
             if ($this->input->post("name")) {
                 $station = new Stations();
                 $station->populate($this->input->post());
                 if ($station->save()) {
-                    Notification::set(Locations::SUCCESS, "The station has been added to " . $country->name);
+                    Notification::set(Locations::SUCCESS, "The station has been added to " . $country->getName());
                     redirect("/locations");
                 }
             }

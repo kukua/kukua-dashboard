@@ -14,13 +14,13 @@
                         <label>Select country</label>
                         <select name="country" id="js-graph-country" class="form-control">
                             {foreach $userCountries as $object}
-                                <option value="{$object.country->id}">{$object.country->name}</option>
+                                <option value="{$object.country->getId()}">{$object.country->getName()}</option>
                             {/foreach}
                         </select>
                     </div>
                 </div>
             {else}
-                <input type="hidden" name="country" id="js-graph-country" class="hidden" value="{$userCountries.0.country->id}">
+                <input type="hidden" name="country" id="js-graph-country" class="hidden" value="{$userCountries.0.country->getId()}">
             {/if}
             <div class="row">
                 <div class="col-sm-4">
