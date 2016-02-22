@@ -13,7 +13,7 @@ class Feedback extends MyController {
      */
     public function index() {
         $this->allow("admin");
-        $feedback = new Feedback_model();
+        $feedback = new UserFeedback();
         $this->data["feedback"] = $feedback->load();
         $this->load->view("feedback/index", $this->data);
     }
@@ -34,9 +34,9 @@ class Feedback extends MyController {
                 exit;
             }
 
-            $feedback = new Feedback_model();
+            $feedback = new UserFeedback();
             $feedback->populate($this->input->post());
-            $feedback->user_id = $this->_user->id;
+            $feedback->setUserId($this->_user->id);
             if ($feedback->save() !== false) {
                 echo json_encode(["success" => true]);
                 exit;
@@ -50,17 +50,16 @@ class Feedback extends MyController {
      */
     public function complete($id) {
         $this->allow("admin");
-        $feedback = new Feedback_model();
-        $obj = $feedback->findById($id);
-        if ($obj) {
-            $obj->completed = 1;
-            $feedback->populate((array) $obj);
-            if ($feedback->save() !== false) {
+		$feedback = new UserFeedback();
+		$feedback->findById($id);
+		if ($feedback->getId() !== null) {
+			$feedback->setCompleted("1");
+			if ($feedback->save() !== false) {
                 redirect("/feedback");
             }
         }
 
-        Notification::set(Feedback::DANGER, "NO!");
+        Notification::set(Feedback::DANGER, "Something went wrong. Please try again.");
         redirect("/feedback");
     }
 
@@ -70,17 +69,16 @@ class Feedback extends MyController {
      */
     public function uncomplete($id) {
         $this->allow("admin");
-        $feedback = new Feedback_model();
+        $feedback = new UserFeedback();
         $obj = $feedback->findById($id);
         if ($obj) {
-            $obj->completed = 0;
-            $feedback->populate((array) $obj);
-            if ($feedback->save() !== false) {
+            $obj->setCompleted(0);
+            if ($obj->save() !== false) {
                 redirect("/feedback");
             }
         }
 
-        Notification::set(Feedback::DANGER, "NO!");
+        Notification::set(Feedback::DANGER, "Something went wrong. Please try again.");
         redirect("/feedback");
     }
 
@@ -90,14 +88,14 @@ class Feedback extends MyController {
      */
     public function delete($id) {
         $this->allow("admin");
-        $feedback = new Feedback_model();
+        $feedback = new UserFeedback();
         $obj = $feedback->findById($id);
         if ($obj) {
             if ($feedback->delete($id)) {
                 redirect("/feedback");
             }
         }
-        Notification::set(Feedback::DANGER, "NEIN NEIN NEIN.");
+        Notification::set(Feedback::DANGER, "Something went wrong. Please try again.");
         redirect("/feedback");
     }
 
