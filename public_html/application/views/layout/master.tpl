@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Kukua Dashboard</title>
+	<link href="https://fonts.googleapis.com/css?family=Asap:400,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="/assets/dist/main.min.css" type="text/css">
 </head>
 <body>
@@ -21,7 +22,7 @@
         {/literal}
     {/if}
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -30,22 +31,20 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/" title="Go to the home screen">
-					<img src="/assets/img/kukua-logo-white.png" alt="Kukua logo" style="margin-top:4px;">
+                <a class="navbar-brand" href="http://www.kukua.cc/" title="Go to the home screen">
+					<img src="/assets/img/kukua-logo-small.png" alt="Kukua logo">
                 </a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 {if $user !== false}
-                    <ul class="nav navbar-nav">
-                        <li><a href="{$baseUrl}">Home</a></li>
-                        <li><a href="{$baseUrl}graph">Weather graph</a></li>
-                        <li><a href="{$baseUrl}forecast">Forecast map</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav pull-right">
+                    <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi {$user->first_name}! <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{$baseUrl}user/update/{$user->id}">My account</a></li>
+								<li><a href="{$baseUrl}graph">Weather graph</a></li>
+								<li><a href="{$baseUrl}forecast">Forecast map</a></li>
+                                <li role="separator" class="divider"></li>
                                 {if $isAdmin}
                                     <li><a href="{$baseUrl}user">Users</a></li>
                                     <li><a href="{$baseUrl}feedback">Feedback</a></li>
@@ -53,8 +52,8 @@
                                     <li role="separator" class="divider"></li>
                                     <li><a href="{$baseUrl}smsclients">SMS Clients</a></li>
                                     <li><a href="{$baseUrl}sim">SIM activity</a></li>
+									<li role="separator" class="divider"></li>
                                 {/if}
-                                <li role="separator" class="divider"></li>
                                 <li><a href="{$baseUrl}auth/logout">Logout</a></li>
                             </ul>
                         </li>

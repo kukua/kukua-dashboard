@@ -60,7 +60,7 @@
         var graphTypeValue = graphType.val();
         switch(graphTypeValue) {
             case 'rain':
-                options.title.text = graphTypeText
+                //options.title.text = graphTypeText
                 options.chart.type = "column"
                 options.yAxis.title.text = graphTypeText + " (mm)"
                 options.yAxis.min = null
@@ -84,7 +84,7 @@
                 break
             //if other
             default:
-                options.title.text = "Temperature"
+                //options.title.text = "Temperature"
                 options.chart.type = "arearange"
                 options.yAxis.title.text = "Temperature (°C)"
                 options.yAxis.min = null 

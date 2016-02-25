@@ -19,7 +19,11 @@ class Auth extends MyController {
      * @access public
      * @return void
      */
-    public function login() {
+	public function login() {
+		if ($this->ion_auth->logged_in()) {
+			redirect("graph", "refresh");
+		}
+
         if ($this->input->post()) {
             if ($this->_authenticate() === True) {
                 redirect("graph", "refresh");

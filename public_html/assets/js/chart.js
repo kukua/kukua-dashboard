@@ -107,7 +107,13 @@
     chart.getOptions = function() {
         var options = new Object({
             title: {
-                text: ""
+                text: "",
+				align: "left",
+				style: {
+					color: '#337DE5',
+					fontSize: "26px",
+					fontFamily: "Asap, Trebuchet MS"
+				}
             },
             xAxis: {
                 type: 'datetime',
@@ -116,7 +122,7 @@
                     align: 'right',
                 },
                 title: {
-                    text: 'Date/Time'
+                    text: 'Date/Time',
                 },
                 crosshair: true,
                 events: {
@@ -133,7 +139,6 @@
                         //Rebind
                         kukua.datePickerChange()
                         kukua.datePickerCallback(moment(extremes.min), moment(extremes.max));
-                        console.log(extremes);
                     }
                 },
                 alternateGridColor: "#f7f7f7"
@@ -153,7 +158,10 @@
                 }
             },
             chart: {
-                zoomType: 'x'
+				style: {
+					fontFamily: 'Trebuchet MS',
+				},
+                zoomType: 'x',
             },
             plotOptions: {
                 series: {
@@ -180,7 +188,13 @@
     chart.getTempOptions = function() {
         var options = new Object({
             title: {
-                text: ""
+                text: "",
+				align: "left",
+				style: {
+					color: '#337DE5',
+					fontSize: "26px",
+					fontFamily: "Asap, Trebuchet MS"
+				}
             },
             xAxis: {
                 type: 'datetime',

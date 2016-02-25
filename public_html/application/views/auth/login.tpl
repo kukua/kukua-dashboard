@@ -3,11 +3,6 @@
 {block name="content"}
     <div class="container">
         <div class="row">
-            <div class="col-sm-4 col-sm-offset-4 u-text-center">
-                <img src="/assets/img/kukua-logo-small.png">
-            </div>
-        </div>
-        <div class="row">
             <div class="col-sm-4 col-sm-offset-4">
                 <h1>Authenticate</h1>
                 {include file="global/notification.tpl"}

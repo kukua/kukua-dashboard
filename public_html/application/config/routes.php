@@ -54,7 +54,7 @@ $route['api/v1/sensordata']['get']  = 'api/sensordata/get';
 $route['api/sms/get']['post'] = 'api/sms/get';
 $route['api/sms/get']['get'] = 'api/sms/get';
 
-$route['default_controller'] = 'index/index';
+$route['default_controller'] = 'auth/login';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
