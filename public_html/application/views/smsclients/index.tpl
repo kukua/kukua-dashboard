@@ -29,7 +29,7 @@
                                 <td>{$client->getName()}</td>
                                 <td>{$client->getLocation()}</td>
                                 <td>{$client->getNumber()}</td>
-                                <td>{$client->getCreated()|date_format:"%d-%M-%Y"}
+                                <td>{$client->getCreated()|date_format:"%d-%m-%Y"}
                                 <td><a href="/smsclients/delete/{$client->getId()}" data-text="Are you sure you want to remove this client?" class="js-confirm-delete pull-right"><i class="glyphicon glyphicon-remove text-danger"></i></a></td>
                             </tr>
                         {/foreach}

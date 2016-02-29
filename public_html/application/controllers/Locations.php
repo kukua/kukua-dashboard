@@ -32,7 +32,7 @@ class Locations extends MyController {
     /**
      *
      */
-    public function disable($id) {
+    public function disable_station($id) {
         $station = (new Stations())->findById($id);
         if ($station->getId() !== null) {
             $station->setActive(0);
@@ -42,13 +42,13 @@ class Locations extends MyController {
                 Notification::set(Locations::WARNING, "Something went wrong. Please try agian");
             }
         }
-        redirect("/locations");
+        redirect("/locations/view_country/{$station->getCountryId()}");
     }
 
     /**
      *
      */
-    public function enable($id) {
+    public function enable_station($id) {
         $station = (new Stations())->findById($id);
         if ($station->getId() !== null) {
             $station->setActive(1);
@@ -58,7 +58,7 @@ class Locations extends MyController {
                 Notification::set(Locations::WARNING, "Something went wrong. Please try agian");
             }
         }
-        redirect("/locations");
+        redirect("/locations/view_country/{$station->getCountryId()}");
     }
 
     /**
@@ -79,8 +79,8 @@ class Locations extends MyController {
     /**
      *
      */
-    public function delete_country() {
-        $countryId = is_numeric($this->input->post("country_id")) ? $this->input->post("country_id") : false;
+    public function delete_country($id) {
+        $countryId = is_numeric($id) ? $id : false;
         $country = (new Countries())->findById($countryId);
         if ($country->getId() !== null) {
             $countryId = $country->getId();
@@ -109,23 +109,26 @@ class Locations extends MyController {
         $station = (new Stations())->findById($id);
         if ($station->getId() !== null) {
             if ($station->delete($station->getId())) {
-                return true;
+                Notification::set(Locations::SUCCESS, "The station has been deleted");
+				redirect("/locations/view_country/{$station->getCountryId()}");
             }
         }
-        return false;
+		Notification::set(Locations::WARNING, "The station could not be deleted. Please try again");
+        redirect("/locations/view_country/{$station->getCountryId()}");
     }
 
     /**
      *
      */
-    public function add_station() {
-        $countryId = is_numeric($this->input->post("country_id")) ? $this->input->post("country_id") : false;
-        $country = (new Countries())->findById($countryId);
+    public function add_station($id) {
+        $countryId = is_numeric($id) ? $id : false;
+		$country = (new Countries())->findById($countryId);
         if ($country->getId() !== null) {
             $this->data["country"] = $country;
             if ($this->input->post("name")) {
                 $station = new Stations();
-                $station->populate($this->input->post());
+				$station->populate($this->input->post());
+				$station->setCountryId($country->getId());
                 if ($station->save()) {
                     Notification::set(Locations::SUCCESS, "The station has been added to " . $country->getName());
                     redirect("/locations");
@@ -134,10 +137,41 @@ class Locations extends MyController {
             $this->load->view("locations/add_station", $this->data);
         } else {
             Notification::set(Locations::DANGER, "Invalid input");
-            redirect("/locations");
+            redirect("/locations/view_country/{$country->getId()}");
         }
     }
 
+	/**
+	 * View stations for a country
+	 *
+	 *	@access public
+	 *	@return void
+	 */
+	public function view_country($id) {
+		$countryId = is_numeric($id) ? $id : false;
+		if ($countryId === false) {
+            Notification::set(Locations::DANGER, "Invalid input");
+            redirect("/locations");
+		}
+
+		$country = (new Countries())->findById($countryId);
+		if ($country->getId() === null) {
+            Notification::set(Locations::DANGER, "Invalid input");
+            redirect("/locations");
+		}
+
+		$stations = (new Stations())->findByCountryId($id, true);
+		$this->data["country"] = $country;
+		$this->data["stations"] = $stations;
+		$this->load->view("locations/view_country", $this->data);
+	}
+
+	/**
+	 * Edit station columns
+	 *
+	 * @access public
+	 * @return void
+	 */
     public function edit_station($id) {
         $station = (new Stations())->findById($id);
         $columns = (new StationColumns())->findByStationId($id);

@@ -2,11 +2,11 @@
 
 {block name="content"}
     <div class="container">
-        <form method="post" action="{$baseUrl}locations/add_station">
-            <input type="hidden" name="country_id" value="{$country->getId()}">
+        <form method="post" action="{$baseUrl}locations/add_station/{$country->getId()}">
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-3">
                     <h1 class="text-center">Add a station to {$country->getName()}</h1>
+					{include file="global/notification.tpl"}
                 </div>
             </div>
             <div class="row">
@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-3">
                     <button type="submit" class="btn btn-success btn-block btn-lg">Add station</button>
-                    <a href="{$baseUrl}locations" class="btn btn-link btn-block">Cancel</a>
+                    <a href="{$baseUrl}locations/view_country/{$country->getId()}" class="btn btn-link btn-block">Cancel</a>
                 </div>
             </div>
         </form>

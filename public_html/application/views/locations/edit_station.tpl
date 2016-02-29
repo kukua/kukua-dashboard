@@ -3,16 +3,17 @@
 {block name="content"}
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
-                <a href="/locations">go back</a> 
-                <h1>
-                    Station details {$station->getName()} <small>{$station->getStationId()}</small>
-                </h1>
-                {include file="global/notification.tpl"}
-            </div>
+			<div class="col-sm-2 col-sm-offset-2">
+				<div style="margin-top: 30px;"></div>
+				<a href="/locations/view_country/{$station->getCountryId()}">&laquo; Go back</a>
+			</div>
+			<div class="col-sm-4">
+				<h1 class="text-center">{$station->getName()|ucfirst}<br> <small>{$station->getStationId()}</small></h1>
+			</div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-8 col-sm-offset-2">
+				{include file="global/notification.tpl"}
                 <form method="post" action="/locations/add_station_column/{$station->getId()}">
                     <table class="table table-striped table-hover">
                         <thead>
