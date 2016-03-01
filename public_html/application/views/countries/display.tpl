@@ -36,7 +36,7 @@
 									</td>
 									<td>{$column->getName()}</td>
 									<td class="text-right">
-										<a href="/countries/delete_column/{$column->getId()}" class="text-danger"><i class="glyphicon glyphicon-remove"></i></a>
+										<a href="/countries/delete_column/{$column->getId()}/{$country->getId()}" class="text-danger"><i class="glyphicon glyphicon-remove"></i></a>
 									</td>
 								</tr>
 							{/foreach}

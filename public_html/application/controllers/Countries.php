@@ -147,6 +147,19 @@ class Countries extends MyController {
 	}
 
 	/**
+	 * @access public
+	 * @param  int $id
+	 * @return void
+	 */
+	public function delete_column($id, $countryId) {
+		$action = (new CountryColumn())->delete($id);
+		if ($action !== false) {
+			Notification::set(Countries::SUCCESS, "Column successfully deleted");
+		}
+		redirect("/countries/display/" . $countryId);
+	}
+
+	/**
 	 * Toggle column visibility
 	 *
 	 * @access public

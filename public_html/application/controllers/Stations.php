@@ -108,7 +108,7 @@ class Stations extends MyController {
 			}
 		}
 		Notification::set(Stations::WARNING, "The station could not be deleted. Please try again");
-		redirect("/stations/" . $station->getCountryId());
+		redirect("/stations/index/" . $station->getCountryId());
 	}
 
 	/**
