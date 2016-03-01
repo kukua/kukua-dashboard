@@ -47,25 +47,25 @@ class Foreca extends Source {
             $dates["dateFrom"] = $source->getDateFrom();
             $dates["dateTo"]   = $source->getDateTo();
             $this->setSelect($this->selectAll());
-        } else {
-            if ($source->getRange() == "temp") {
+		} else {
+            if ($source->getRange() == "Temperature") {
                 $dates = false;
                 $this->setSelect([
                     "tempLow" => "MinTemp",
                     "tempHigh"=> "MaxTemp"
                 ]);
-            }
-            elseif ($source->getRange() == "rain") {
+			}
+            elseif ($source->getRange() == "Rainfall") {
                 $dates = false; 
-                $this->setSelect(["precip" => "Rainfall"]);
+                $this->setSelect(["precip" => $source->getRange()]);
             }
-            elseif ($source->getRange() == "hum") {
+            elseif ($source->getRange() == "Humidity") {
                 $dates = false;
-                $this->setSelect(["humid" => "Humidity"]);
+                $this->setSelect(["humid" => $source->getRange()]);
             }
-            elseif ($source->getRange() == "wind") {
+            elseif ($source->getRange() == "Wind") {
                 $dates = false;
-                $this->setSelect(["windSpeed" => "Wind"]);
+                $this->setSelect(["windSpeed" => $source->getRange()]);
             }
             else {
                 $dates["dateFrom"] = $source->getDateFrom();
@@ -232,7 +232,7 @@ class Foreca extends Source {
                 if (count($values->values)) {
 
                     //Set correct name
-                    $niceName = (new Stations())->findByStationId($values->name)->getName();
+                    $niceName = (new Station())->findByStationId($values->name)->getName();
                     if (empty($niceName)) {
                         $niceName = "forecast";
                     }

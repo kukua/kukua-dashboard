@@ -40,7 +40,7 @@ class Graph extends MyController {
             $this->session->unset_userdata(array_keys($items));
         }
 
-        $userCountries = new UserCountries();
+		$userCountries = new UserCountry();
         $this->data["userCountries"] = $userCountries->findByUserId($this->_user->id, true);
         $this->load->view("graph/index", $this->data);
     }

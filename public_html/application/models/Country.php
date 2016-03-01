@@ -6,7 +6,7 @@
  * @version 1.0
  * @author	Siebren Kranenburg <siebren@kukua.cc>
  */
-class Countries extends CI_Model {
+class Country extends CI_Model {
 
     const TABLE = "countries";
 
@@ -115,7 +115,7 @@ class Countries extends CI_Model {
     /**
      * @access public
      * @param  Array $data
-     * @return Countries
+     * @return Country
      */
     public function populate($data) {
         if (isset($data["id"])) {
@@ -182,7 +182,7 @@ class Countries extends CI_Model {
 
         $result = [];
         foreach($get->result_array() as $key => $value) {
-            $object = new Countries();
+            $object = new Country();
             $result[] = $object->populate($value);
         }
         return $result;
@@ -190,7 +190,7 @@ class Countries extends CI_Model {
 
     /**
      * @access public
-     * @return Countries
+     * @return Country
      */
     public function findById($id) {
         $this->db->select("*");

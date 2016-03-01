@@ -6,7 +6,7 @@
  * @version 1.0
  * @author	Siebren Kranenburg <siebren@kukua.cc>
  */
-class Stations extends CI_Model {
+class Station extends CI_Model {
 
     const TABLE = "stations";
 
@@ -225,7 +225,7 @@ class Stations extends CI_Model {
 
         $result = [];
         foreach($get->result_array() as $key => $value) {
-            $object = new Stations();
+            $object = new Station();
             $result[] = $object->populate($value);
         }
         return $result;
@@ -309,7 +309,7 @@ class Stations extends CI_Model {
 			$this->db->delete(self::TABLE);
 			if ($recursive) {
 				foreach($get->result_array() as $result) {
-					(new StationColumns())->deleteByStationId($result["id"]);
+					(new StationColumn())->deleteByStationId($result["id"]);
 				}
 			}
 		}

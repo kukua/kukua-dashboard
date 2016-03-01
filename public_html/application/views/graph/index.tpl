@@ -22,11 +22,7 @@
 					{/if}
 					<div class="col-sm-3">
 						<label class="ellipsis" title="Select graph">Select graph</label>
-						<select id="js-graph-type-swap" class="form-control" name="panelId">
-							{foreach GlobalHelper::graphWeathertypes() as $key => $value}
-								<option value="{$key}">{$value}</option>
-							{/foreach}
-						</select>
+						<select id="js-graph-type-swap" class="form-control" name="panelId"></select>
 					</div>
 					<div class="col-sm-4">
 						<div class="form-group">
@@ -67,7 +63,9 @@
 		</button>
 	</center>
 
-	<div id="chart" style="width:100%; height:78%;"></div>
+	<div class="container">
+		<div id="chart" style="width:100%; height:78%;"></div>
 
-	<div id="chart-forecast"></div>
+		<div id="chart-forecast"></div>
+	</div>
 {/block}

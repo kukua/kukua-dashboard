@@ -1,12 +1,19 @@
 <?php defined("BASEPATH") OR exit("No direct script access allowed");
 
-class StationColumns extends CI_Model {
+/**
+ * @package Controllers
+ * @since	22-02-2016
+ * @version 1.0
+ * @author	Siebren Kranenburg <siebren@kukua.cc>
+ * @copyright 2016 Kukua B.V.
+ */
+class StationColumn extends CI_Model {
 
     const TABLE = "stations_columns";
 
     protected $_id;
     protected $_station_id;
-    protected $_key;
+    protected $_country_column_id;
     protected $_value;
 
     /**
@@ -18,9 +25,13 @@ class StationColumns extends CI_Model {
 
         $this->_id = null;
         $this->_station_id = null;
-        $this->_key = null;
+        $this->_country_column_id = null;
         $this->_value = null;
     }
+
+	public function unsetId() {
+		$this->_id = null;
+	}
 
     /**
      * @access public
@@ -70,19 +81,19 @@ class StationColumns extends CI_Model {
      * @throws InvalidArgumentException
      * @return void
      */
-    public function setKey($key) {
-        if (!is_string($key)) {
+    public function setCountryColumnId($id) {
+        if (!is_numeric($id)) {
             throw new InvalidArgumentException("No valid param supplied");
         }
-        $this->_key = (string) $key;
+        $this->_country_column_id = (string) $id;
     }
 
     /**
      * @access public
      * @return string
      */
-    public function getKey() {
-        return $this->_key;
+    public function getCountryColumnId() {
+        return $this->_country_column_id;
     }
 
     /**
@@ -109,7 +120,7 @@ class StationColumns extends CI_Model {
     /**
      * @access public
      * @param  Array $data
-     * @return StationColumns
+     * @return StationColumn
      */
     public function populate($data) {
         if (!is_array($data)) {
@@ -122,8 +133,8 @@ class StationColumns extends CI_Model {
         if (isset($data["station_id"]))
             $this->setStationId($data["station_id"]);
 
-        if (isset($data["key"]))
-            $this->setKey($data["key"]);
+        if (isset($data["country_column_id"]))
+            $this->setCountryColumnId($data["country_column_id"]);
 
         if (isset($data["value"]))
             $this->setValue($data["value"]);
@@ -139,7 +150,7 @@ class StationColumns extends CI_Model {
         return [
             'id' => $this->getId(),
             'station_id' => $this->getStationId(),
-            'key' => $this->getKey(),
+            'country_column_id' => $this->getCountryColumnId(),
             'value' => $this->getValue(),
         ];
     }
@@ -147,7 +158,7 @@ class StationColumns extends CI_Model {
     /**
      * @access public
      * @param  int id
-     * @return StationColumns
+     * @return StationColumn
      */
     public function findById($id) {
         $this->db->select("*");
@@ -160,8 +171,7 @@ class StationColumns extends CI_Model {
     /**
      * @access public
      * @param  int stationId
-     * @param  string key
-     * @return StationColumns
+     * @return StationColumn
      */
     public function findByStationId($stationId) {
         $this->db->select("*");
@@ -172,7 +182,7 @@ class StationColumns extends CI_Model {
         $result = [];
         if (is_array($get)) {
             foreach($get as $row) {
-                $result[] = (new StationColumns())->populate($row);
+                $result[] = (new StationColumn())->populate($row);
             }
         }
         return $result;
@@ -182,13 +192,13 @@ class StationColumns extends CI_Model {
      * @access protected
      * @param  int stationId
      * @param  string key
-     * @return StationColumns
+     * @return StationColumn
      */
-    public function find($stationId, $key) {
+    public function find($stationId, $countryColumnId) {
         $this->db->select("*");
         $this->db->from(self::TABLE);
         $this->db->where("station_id", $stationId);
-        $this->db->where("key", $key);
+        $this->db->where("country_column_id", $countryColumnId);
         $get = $this->db->get()->row_array();
 
         if (is_array($get) && !empty($get)) {
@@ -223,6 +233,14 @@ class StationColumns extends CI_Model {
         return false;
     }
 
+	/**
+	 * Delete item
+	 *
+	 * @access public
+	 * @param  int $id
+	 * @throws InvalidArgumentException
+	 * @return boolean
+	 */
     public function delete($id) {
         if (!is_numeric($id)) {
             throw new invalidargumentexception("param supplied not valid");
@@ -238,7 +256,8 @@ class StationColumns extends CI_Model {
 
     /**
      * @access public
-     * @access int $id
+	 * @access int $id
+	 * @throws InvalidArgumentException
      * @return boolean
      */
     public function deleteByStationId($id) {
@@ -254,16 +273,18 @@ class StationColumns extends CI_Model {
         return false;
     }
 
-    /**
+	/**
+	 * Validates current object state
+	 *
      * @access protected
      * @return boolean
      */
     protected function _validate() {
-        $validStationId = $this->getStationId() != null;
-        $validKey       = $this->getKey() != "" || $this->getKey() != null;
-        $validValue     = $this->getValue() != "" || $this->getValue() != null;
+        $validStationId			= $this->getStationId() != null;
+        $validCountryColumnId	= $this->getCountryColumnId() != "" || $this->getCountryColumnId() != null;
+        $validValue				= $this->getValue() != "" || $this->getValue() != null;
 
-        if ($validStationId && $validKey && $validValue) {
+        if ($validStationId && $validCountryColumnId && $validValue) {
             return true;
         }
         return false;

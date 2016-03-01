@@ -48,7 +48,7 @@
                                 {if $isAdmin}
                                     <li><a href="{$baseUrl}user">Users</a></li>
                                     <li><a href="{$baseUrl}feedback">Feedback</a></li>
-                                    <li><a href="{$baseUrl}locations">Locations</a></li>
+                                    <li><a href="{$baseUrl}countries">Countries</a></li>
                                     <li role="separator" class="divider"></li>
                                     <li><a href="{$baseUrl}smsclients">SMS Clients</a></li>
                                     <li><a href="{$baseUrl}sim">SIM activity</a></li>

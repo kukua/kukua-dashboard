@@ -141,11 +141,12 @@ $autoload['language'] = [];
 $autoload['model'] = array(
     'ion_auth_model',
     'Eseye',
-    'Countries',
-    'UserCountries',
+	'Country',
+	'CountryColumn',
+    'UserCountry',
     'UserFeedback',
-    'Stations',
-    'StationColumns',
+    'Station',
+    'StationColumn',
     'Source',
     'Smsclient',
 );

@@ -6,7 +6,7 @@
  * @version 1.0
  * @author	Siebren Kranenburg <siebren@kukua.cc>
  */
-class UserCountries extends CI_Model {
+class UserCountry extends CI_Model {
 
     const TABLE = "users_countries";
 
@@ -92,10 +92,10 @@ class UserCountries extends CI_Model {
     /**
 	 * @access public
 	 * @param  array $data
-	 * @return UserCountries
+	 * @return UserCountry
      */
     public function populate($data) {
-        $object = new UserCountries();
+        $object = new UserCountry();
         if (isset($data["id"])) {
             $object->setId($data["id"]);
         }
@@ -151,7 +151,7 @@ class UserCountries extends CI_Model {
         foreach($get->result_array() as $key => $value) {
             $result[$key]["uc"] = $this->populate($value);
             if ($huge !== false) {
-                $country = new Countries();
+                $country = new Country();
                 $result[$key]["country"] = $country->findById($value["country_id"]);
             }
         }

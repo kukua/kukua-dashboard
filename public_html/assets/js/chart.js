@@ -11,12 +11,13 @@
             //get dates from daterangepicker
             var graphType    = kukua.getGraphType()
             var country      = kukua.getGraphCountry()
+			var range = graphType.find(":selected").data('text');
             var postdata = {
                 'country': country.val(),
                 'type': graphType.val(),
                 'dateFrom': moment().format('X'),
                 'dateTo': moment().add(10,'days').format('X'),
-                'range': graphType.val()
+                'range': range
             }
 
             var call = $.ajax({
@@ -110,7 +111,6 @@
                 text: "",
 				align: "left",
 				style: {
-					color: '#337DE5',
 					fontSize: "26px",
 					fontFamily: "Asap, Trebuchet MS"
 				}
@@ -191,7 +191,6 @@
                 text: "",
 				align: "left",
 				style: {
-					color: '#337DE5',
 					fontSize: "26px",
 					fontFamily: "Asap, Trebuchet MS"
 				}

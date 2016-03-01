@@ -86,7 +86,7 @@ class User extends MyController {
 
 				/* update user countries */
 				if ($isAdmin === true && $postCountries !== false) {
-					$updateUserCountry = new UserCountries();
+					$updateUserCountry = new UserCountry();
 					$updateUserCountry->save($id, $postCountries);
 				}
 
@@ -101,8 +101,8 @@ class User extends MyController {
 		}
 
 		$user = $this->ion_auth->user($id)->row();
-		$countries = new Countries();
-		$userCountries = new UserCountries();
+		$countries = new Country();
+		$userCountries = new UserCountry();
 
 		$this->data["user"] = $user;
 		$this->data["countries"] = $countries->load();
@@ -184,7 +184,7 @@ class User extends MyController {
 			}
 
 			/* Save selected countries */
-			$userCountries = new UserCountries();
+			$userCountries = new UserCountry();
 			$postCountries = $this->input->post("country");
 			$userCountries->save($user["id"], $postCountries);
 
@@ -194,7 +194,7 @@ class User extends MyController {
 			}
 		}
 
-		$countries = new Countries();
+		$countries = new Country();
 		$this->data["countries"] = $countries->load();
 		$this->load->view("user/invite", $this->data);
 	}
