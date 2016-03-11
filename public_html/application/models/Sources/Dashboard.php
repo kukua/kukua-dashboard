@@ -159,7 +159,7 @@ class Dashboard extends Source {
 		if ($countryColumn->getName() == "Rainfall") {
 			$prefix = "sum(";
 		}
-		$select .= " " . $prefix . $column->getValue() . ") as " . $countryColumn->getName();
+		$select .= " " . $prefix . $column->getValue() . ") as " . $countryColumn->getName() . ",";
 		return $select;
 	}
 
