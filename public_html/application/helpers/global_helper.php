@@ -89,65 +89,69 @@ class GlobalHelper {
 		}
 
 		try {
-			foreach($assocDataArray as $station) {
-				$fp = fopen('php://output', 'w');
-				if ($fp === false) {
-					throw new Exception("unable to open php's output buffer");
-				}
-
-				ob_start();
-				$arr = [];
-
-				$timeKey = null;
-				foreach($station->columns as $columnKey => $column) {
-					if ($column == "time") {
-						$timeKey = $columnKey;
+			if (!is_null($assocDataArray)) {
+				foreach($assocDataArray as $station) {
+					$fp = fopen('php://output', 'w');
+					if ($fp === false) {
+						throw new Exception("unable to open php's output buffer");
 					}
-					$types[$columnKey] = GlobalHelper::meaningOf($column);
-				}
 
-				/* Header */
-				fputcsv($fp, $station->columns);
+					ob_start();
+					$arr = [];
 
-				/* Second header */
-				fputcsv($fp, $types);
-
-				/* Content */
-				foreach($station->values as $values) {
-					if ($timeKey !== null) {
-						if (isset($values[$timeKey])) {
-							$miliseconds = $values[$timeKey];
-							$seconds = $miliseconds / 1000;
-
-							$now = DateTime::createFromFormat('U', $seconds);
-							$values[$timeKey] = $now->format("d-m-Y H:i:s");
+					$timeKey = null;
+					foreach($station->columns as $columnKey => $column) {
+						if ($column == "time") {
+							$timeKey = $columnKey;
 						}
+						$types[$columnKey] = GlobalHelper::meaningOf($column);
 					}
 
-					fputcsv($fp, $values);
+					/* Header */
+					fputcsv($fp, $station->columns);
+
+					/* Second header */
+					fputcsv($fp, $types);
+
+					/* Content */
+					foreach($station->values as $values) {
+						if ($timeKey !== null) {
+							if (isset($values[$timeKey])) {
+								$miliseconds = $values[$timeKey];
+								$seconds = $miliseconds / 1000;
+
+								$now = DateTime::createFromFormat('U', $seconds);
+								$values[$timeKey] = $now->format("d-m-Y H:i:s");
+							}
+						}
+
+						fputcsv($fp, $values);
+					}
+
+					$string = ob_get_contents();
+					$zip->addFromString($station->name . ".csv", $string);
+					ob_clean();
+					fclose($fp);
 				}
+				$zip->close();
 
-				$string = ob_get_contents();
-				$zip->addFromString($station->name . ".csv", $string);
-				ob_clean();
-				fclose($fp);
-			}
-			$zip->close();
-
-			if (file_exists($zipFile)) {
-				header('Pragma: public');
-				header('Expires: 0');
-				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-				header('Cache-Control: private', false);
-				header('Content-Type: application/zip');
-				header('Content-Disposition: attachment;filename=' . $fileName . '.zip');
-				header('Content-Length: ' . filesize($zipFile));
-				header("Content-Transfer-Encoding: binary");
-				readfile($zipFile);
-				ob_flush();
-				unlink($zipFile);
+				if (file_exists($zipFile)) {
+					header('Pragma: public');
+					header('Expires: 0');
+					header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+					header('Cache-Control: private', false);
+					header('Content-Type: application/zip');
+					header('Content-Disposition: attachment;filename=' . $fileName . '.zip');
+					header('Content-Length: ' . filesize($zipFile));
+					header("Content-Transfer-Encoding: binary");
+					readfile($zipFile);
+					ob_flush();
+					unlink($zipFile);
+				} else {
+					throw Exception("The zip file couldn't handle this much data.");
+				}
 			} else {
-				throw Exception("The zip file couldn't handle this much data.");
+				die("There was no data");
 			}
 		} catch (Exception $e) {
 			throw $e;

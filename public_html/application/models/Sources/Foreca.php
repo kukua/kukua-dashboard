@@ -231,12 +231,12 @@ class Foreca extends Source {
             foreach($data as $station => $values) {
                 if (count($values->values)) {
 
-                    //Set correct name
-                    $niceName = (new Station())->findByStationId($values->name)->getName();
-                    if (empty($niceName)) {
-                        $niceName = "forecast";
-                    }
-                    $values->name = ucfirst($niceName);
+					/* Set correct name */
+					$niceName = (new Station())->findByStationId($values->name);
+					if ($niceName !== false) {
+						$values->name = $niceName->getName();
+					}
+
 
                     //Set correct date
                     foreach($values->values as $key => $points) {

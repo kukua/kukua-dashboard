@@ -21,6 +21,8 @@ class Dashboard extends Source {
 	protected $_group;
 	protected $_order;
 
+	protected $_device_id;
+
 	/**
 	 * Constructor
 	 *
@@ -55,7 +57,6 @@ class Dashboard extends Source {
 
 		if (strtolower($source->getWeatherType()) != "all") {
 			foreach($stations as $key => $station) {
-
 				$column = (new StationColumn())->find($station->getId(), $source->getWeatherType());
 				if ($column !== false) {
 					$build = $this->_build($query, $station, $column);
@@ -65,18 +66,21 @@ class Dashboard extends Source {
 				}
 			}
 		} else {
-			foreach($stations as $station) {
+			foreach ($stations as $station) {
 				$columns = (new StationColumn())->findByStationId($station->getId());
 
 				#temp hack to add a where clause
-				if (strpos($station->getName(), ";") !== false) {
+				if (strpos($station->getStationId(), ";") !== false) {
+					$from = explode(";", $station->getStationId());
 					$query["where"] = $this->andWhere($query["where"], $station);
-					if ($station->getStationId() == "Foreca") {
+					if ($station->getName() == "forecast") {
 						$query["group"] = $this->getGroup("1h");
 					}
+				} else {
+					$from[0] = $station->getStationId();
 				}
 
-				$query["from"]	 = $this->getFrom($station->getStationId());
+				$query["from"]	 = $this->getFrom($from[0]);
 				$query["select"] = "SELECT ";
 				foreach($columns as $column) {
 					$query["select"] = $this->addSelect($query["select"], $column);
@@ -106,18 +110,23 @@ class Dashboard extends Source {
 	 * @return string json
 	 */
 	protected function _build($query, $station, $column) {
+
 		/* temp hack to add a where clause */
-		if (strpos($station->getName(), ";") !== false) {
+		$this->_device_id = $station->getStationId();
+		if (strpos($station->getStationId(), ";") !== false) {
+			$from = explode(";", $station->getStationId());
+			$query["from"]	= $this->getFrom($from[0]);
 			$query["where"] = $this->andWhere($query["where"], $station);
+		} else {
+			$query["from"]  = $this->getFrom($station->getStationId());
 		}
 
 		/* temp hack to check if forecast (only 1h grouping available) */
-		if ($station->getStationId() == "Foreca") {
+		if ($station->getName() == "forecast") {
 			$query["group"] = $this->getGroup("1h");
 		}
 
 		$query["select"] = $this->getSelect($column);
-		$query["from"]	 = $this->getFrom($station->getStationId());
 		if (!empty($query["select"]) && !empty($query["from"])) {
 			$q = $query["select"] . " " . $query["from"] . " " . $query["where"] . " " . $query["group"];
 			log_message('error', $q);
@@ -206,7 +215,7 @@ class Dashboard extends Source {
 	 * @example foreca;id=abc;column=value
 	 */
 	public function andWhere($where, $station) {
-		$extra = explode(";", $station->getName());
+		$extra = explode(";", $station->getStationId());
 		foreach($extra as $k => $keyval) {
 			if ($k == 0) continue;
 
@@ -214,7 +223,7 @@ class Dashboard extends Source {
 			$where .= " AND " . $res[0] . " = '" . $res[1] . "'";
 		}
 
-		if ($extra[0] == "forecast") {
+		if ($extra[0] == "Foreca") {
 			$where .= " AND time > now()";
 		}
 		return $where;
@@ -273,12 +282,9 @@ class Dashboard extends Source {
 				if (count($values->values)) {
 
 					/* Set correct name */
-					$niceName = (new Station())->findByStationId($values->name)->getName();
-					if (strpos($niceName, ";") !== false) {
-						$extra = explode(";", $niceName);
-						$values->name = ucfirst($extra[0]);
-					} else {
-						$values->name = ucfirst($niceName);
+					$niceName = (new Station())->findByStationId($this->_device_id);
+					if ($niceName !== false) {
+						$values->name = $niceName->getName();
 					}
 
 					/* Set correct date */

@@ -240,8 +240,11 @@ class Station extends CI_Model {
         $this->db->select("*");
         $this->db->from(self::TABLE);
         $this->db->where("station_id", $stationId);
-        $get = $this->db->get();
-        return $this->populate($get->row_array());
+		$get = $this->db->get()->row_array();
+		if (!is_null($get)) {
+			return $this->populate($get);
+		}
+		return false;
     }
 
     /**
