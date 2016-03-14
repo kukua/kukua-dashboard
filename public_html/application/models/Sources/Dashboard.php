@@ -86,7 +86,7 @@ class Dashboard extends Source {
 					$query["select"] = $this->addSelect($query["select"], $column);
 				}
 
-				$query["select"] = rtrim($query["select"], ",");
+				$query["select"] .= " mean(deviceId) as device_id";
 				if (!empty($query["select"])) {
 					$q = $query["select"] . " " . $query["from"] . " " . $query["where"] . " " . $query["group"];
 					log_message('error', $q);
