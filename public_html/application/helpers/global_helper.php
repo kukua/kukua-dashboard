@@ -135,7 +135,7 @@ class GlobalHelper {
 					}
 
 					$station = (new Station())->findByStationId($stationKey);
-					if (!is_null($station)) {
+					if ($station !== false) {
 						$currentStationName = ucfirst($station->getName());
 					} else {
 						$currentStationName = $station->name;
