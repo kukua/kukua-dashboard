@@ -128,8 +128,21 @@ class GlobalHelper {
 						fputcsv($fp, $values);
 					}
 
+					if ($station->values[0][2] !== null) {
+						$stationKey = $station->name . ";deviceId=" . $station->values[0][2];
+					} else {
+						$stationKey = $station->name;
+					}
+
+					$station = (new Station())->findByStationId($stationKey);
+					if (!is_null($station)) {
+						$currentStationName = ucfirst($station->getName());
+					} else {
+						$currentStationName = $station->name;
+					}
+
 					$string = ob_get_contents();
-					$zip->addFromString($station->name . ".csv", $string);
+					$zip->addFromString($currentStationName . ".csv", $string);
 					ob_clean();
 					fclose($fp);
 				}

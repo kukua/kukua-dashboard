@@ -151,7 +151,8 @@ class Dashboard extends Source {
 			$prefix = "sum(";
 		}
 
-		return "SELECT " . $prefix . $column->getValue() . ") as " . $countryColumn->getName();
+		$select = "SELECT " . $prefix . $column->getValue() . ") as " . $countryColumn->getName() . ", mean(deviceId) as device_id";
+		return $select;
 	}
 
 	/**
