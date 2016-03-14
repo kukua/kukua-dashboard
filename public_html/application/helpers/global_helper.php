@@ -90,7 +90,7 @@ class GlobalHelper {
 
 		try {
 			if (!is_null($assocDataArray)) {
-				foreach($assocDataArray as $station) {
+				foreach($assocDataArray as $i => $station) {
 					$fp = fopen('php://output', 'w');
 					if ($fp === false) {
 						throw new Exception("unable to open php's output buffer");
@@ -134,7 +134,7 @@ class GlobalHelper {
 						$stationKey = $station->name;
 					}*/
 
-					$currentStationName = $station->name;
+					$currentStationName = $station->name . " - " . $i;
 					//$station = (new Station())->findByStationId($stationKey);
 					$station = false;
 					if ($station !== false) {
