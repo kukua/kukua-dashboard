@@ -9,7 +9,7 @@
 					{include file="global/notification.tpl"}
 					<form class="form-signin" method="post" action="/auth/login">
 						<label for="inputEmail" class="sr-only">Emailaddress</label>
-						<input type="text" id="inputEmail" name="identity" class="form-control" placeholder="Username">
+						<input type="text" id="inputEmail" name="identity" class="form-control" placeholder="E-mail address">
 						<span id="suggestion"></span>
 						<div>
 							<label for="inputPassword" class="sr-only">Password</label>
