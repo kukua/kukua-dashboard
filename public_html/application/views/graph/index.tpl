@@ -20,14 +20,14 @@
 					{else}
 						<input type="hidden" name="country" id="js-graph-country" class="hidden" value="{$userCountries.0.country->getId()}">
 					{/if}
-					<div class="col-sm-3">
+					<div class="col-sm-2">
 						<label class="ellipsis" title="Select graph">Select graph</label>
 						<select id="js-graph-type-swap" class="form-control" name="panelId"></select>
 					</div>
 					<div class="col-sm-4">
 						<div class="form-group">
 							<label class="ellipsis" title="Select date range">Date range</label>
-							<div id="reportrange" class="clearfix" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+							<div id="reportrange" class="ellipsis clearfix" style="background: #fff; cursor: pointer; padding: 6px 10px; border: 1px solid #ccc; width: 100%; border-radius: 4px">
 								<i class="glyphicon glyphicon-calendar"></i>&nbsp;
 								<span></span>
 							</div>
@@ -44,28 +44,21 @@
 							</select>
 						</div>
 					</div>
-					<div class="col-sm-1 pull-right">
+					<div class="col-sm-2">
 						<div class="form-group">
 							<label>&nbsp;</label><br>
 							<input type="hidden" name="from" id="dateFrom">
 							<input type="hidden" name="to" id="dateTo">
-							<button type="submit"class="btn btn-default" title="Download CSV"><i class="glyphicon glyphicon-download"></i></button>
+							<button type="submit"class="btn btn-default btn-block ellipsis" title="Download CSV">Download CSV</button>
 						</div>
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
-	<center>
-		<button class="advanced-button js-advanced-button btn">
-			Filters &amp; Download
-			<span class="caret"></span>
-		</button>
-	</center>
 
 	<div class="container">
 		<div id="chart" style="width:100%; height:78%;"></div>
-
 		<div id="chart-forecast"></div>
 	</div>
 {/block}

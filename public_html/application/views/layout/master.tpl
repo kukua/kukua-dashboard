@@ -8,7 +8,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Asap:400,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="/assets/dist/main.min.css" type="text/css">
 </head>
-<body>
+<body style="margin-top: 50px">
     {if ($smarty.const.ENVIRONMENT == "production")}
         {literal}
             <script>
@@ -22,7 +22,7 @@
         {/literal}
     {/if}
 
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">

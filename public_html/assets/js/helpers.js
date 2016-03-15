@@ -11,7 +11,6 @@
 		helpers.feedbackDisplay()
 		helpers.feedbackPost()
 
-		helpers.advancedSearch()
 		helpers.tableRowClick()
 	};
 
@@ -145,18 +144,6 @@
 				});
 			}
 			return false
-		})
-	}
-
-	helpers.advancedSearch = function() {
-		$(".js-advanced-button").on("click", function() {
-			if ($(".js-advanced-container").hasClass("open")) {
-				$(".js-advanced-container").slideUp(200);
-				$(".js-advanced-container").removeClass("open");
-			} else {
-				$(".js-advanced-container").slideDown(200);
-				$(".js-advanced-container").addClass("open");
-			}
 		})
 	}
 

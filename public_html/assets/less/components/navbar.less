@@ -7,8 +7,20 @@
 .navbar-default {
 	background-color: #fff;
 }
-.navbar-default li:active,
-.navbar-default li:hover,
-.navbar-default li.active {
-	background-color: #e7e7e7;
+
+.navbar-default {
+	li a {
+		&:active, &:hover, &:focus {
+			color: @light-color;
+			background-color: @brand-primary;
+		}
+	}
+}
+
+.navbar-default .navbar-nav > .open > a, 
+.navbar-default .navbar-nav > .open > a:focus, 
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:active {
+	background-color: @brand-primary!important;
+	color: @light-color;
 }
