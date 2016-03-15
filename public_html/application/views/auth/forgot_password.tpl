@@ -1,6 +1,7 @@
 {extends file="layout/master.tpl"}
 
 {block name="content"}
+<div class="login_background">
     <div class="container">
         <div class="row">
             <div class="col-sm-4 col-sm-offset-4">
@@ -13,17 +14,14 @@
                 	    <input type="text" id="inputEmail" name="identity" class="form-control" placeholder="E-mail address">
                 	    <span id="suggestion"></span>
                 	    <div class="">
-                	        <button class="btn btn-lg btn-primary btn-block" type="submit">I forgot</button>
+                	        <button class="btn btn-lg btn-default btn-block" type="submit">I forgot</button>
                 	    </div>
                 	</form>
+					<a href="http://www.kukua.cc" title="Go to the Kukua homepage" target="_blank">www.kukua.cc</a>
+					<a href="/auth/login" class="pull-right">Back to login</a>
 				</div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-4 col-sm-offset-4">
-                <a href="http://www.kukua.cc" title="Go to the Kukua homepage" target="_blank">www.kukua.cc</a>
-                <a href="/auth/login" class="pull-right">Back to login</a>
-            </div>
-        </div>
     </div>
+</div>
 {/block}

@@ -1,6 +1,7 @@
 {extends file="layout/master.tpl"}
 
 {block name="content"}
+<div class="login_background">
     <div class="container">
         <div class="row">
             <div class="col-sm-4 col-sm-offset-4">
@@ -31,4 +32,5 @@
             </div>
         </div>
     </div>
+</div>
 {/block}
