@@ -1,6 +1,17 @@
 <?php
 
 /**
+ * Add redirect for d.kukua.cc since .tech and
+ * d.kukua.cc are the same
+ */
+if (isset($_SERVER["HTTP_HOST"])) {
+	if ($_SERVER["HTTP_HOST"] == "d.kukua.cc") {
+		header("Location: http://dashboard.kukua.cc");
+		exit;
+	}
+}
+
+/**
  * CodeIgniter
  *
  * An open source application development framework for PHP
