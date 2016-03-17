@@ -6,7 +6,7 @@
  */
 if (isset($_SERVER["HTTP_HOST"])) {
 	if ($_SERVER["HTTP_HOST"] == "d.kukua.cc") {
-		header("Location: http://dashboard.kukua.cc");
+		header("Location: http://dashboard.kukua.tech");
 		exit;
 	}
 }
