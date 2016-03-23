@@ -1,5 +1,5 @@
 # Dashboard
-> Graphical interface for sensor data from ConCaVa (via InfluxDB).
+> Graphical interface for sensor data from ConCaVa.
 
 ## Requirements
 
@@ -7,7 +7,6 @@
 
 * [Docker](http://docs.docker.com/linux/started/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
-* [InfluxDB v0.8.8](https://influxdb.com/docs/v0.8/)
 * [Nginx](http://nginx.org/)
 
 ### Development
@@ -23,7 +22,6 @@ $ cp .env.sample .env
 
 $ docker-compose up -d
 # Navigate to http://<container ip>:80/ for the dashboard
-# Navigate to http://<container ip>:8083/ for InfluxDB
 
 $ cp public_html/.environment/production.php public_html/.environment/development.php
 # Set your environment to development if needed error reporting etc

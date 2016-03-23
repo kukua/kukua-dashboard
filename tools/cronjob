@@ -1,1 +1,0 @@
-*/15 * * * * kukua cd /data/dashboard && tools/cronjob_run.sh >> tools/cron.log 2>&1
