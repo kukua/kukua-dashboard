@@ -30,9 +30,4 @@ $ cp public_html/.environment/production.php public_html/.environment/developmen
 $ bower install
 $ npm install
 $ gulp build
-
-# Setup cronjob
-$ sudo cp tools/cronjob /etc/cron.d/import_sensor_data
-$ sudo chown root:root /etc/cron.d/import_sensor_data
-$ sudo service cron restart
 ```

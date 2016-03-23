@@ -6,7 +6,7 @@ hhvm:
     volumes:
         - ./public_html/:/data
     links:
-        - mysql:db
+        - mysql
 nginx:
     image: nginx
     container_name: nginx
@@ -24,7 +24,7 @@ nginx:
         - hhvm
     command: /etc/nginx/start.sh
 mysql:
-    image: tutum/mysql:5.6
+    image: mariadb:10.1
     container_name: mysql
     env_file: .env
     ports:
