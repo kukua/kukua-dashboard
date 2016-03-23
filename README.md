@@ -23,7 +23,7 @@ $ cp .env.sample .env
 $ docker-compose up -d
 # Navigate to http://<container ip>:80/ for the dashboard
 
-$ cp public_html/.environment/production.php public_html/.environment/development.php
+$ cp public_html/.environment/default.php public_html/.environment/config.php
 # Set your environment to development if needed error reporting etc
 
 # CSS / JS compiling
