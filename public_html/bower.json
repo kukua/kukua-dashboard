@@ -3,8 +3,8 @@
   "dependencies": {
     "jquery": "~2.1.*",
     "bootstrap": "~3.3.*",
-    "moment": "~2.10.6",
     "mailcheck": "~1.1.1",
+    "moment": "~2.10.6",
     "highcharts": "highcharts-release#~4.2.1",
     "bootstrap-daterangepicker": "~2.1.17"
   }

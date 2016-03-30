@@ -33,6 +33,54 @@ class Auth extends MyController {
         $this->load->view("auth/login", $this->data);
     }
 
+	/**
+	 * Request dashboard access
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function request() {
+		if ($this->input->post()) {
+			$username = "";
+			$password = "";
+			$email	  = $this->input->post("email");
+			$data	  = [
+				"first_name" => $this->input->post("first_name"),
+				"last_name"  => $this->input->post("last_name"),
+			];
+
+			if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+				Notification::set(Auth::WARNING, "This is not a valid e-mail address");
+				redirect("auth/request", "refresh");
+			}
+
+			// Check if e-mail already exists
+			if ($this->ion_auth->email_check($email) === true) {
+				Notification::set(Auth::WARNING, "This e-mail address is already registered");
+				redirect("auth/request", "refresh");
+			}
+
+			$user = $this->ion_auth->register($username, $password, $email, $data);
+			if ($user == false) {
+				Notification::set(Auth::DANGER, "Something went wrong. Please try again.");
+				redirect("auth/request", "refresh");
+			}
+
+			/* Deactivate user on request */
+			$this->ion_auth->deactivate($user);
+
+			/* Save selected countries */
+			$userCountries = new UserCountry();
+			$postCountries = ["1"];
+
+			if ($userCountries->save($user, $postCountries)) {
+				Notification::set(Auth::SUCCESS, "Your request has been succesfully received. We will get back to you as soon as possible.");
+				redirect("auth/request", "refresh");
+			}
+		}
+		$this->load->view("auth/request", $this->data);
+	}
+
     /**
      * Log out
      *
@@ -191,7 +239,7 @@ class Auth extends MyController {
         } else {
             Notification::set(Auth::DANGER, "Your account has been deactivated. Contact info@kukua.cc");
         }
-            
+
         return false;
     }
 

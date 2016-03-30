@@ -111,7 +111,11 @@ class User extends MyController {
 	}
 
 	/**
+	 * Disable access for user in dashboard
 	 *
+	 * @access public
+	 * @param  int $id
+	 * @return void
 	 */
 	public function disable($id) {
 		$this->allow("admin");
@@ -131,6 +135,13 @@ class User extends MyController {
 		redirect("user", "refresh");
 	}
 
+	/**
+	 * Enable access for user in dashboard
+	 *
+	 * @access public
+	 * @param  int $id
+	 * @return void
+	 */
 	public function enable($id) {
 		$this->allow("admin");
 		$user = $this->ion_auth->user($id)->row();
@@ -281,6 +292,20 @@ class User extends MyController {
 		}
 
 		redirect("user", "refresh");
+	}
+
+	/**
+	 * Resend invitation e-mail
+	 *
+	 * @access public
+	 * @param  int $id
+	 * @return void
+	 */
+	public function resendInvite($id) {
+		if ($this->_send_user_invitation($id)) {
+			Notification::set(User::SUCCESS, "The e-mail has been send");
+		}
+		redirect("/user");
 	}
 
 	/**

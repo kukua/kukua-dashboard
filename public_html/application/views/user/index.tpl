@@ -52,6 +52,9 @@
                                     </p>
                                 </td>
                                 <td class="{$class} text-right">
+									{if !empty($user->activation_code)}
+										<a href="{$baseUrl}user/resendInvite/{$user->id}" class="btn btn-primary btn-xs">(re) send invite</a>
+									{/if}
                                     {if $user->active == "1"}
                                         <a href="{$baseUrl}user/disable/{$user->id}" title="Disable this account"><i class="text-muted glyphicon glyphicon-eye-close"></i></a>
                                     {else}
