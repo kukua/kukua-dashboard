@@ -38,67 +38,6 @@
 		$('input#dateTo').val(endDate.format("X"))
 	};
 
-	kukua.forecast = function() {
-		var graphCountry	= kukua.getGraphCountry()
-		var graphType		= kukua.getGraphType()
-		var graphTypeText	= kukua.getGraphTypeText()
-		var graphInterval	= kukua.getGraphInterval()
-
-		/* Don't execute when other than tanzania */
-		if (graphCountry.val() != "1") {
-			$("#chart-forecast").html("")
-			$(".js-chart-forecast-title").html("")
-			return;
-		} else {
-			$(".js-chart-forecast-title").html("Ten day forecast")
-		}
-
-		var options = chart.getTempOptions()
-		options.chart.zoomType = 'x'
-
-		var item = graphType.find(":selected").data('text');
-		switch(item) {
-			case 'Rainfall':
-				//options.title.text = graphTypeText
-				options.chart.type = "column"
-				options.yAxis.title.text = graphTypeText + " (mm)"
-				options.yAxis.min = null
-				options.yAxis.max = null
-				options.tooltip.valueSuffix = ' mm'
-				break
-			case 'Humidity':
-				options.chart.type = "line"
-				options.yAxis.title.text = graphTypeText + " (%)"
-				options.yAxis.min = null
-				options.yAxis.max = null
-				options.tooltip.valueSuffix = ' (%)'
-				break
-			case 'Pressure':
-				options.chart.type = "line"
-				options.yAxis.title.text = graphTypeText + " (hPa)"
-				options.yAxis.min = null
-				options.yAxis.max = null
-				options.tooltip.valueSuffix = ' (hPa)'
-				break
-			case 'Wind':
-				options.chart.type = "line"
-				options.yAxis.title.text = graphTypeText + " (km/h)"
-				options.yAxis.min = null
-				options.yAxis.max = null
-				options.tooltip.valueSuffix = ' (km/h)'
-				break
-			//if other
-			default:
-				options.chart.type = "arearange"
-				options.yAxis.title.text = "Temperature (°C)"
-				options.yAxis.min = null 
-				options.yAxis.max = null
-				options.tooltip.valueSuffix = '°C'
-				break
-		}
-		chart.temp("#chart-forecast", "/api/sensordata/forecast", options)
-	};
-
 	kukua.graph = function() {
 		var graphCountry	= kukua.getGraphCountry()
 		var graphType		= kukua.getGraphType()
@@ -172,7 +111,6 @@
 					$("#js-graph-type-swap").append("<option value='" + column.id + "' data-text='" + column.name + "'>" + column.name + "</option>");
 				});
 				kukua.graph()
-				kukua.forecast()
 			})
 		}).trigger("change");
 	};
@@ -184,7 +122,6 @@
 		})
 		kukua.getGraphType().on("change", function() {
 			kukua.graph()
-			kukua.forecast()
 		})
 	};
 

@@ -5,53 +5,6 @@
         //No need to do anything on domReady
     };
 
-    chart.temp = function(container, jsonUrl, options) {
-        if ($(container).length >= 1) {
-
-            //get dates from daterangepicker
-            var graphType    = kukua.getGraphType()
-            var country      = kukua.getGraphCountry()
-			var range = graphType.find(":selected").data('text');
-            var postdata = {
-                'country': country.val(),
-                'type': graphType.val(),
-                'dateFrom': moment().format('X'),
-                'dateTo': moment().add(10,'days').format('X'),
-                'range': range
-            }
-
-            var call = $.ajax({
-                type: 'POST',
-                url: jsonUrl,
-                data: postdata,
-                dataType: 'json'
-            })
-
-            call.done(function(request) {
-                var result = new Array()
-
-                $.each(request, function(id, station) {
-                    var data  = new Object()
-                    data.name = "N.E. Tanzania"
-                    data.data = []
-                    $.each(station.values, function(key, value) {
-                        data.data.push(value)
-                    })
-                    result.push(data)
-                })
-
-                //Add data points to the given options
-                options.series = result
-
-                //Combine given options with default options
-                var opt = $.extend({}, chart.getTempOptions(), options)
-
-                //render
-                $(container).highcharts(opt)
-            })
-        }
-    };
-
     chart.render = function(container, jsonUrl, options) {
         if ($(container).length >= 1) {
 
@@ -185,71 +138,5 @@
         return options;
     };
 
-    chart.getTempOptions = function() {
-        var options = new Object({
-            title: {
-                text: "",
-				align: "left",
-				style: {
-					fontSize: "26px",
-					fontFamily: "Asap, Trebuchet MS"
-				}
-            },
-            xAxis: {
-                type: 'datetime',
-                labels: {
-                    rotation: -45,
-                    align: 'right',
-                },
-                title: {
-                    text: 'Date/Time'
-                },
-                crosshair: true,
-                alternateGridColor: "#f7f7f7"
-            },
-            tooltip: {
-                shared: true,
-                valueSuffix: ''
-            },
-            legend: {
-                align: 'center',
-                verticalAlign: 'bottom',
-                layout: 'horizontal'
-            },
-            yAxis: {
-                title: {
-                    text: ''
-                },
-                min: 0,
-                max: 50
-            },
-            chart: {
-                zoomType: 'x'
-            },
-            plotOptions: {
-                series: {
-                    states: {
-                        hover: {
-                            enabled: false
-                        }
-                    }
-                },
-                line: {
-                    turboThreshold: 100000,
-                    lineWidth: 1
-                },
-                events: {
-                    afterSetExtremes: function(event){
-
-                    }
-                }
-            },
-            credits: {
-                enabled: false
-            },
-        });
-
-        return options;
-    };
 })(window.chart = window.chart || {});
 $(document).ready(chart.onDomReady);

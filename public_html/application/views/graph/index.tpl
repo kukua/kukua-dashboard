@@ -59,6 +59,5 @@
 
 	<div class="container">
 		<div id="chart" style="width:100%; height:78%;"></div>
-		<div id="chart-forecast"></div>
 	</div>
 {/block}
