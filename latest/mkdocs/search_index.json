@@ -1,0 +1,14 @@
+{
+    "docs": [
+        {
+            "location": "/",
+            "text": "Dashboard",
+            "title": "Home"
+        },
+        {
+            "location": "/#dashboard",
+            "text": "",
+            "title": "Dashboard"
+        }
+    ]
+}
