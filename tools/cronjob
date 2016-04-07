@@ -1,0 +1,1 @@
+0 4 * * * ubuntu /home/ubuntu/data/dashboard/tools/cronjob_sms.sh
