@@ -2,50 +2,6 @@
 
 class GlobalHelper {
 
-	public static function getDefaultDate($intval, $midnight = false) {
-		$today = new DateTime();
-		$today->sub(new DateInterval($intval));
-		if ($midnight === true) {
-			return $today->format("Y/m/d 00:00:00");
-		}
-		return $today->format("Y/m/d 23:59:59");
-	}
-
-	public static function graphWeatherTypes() {
-		return [
-			"temp" => "Temperature",
-			"rain" => "Rainfall",
-			"hum"  => "Humidity",
-			"pres" => "Pressure",
-			"wind" => "Wind"
-		];
-	}
-
-	public static function allWeatherTypes() {
-		$types = GlobalHelper::graphWeatherTypes();
-		$types["winddir"] = "WindDirection";
-		$types["windgust"] = "WindGusts";
-		$types["windgustdir"] = "WindGustDirection";
-		$types["bat"] = "Battery";
-
-		return $types;
-	}
-
-	public static function getForecastMap($country) {
-		switch($country) {
-			case 'Nigeria':
-				$url = "http://vip.foreca.com/kukua/maps-nigeria.html?rain";
-				break;
-			case 'Tanzania':
-				$url = "http://vip.foreca.com/kukua/maps-tanzania.html?rain";
-				break;
-			default:
-				$url = "";
-				break;
-		}
-		return $url;
-	}
-
 	public static function meaningOf($values) {
 		$return = null;
 
@@ -88,8 +44,11 @@ class GlobalHelper {
 			throw new Exception("Cannot open zip archive");
 		}
 
+		var_dump($assocDataArray);
+		die();
+
 		try {
-			if (!is_null($assocDataArray)) {
+			if (!is_array($assocDataArray) && !empty($assocDataArray)) {
 				foreach($assocDataArray as $i => $station) {
 					$fp = fopen('php://output', 'w');
 					if ($fp === false) {

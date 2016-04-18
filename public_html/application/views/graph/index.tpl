@@ -8,21 +8,22 @@
 				<div class="js-test"></div>
 
 				<div class="row">
-					{if count($userCountries) > 1}
-						<div class="col-sm-2">
-							<label class="ellipsis" title="Select country">Select country</label>
-							<select name="country" id="js-graph-country" class="form-control">
-								{foreach $userCountries as $object}
-									<option value="{$object.country->getId()}">{$object.country->getName()}</option>
-								{/foreach}
-							</select>
-						</div>
-					{else}
-						<input type="hidden" name="country" id="js-graph-country" class="hidden" value="{$userCountries.0.country->getId()}">
-					{/if}
+					<div class="col-sm-2">
+						<label class="ellipsis">Region</label>
+						<select class="form-control" id="js-graph-region" name="region">
+							{foreach $regions as $region}
+								<option value="{$region->getId()}">{$region->getName()}</option>
+							{/foreach}
+						</select>
+					</div>
 					<div class="col-sm-2">
 						<label class="ellipsis" title="Select graph">Select graph</label>
-						<select id="js-graph-type-swap" class="form-control" name="panelId"></select>
+						<select id='js-graph-type-swap' class="form-control" name="panelId">
+							<option value="Temperature">Temperature</option>
+							<option value="Rainfall">Rainfall</option>
+							<option value="Humidity">Humidity</option>
+							<option value="WindSpeed">Wind speed</option>
+						</select>
 					</div>
 					<div class="col-sm-4">
 						<div class="form-group">

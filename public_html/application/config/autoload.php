@@ -59,14 +59,14 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
 $autoload['libraries'] = [
-    'parser',
-    'user_agent',
-    "session",
-    'Smartytpl',
-    'form_validation',
-    'Notification',
-    'ion_auth',
-    'Email'
+	'parser',
+	'user_agent',
+	"session",
+	'Smartytpl',
+	'form_validation',
+	'Notification',
+	'ion_auth',
+	'Email'
 ];
 
 /*
@@ -93,8 +93,8 @@ $autoload['drivers'] = array();
 |	$autoload['helper'] = array('url', 'file');
 */
 $autoload['helper'] = [
-    "url",
-    "global"
+	"url",
+	"global"
 ];
 
 /*
@@ -139,14 +139,12 @@ $autoload['language'] = [];
 |	$autoload['model'] = array('first_model' => 'first');
 */
 $autoload['model'] = array(
-    'ion_auth_model',
-    'Eseye',
-	'Country',
-	'CountryColumn',
-    'UserCountry',
-    'UserFeedback',
-    'Station',
-    'StationColumn',
-    'Source',
-    'Smsclient',
+	'ion_auth_model',
+	'UserFeedback',
+	'UserStations',
+	'Station',
+	'Eseye',
+	'Source',
+	'Smsclient',
+	'Region'
 );

@@ -40,8 +40,7 @@ class Graph extends MyController {
 			$this->session->unset_userdata(array_keys($items));
 		}
 
-		$userCountries = new UserCountry();
-		$this->data["userCountries"] = $userCountries->findByUserId($this->_user->id, true);
+		$this->data["regions"] = (new UserStations())->findRegionsByUserId($this->_user->id);
 		$this->load->view("graph/index", $this->data);
 	}
 
@@ -50,12 +49,12 @@ class Graph extends MyController {
 	 * @return void
 	 */
 	public function download() {
-		$data["country"] = $this->input->post("country");
+		$data["region"] = $this->input->post("region");
 		$data["type"] = "all";
 		$data["dateFrom"] = $this->input->post("from");
 		$data["dateTo"] = $this->input->post("to");
 		$data["interval"] = $this->input->post("interval");
-		$result = json_decode($this->_call($data));
+		$result = $this->_call($data);
 		GlobalHelper::outputCsv("export-stations", $result);
 		exit;
 	}
@@ -63,10 +62,13 @@ class Graph extends MyController {
 	/**
 	 * @access protected
 	 * @return Curl::response
+	 * @todo   fix security
+	 * @fixme  Insecure
 	 */
 	protected function _call($data = Array()) {
 		$curl = new \Curl\Curl();
-		$curl->post("http://dashboard.kukua.cc/api/sensordata/get",
+		$curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+		$curl->post("https://dashboard.kukua.cc/api/sensordata/get",
 			$data
 		);
 		return $curl->response;

@@ -386,11 +386,12 @@
 								<li role="separator" class="divider"></li>
 								{if $isAdmin}
 									<li><a href="{$baseUrl}user">Users</a></li>
-									<li><a href="{$baseUrl}feedback">Feedback</a></li>
-									<li><a href="{$baseUrl}countries">Countries</a></li>
+									<li><a href="{$baseUrl}regions">Regions</a></li>
+									<li><a href="{$baseUrl}stations">Stations</a></li>
 									<li role="separator" class="divider"></li>
 									<li><a href="{$baseUrl}smsclients">SMS Clients</a></li>
 									<li><a href="{$baseUrl}sim">SIM activity</a></li>
+									<li><a href="{$baseUrl}feedback">Feedback</a></li>
 									<li role="separator" class="divider"></li>
 								{/if}
 								<li><a href="{$baseUrl}auth/logout">Logout</a></li>

@@ -12,10 +12,10 @@
             var graphType    = kukua.getGraphType()
             var selectedDate = kukua.getDateRangePicker()
             var interval     = kukua.getGraphInterval()
-            var country = kukua.getGraphCountry()
+            var region		 = kukua.getGraphRegion()
 
             var postdata = {
-                'country': country.val(),
+                'region': region.val(),
                 'type': graphType.val(),
                 'dateFrom': selectedDate.data('daterangepicker').startDate.startOf('day').format('X'),
                 'dateTo': selectedDate.data('daterangepicker').endDate.endOf('day').format('X'),
@@ -33,17 +33,9 @@
             })
 
             call.done(function(request) {
-                var result = new Array()
-                if (request != null) {
-                    $.each(request, function(id, station) {
-                        var data  = new Object()
-                        data.name = station.name
-                        data.data = []
-                        $.each(station.values, function(key, value) {
-                            data.data.push(value)
-                        })
-                        result.push(data)
-                    })
+                var result = []
+                if (request != null && request.length > 0) {
+					result = request;
                 }
 
                 //Add data points to the given options

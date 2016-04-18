@@ -32,18 +32,6 @@ class User extends MyController {
 	}
 
 	/**
-	 * Display current user - NYI
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function read($id = null) {
-		$this->allow("members", $id);
-		$this->data["user"] = $this->ion_auth->user($id)->row();
-		$this->load->view("user/read", $this->data);
-	}
-
-	/**
 	 * Create a user - NYI
 	 *
 	 * @access public
@@ -64,13 +52,12 @@ class User extends MyController {
 	public function update($id = null) {
 		$this->allow("members", $id);
 
+		$isAdmin = $this->ion_auth->in_group("admin");
 		if ($this->input->post("first_name")) {
-			$isAdmin = $this->ion_auth->in_group("admin");
 
 			$this->form_validation->set_rules("first_name", "First name", "required");
 			$this->form_validation->set_rules("last_name", "Last name", "required");
 			$postPw = $this->input->post("new") ? true : false;
-			$postCountries = $this->input->post("country") ? $this->input->post("country") : false;
 
 			if ($postPw) {
 				$this->form_validation->set_rules('new', 'Password', 'required|matches[new_confirm]');
@@ -84,10 +71,10 @@ class User extends MyController {
 					$userData["password"] = $this->input->post("new");
 				}
 
-				/* update user countries */
-				if ($isAdmin === true && $postCountries !== false) {
-					$updateUserCountry = new UserCountry();
-					$updateUserCountry->save($id, $postCountries);
+				if ($isAdmin) {
+					$postUserStations = $this->input->post('userStations');
+					$dbUserStations = new UserStations();
+					$dbUserStations->saveBatch($id, $postUserStations);
 				}
 
 				if ($this->ion_auth->update($id, $userData) === true) {
@@ -100,13 +87,10 @@ class User extends MyController {
 			}
 		}
 
-		$user = $this->ion_auth->user($id)->row();
-		$countries = new Country();
-		$userCountries = new UserCountry();
+		$this->_userStations($id);
 
+		$user = $this->ion_auth->user($id)->row();
 		$this->data["user"] = $user;
-		$this->data["countries"] = $countries->load();
-		$this->data["userCountries"] = $userCountries->findByUserId($user->id);
 		$this->load->view("user/update", $this->data);
 	}
 
@@ -188,25 +172,24 @@ class User extends MyController {
 				redirect("user/invite", "refresh");
 			}
 
+			$data["activation_code"] = bin2hex(openssl_random_pseudo_bytes(8));
 			$user = $this->ion_auth->register($username, $password, $email, $data);
 			if ($user == false) {
 				Notification::set(User::DANGER, "Something went wrong. Please try again.");
 				redirect("user/invite", "refresh");
 			}
 
-			/* Save selected countries */
-			$userCountries = new UserCountry();
-			$postCountries = $this->input->post("country");
-			$userCountries->save($user["id"], $postCountries);
+			$postUserStations = $this->input->post('userStations');
+			$dbUserStations = new UserStations();
+			$dbUserStations->saveBatch($user, $postUserStations);
 
-			if ($this->_send_user_invitation($user["id"])) {
+			if ($this->_send_user_invitation($user)) {
 				Notification::set(User::SUCCESS, "The user has been invited");
 				redirect("user/invite", "refresh");
 			}
 		}
 
-		$countries = new Country();
-		$this->data["countries"] = $countries->load();
+		$this->_userStations();
 		$this->load->view("user/invite", $this->data);
 	}
 
@@ -309,14 +292,45 @@ class User extends MyController {
 	}
 
 	/**
+	 * Build view data for user stations
+	 *
+	 * @access private
+	 * @return void
+	 */
+	private function _userStations($userId = null) {
+		$userStations = [];
+		if (!is_null($userId)) {
+			$userStations = (new UserStations())->findStationsByUserId($userId);
+		}
+
+		if ($this->ion_auth->in_group("admin") === true) {
+			$stations = (new Station())->load();
+			$regions  = (new Region())->load();
+
+			$regionStations = [];
+			foreach ($stations as $station) {
+				foreach ($regions as $region) {
+					if ($station->getRegionId() == $region->getId()) {
+						$regionStations[$region->getId()]["region"] = $region;
+						$regionStations[$region->getId()]["stations"][] = $station;
+					}
+				}
+			}
+
+			$this->data["regions"] = $regionStations;
+		}
+		$this->data["userStations"] = $userStations;
+	}
+
+	/**
 	 * Send the email
 	 *
 	 * @access private
 	 * @param int $user_id
 	 * @return boolean
 	 */
-	private function _send_user_invitation($user_id) {
-		$user = $this->ion_auth->where("id", $user_id)->users()->row();
+	private function _send_user_invitation($userId) {
+		$user = $this->ion_auth->users()->user($userId)->row();
 		$data["user"] = $user;
 		$data["base"] = base_url();
 

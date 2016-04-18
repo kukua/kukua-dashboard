@@ -7,10 +7,10 @@
 		kukua.datePickerCallback(moment(), moment())
 
 		//Render first onDomReady
-		kukua.countryColumns()
 
 		//bind onChange reload graph
 		kukua.formChanges()
+		kukua.graph()
 	};
 
 	kukua.datePickerInit = function() {
@@ -39,7 +39,7 @@
 	};
 
 	kukua.graph = function() {
-		var graphCountry	= kukua.getGraphCountry()
+		var graphRegion		= kukua.getGraphRegion()
 		var graphType		= kukua.getGraphType()
 		var graphTypeText	= kukua.getGraphTypeText()
 		var graphInterval	= kukua.getGraphInterval()
@@ -48,7 +48,7 @@
 		options.chart.zoomType = 'x'
 		options.title.text = graphTypeText
 
-		var item = graphType.find(":selected").data('text');
+		var item = graphType.find(":selected").val();
 		switch(item) {
 			case 'Temperature':
 				options.chart.type = "line"
@@ -86,7 +86,7 @@
 				options.tooltip.valueSuffix = ' km/h'
 				break;
 		}
-		chart.render("#chart", "/api/sensordata/get/", options)
+		chart.render("#chart", "/api/sensordata/get/true", options)
 	};
 
 	kukua.datePickerChange = function() {
@@ -95,27 +95,10 @@
 		})
 	};
 
-	kukua.countryColumns = function() {
-		kukua.getGraphCountry().on("change", function() {
-			var country = kukua.getGraphCountry().val();
-			var result = $.ajax({
-				type: 'GET',
-				url: '/countries/getcolumns/' + country,
-				dataType: 'json'
-			});
-
-			result.done(function(request) {
-				var items = [];
-				$("#js-graph-type-swap").html("");
-				$.each(request, function(id, column) {
-					$("#js-graph-type-swap").append("<option value='" + column.id + "' data-text='" + column.name + "'>" + column.name + "</option>");
-				});
-				kukua.graph()
-			})
-		}).trigger("change");
-	};
-
 	kukua.formChanges = function() {
+		kukua.getGraphRegion().on("change", function() {
+			kukua.graph()
+		})
 		kukua.datePickerChange();
 		kukua.getGraphInterval().on("change", function() {
 			kukua.graph()
@@ -125,8 +108,8 @@
 		})
 	};
 
-	kukua.getGraphCountry = function() {
-		return $("#js-graph-country")
+	kukua.getGraphRegion = function() {
+		return $("#js-graph-region")
 	};
 	kukua.getGraphInterval = function() {
 		return $('#js-graph-show-per')

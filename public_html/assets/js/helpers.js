@@ -2,35 +2,17 @@
 	'use strict';
 
 	helpers.onDomReady = function() {
-		helpers.forecast();
-
 		helpers.confirmDelete()
 		helpers.confirmDisable()
 		helpers.confirmRevoke()
 		helpers.confirmGrant()
+
 		helpers.feedbackDisplay()
 		helpers.feedbackPost()
 
 		helpers.tableRowClick()
+		helpers.stationsInRegions()
 	};
-
-	helpers.forecast = function() {
-		$("#js-forecast-country").on('change', function () {
-			var postCountry = {
-				"country": $(this).val()
-			}
-			var call = $.ajax({
-				type: 'POST',
-				url: '/forecast/get/',
-				data: postCountry,
-				dataType: 'json'
-			})
-
-			call.done(function(request) {
-				$(".js-iframe").html('<iframe src="' + request.url + '" frameborder="0" width="802px" height="802px"></iframe>');
-			})
-		}).trigger("change");
-	}
 
 	/**
 	 * Display confirm box on delete
@@ -129,24 +111,6 @@
 		});
 	};
 
-	helpers.removeStation = function() {
-		var item = $(".js-remove-station");
-		item.on("click", function(e) {
-			var $this = $(this);
-			var x = confirm("Are you sure you want to delete this station?")
-			if (x == true) {
-				$.ajax({
-					type: "GET",
-					url: "/locations/delete_station/" + item.data("station_id"),
-					success: function(data) {
-						$this.parent("td").parent("tr").fadeOut()
-					}
-				});
-			}
-			return false
-		})
-	}
-
 	helpers.tableRowClick = function() {
 		$(".js-row-link td").on("click", function() {
 			if ($(this).children("a").length > 1) {
@@ -156,5 +120,46 @@
 			}
 		})
 	}
+
+	helpers.stationsInRegions = function() {
+		$('.js-check').on('click', function() {
+			var checked = $(this).is(":checked");
+			$.each($(this).next().next().children('li').children('input'), function() {
+				if (checked) {
+					$(this).prop("checked", true);
+				} else {
+					$(this).prop("checked", false);
+				}
+			});
+		});
+
+		helpers.checkboxFix();
+		$('input.js-checkbox-result').on('change', function() {
+			helpers.checkboxFix();
+		});
+	}
+
+	helpers.checkboxFix = function() {
+		$.each($('.js-checkbox'), function() {
+			var mainInput = $(this).children('.js-check');
+			var items = $(this).children('ul').children('li').children('.js-checkbox-result');
+			var totalItems = items.length;
+			var count = 0;
+			$.each(items, function(key, value) {
+				if ($(this).is(":checked")) {
+					count++
+				} else {
+					count--
+				}
+			});
+
+			if (totalItems == count) {
+				mainInput.prop("checked", true);
+			} else {
+				mainInput.prop("checked", false);
+			}
+		});
+	}
+
 })(window.helpers = window.helpers || {});
 $(document).ready(helpers.onDomReady);

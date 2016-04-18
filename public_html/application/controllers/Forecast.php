@@ -8,9 +8,7 @@ class Forecast extends MyController {
     }
 
     public function index() {
-        $uc = new UserCountry();
-        $userCountries = $uc->findByUserId($this->_user->id, true);
-        $this->data["userCountries"] = $userCountries;
+        $this->data["country"] = "Tanzania";
         $this->load->view("forecast/index", $this->data);
     }
 

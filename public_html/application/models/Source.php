@@ -8,7 +8,7 @@
  */
 class Source extends CI_Model {
 
-	protected $_country;
+	protected $_region;
 	protected $_type;
 	protected $_dateFrom;
 	protected $_dateTo;
@@ -33,24 +33,23 @@ class Source extends CI_Model {
 
 	/**
 	 * @access public
-	 * @param string
+	 * @param  string $region
 	 * @throws InvalidArgumentException
-	 * @return void
+	 * @return string
 	 */
-	public function setCountry($country) {
-		if (!is_string($country)) {
-			throw new InvalidArgumentException("Param supplied not a string");
+	public function setRegion($region) {
+		if (!is_numeric($region)) {
+			throw new InvalidArgumentException("Invalid param supplied");
 		}
-
-		$this->_country = $country;
+		$this->_region = $region;
 	}
 
 	/**
 	 * @access public
 	 * @return string
 	 */
-	public function getCountry() {
-		return $this->_country;
+	public function getRegion() {
+		return $this->_region;
 	}
 
 	/**
@@ -171,26 +170,25 @@ class Source extends CI_Model {
 	 * @return Source
 	 */
 	public function populate($data) {
-		if (isset($data["country"])) {
-			$this->setCountry($data["country"]);
+		if (!is_array($data)) {
+			throw new InvalidArgumentException("No valid param given");
 		}
 
+		if (isset($data["region"])) {
+			$this->setRegion($data["region"]);
+		}
 		if (isset($data["type"])) {
 			$this->setWeatherType($data["type"]);
 		}
-
 		if (isset($data["dateFrom"])) {
 			$this->setDateFrom($data["dateFrom"]);
 		}
-
 		if (isset($data["dateTo"])) {
 			$this->setDateTo($data["dateTo"]);
 		}
-
 		if (isset($data["interval"])) {
 			$this->setInterval($data["interval"]);
 		}
-
 		if (isset($data["range"])) {
 			$this->setRange($data["range"]);
 		}
@@ -199,38 +197,49 @@ class Source extends CI_Model {
 	}
 
 	/**
-	 * Gathering data from different sources
-	 * for display
+	 * Gather data from DB
 	 *
 	 * @access public
+	 * @param  User
 	 * @return Array
 	 */
-	public function gather() {
+	public function gather($user = null) {
+		require_once(APPPATH . "models/Sources/Measurements.php");
+
 		$result = [];
-		require_once(APPPATH . "models/Sources/Dashboard.php");
-		$dashboard = new Dashboard();
-		$dashResult = $dashboard->get($this);
-		if (isset($dashResult[0])) {
-			foreach($dashResult as $dash) {
-				$result[] = $dash;
-			}
+		$object = new Measurements();
+		$measurements = $object->get($this, $user);
+		if (isset($measurements[0])) {
+			$result = $measurements;
 		}
 		return $result;
 	}
 
 	/**
 	 * @access public
+	 * @param  User
 	 * @return Array
 	 */
-	public function gatherForecast() {
-		$result = [];
+	public function gatherForecast($user = null) {
 		require_once(APPPATH . "models/Sources/Foreca.php");
+
+		$result = [];
+		switch($this->getRegion()) {
+		case '1':
+			$stations = ['hourly_02339354'];
+			break;
+		case '2':
+			$stations = ['hourly_100156918'];
+			break;
+		default:
+			$stations = [];
+			break;
+		}
+
 		$object = new Foreca();
-		$objResult = $object->get($this);
+		$objResult = $object->get($this, $stations);
 		if (isset($objResult[0])) {
-			foreach($objResult as $dash) {
-				$result[] = $dash;
-			}
+			$result = $objResult;
 		}
 		return $result;
 	}

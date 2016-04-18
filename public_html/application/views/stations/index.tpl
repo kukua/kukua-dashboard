@@ -3,50 +3,33 @@
 {block name="content"}
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-2 col-sm-offset-2">
-				<div style="margin-top: 30px;"></div>
-				<a href="/countries/">&laquo; Go back</a>
-			</div>
-			<div class="col-sm-4">
-				<h1 class="text-center">Stations in {$country->getName()}</h1>
-				{include file="global/notification.tpl"}
-			</div>
-		</div>
-
-		<div class="row">
 			<div class="col-sm-8 col-sm-offset-2">
+
+				<div class="text-center">
+					<h1 class="text-center">Stations</h1>
+					{include file="global/notification.tpl"}
+				</div>
+
 				<table class="table">
 					<thead>
 						<th>Name</th>
-						<th>Copy params from...</th>
-						<th></th>
+						<th>Device_id</th>
+						<th>SIM ID</th>
+						<th>Lat/Long</th>
 						<th></th>
 					</thead>
 					<tbody>
-						{foreach $stations as $station}
-							{$class = ""}
-							{if $station->getActive() != 1}
-								{$class = "bg-warning"}
-							{/if}
-							<form method="post" action="/stations/copyParams/{$station->getId()}/{$country->getId()}">
+						{if (count($stations))}
+							{foreach $stations as $station}
+								{$class = ""}
+								{if $station->getActive() != 1}
+									{$class = "bg-warning"}
+								{/if}
 								<tr class="{$class}">
 									<td>{$station->getName()|ucfirst}</td>
-									{if count($stations) > 1}
-										<td>
-											<select class="js-station-copy form-control" name="copyFrom">
-												{foreach $stations as $copyStation}
-													{if $copyStation->getId() != $station->getId()}
-														<option value="{$copyStation->getId()}">{$copyStation->getName()|ucfirst}</option>
-													{/if}
-												{/foreach}
-											</select>
-										</td>
-										<td>
-											<button type="submit" class="btn btn-primary">Copy</button>
-										</td>
-									{else}
-										<td class="text-muted">Nothing to copy from yet</td>
-									{/if}
+									<td>{$station->getDeviceId()}</td>
+									<td>{$station->getSimId()}</td>
+									<td>{$station->getLatitude()} / {$station->getLongitude()}</td>
 									<td class="text-right">
 										{if $station->getActive() == 1}
 											<a href="/stations/disable/{$station->getId()}" class="text-info js-confirm-disable" title="Don't display station in chart"><i class="glyphicon glyphicon-eye-close"></i></a>
@@ -57,15 +40,15 @@
 										<a href="/stations/delete/{$station->getId()}" class="text-danger js-confirm-delete"><i class="glyphicon glyphicon-remove"></i></a>
 									</td>
 								</tr>
-							</form>
-						{/foreach}
+							{/foreach}
+						{/if}
 					</tbody>
 				</table>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-sm-8 col-sm-offset-2">
-				<a href="/stations/create/{$country->getId()}" class="btn btn-primary">Add station</a>
+				<a href="/stations/create/" class="btn btn-primary">Add station</a>
 			</div>
 		</div>
 	</div>

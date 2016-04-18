@@ -9,21 +9,10 @@
     </div>
 
     <div class="container">
-        {if is_array($userCountries)}
-            <div class="row" style="margin-bottom: 40px;">
-                <div class="col-sm-4">
-                    <label>Select country</label>
-                    <select name="js-country" id="js-forecast-country" id="js-graph-country" class="form-control">
-                        {foreach $userCountries as $uc}
-                            <option value="{$uc.country->getName()}">{$uc.country->getName()}</option>
-                        {/foreach}
-                    </select>
-                </div>
-            </div>
-        {/if}
         <div class="row">
             <div class="col-sm-12">
                 <div class="pull-left js-iframe">
+					<iframe src="http://vip.foreca.com/kukua/maps-tanzania.html?rain" frameborder="0" width="802px" height="802px"></iframe>
                 </div>
                 <div class="pull-right">
                     <small>mm = millimeter</small>
