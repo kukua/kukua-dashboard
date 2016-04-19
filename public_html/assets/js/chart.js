@@ -34,12 +34,10 @@
 
             call.done(function(request) {
                 var result = []
+				options.series = [];
                 if (request != null && request.length > 0) {
-					result = request;
+					options.series = request;
                 }
-
-                //Add data points to the given options
-                options.series = result
 
                 //Combine given options with default options
                 var opt = $.extend({}, chart.getOptions(), options)
