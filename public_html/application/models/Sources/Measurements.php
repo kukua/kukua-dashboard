@@ -68,17 +68,17 @@ class Measurements extends Source {
 		$sort   = $this->buildSort();
 
 		/** If user AND region is set */
-		if ($source->getRegion() !== null && $user !== null) {
+		if ($source->getRegion() !== null && $user) {
 			$stations = (new Station())->findByRegionIdAndUserId($source->getRegion(), $user->id);
 		}
 
 		/** If user is set */
-		if ($source->getRegion() == null && $user !== null) {
+		if ($source->getRegion() == null && $user) {
 			$stations = (new UserStations())->findStationsByUserId($user->id);
 		}
 
 		/** If region is set */
-		if ($source->getRegion() !== null && $user == null) {
+		if ($source->getRegion() !== null && !$user) {
 			$stations = (new Station())->findByRegionId($source->getRegion());
 		}
 
