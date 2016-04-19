@@ -44,11 +44,8 @@ class GlobalHelper {
 			throw new Exception("Cannot open zip archive");
 		}
 
-		var_dump($assocDataArray);
-		die();
-
 		try {
-			if (!is_array($assocDataArray) && !empty($assocDataArray)) {
+			if (is_array($assocDataArray) && !empty($assocDataArray)) {
 				foreach($assocDataArray as $i => $station) {
 					$fp = fopen('php://output', 'w');
 					if ($fp === false) {

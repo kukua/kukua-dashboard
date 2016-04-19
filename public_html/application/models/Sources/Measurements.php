@@ -89,10 +89,17 @@ class Measurements extends Source {
 			log_message("ERROR", $query);
 			$dbResult = $this->_db->query($query);
 
-			$column = $this->_default_columns[$source->getWeatherType()]['name'];
-			$data[$key]["name"] = $station->getName();
-			while($rows = $dbResult->fetch_assoc()) {
-				$data[$key]["data"][] = [(int) $rows["timestamp"], (float) $rows[$column]];
+			if ($source->getWeatherType() != "all") {
+				$columns[] = $this->_default_columns[$source->getWeatherType()];
+			} else {
+				$columns = $this->_default_columns;
+			}
+
+			foreach($columns as $column) {
+				$data[$key]["name"] = $station->getName();
+				while($rows = $dbResult->fetch_assoc()) {
+					$data[$key]["data"][] = [(int) $rows["timestamp"], (float) $rows[$column["name"]]];
+				}
 			}
 		}
 

@@ -55,6 +55,8 @@ class Graph extends MyController {
 		$data["dateTo"] = $this->input->post("to");
 		$data["interval"] = $this->input->post("interval");
 		$result = $this->_call($data);
+		GlobalHelper::debug($result->response);
+		die();
 		GlobalHelper::outputCsv("export-stations", $result);
 		exit;
 	}
@@ -71,6 +73,6 @@ class Graph extends MyController {
 		$curl->post("https://dashboard.kukua.cc/api/sensordata/get",
 			$data
 		);
-		return $curl->response;
+		return $curl;
 	}
 }
