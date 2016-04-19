@@ -164,4 +164,21 @@ class UserStations extends CI_Model {
 		}
 		return false;
 	}
+
+	/**
+	 * Delete entries by station id
+	 *
+	 * @access public
+	 * @param  int $stationId
+	 * @throws InvalidArgumentException
+	 * @return void
+	 */
+	public function deleteByStationId($stationId) {
+		if (!is_numeric($stationId)) {
+			throw new InvalidArgumentException("No valid param supplied");
+		}
+
+		$this->db->where("station_id", $stationId);
+		$this->db->delete(self::TABLE);
+	}
 }

@@ -85,7 +85,12 @@ class Stations extends MyController {
 	public function delete($id) {
 		$station = (new Station())->findById($id);
 		if ($station->getId() !== null) {
+			$stationId = $station->getId();
 			if ($station->delete($station->getId())) {
+
+				/* Also delete combination of users to the station */
+				(new UserStations())->deleteByStationId($stationId);
+
 				Notification::set(Stations::SUCCESS, "The station has been deleted");
 				redirect("/stations/");
 			}
