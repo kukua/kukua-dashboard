@@ -6,7 +6,7 @@ class GlobalHelper {
 		$return = null;
 
 		switch($values) {
-			case 'time':
+			case 'Timestamp':
 				$return = "UTC (d-m-Y)";
 			break;
 			case 'Temperature':
@@ -21,7 +21,7 @@ class GlobalHelper {
 			case 'Wind':
 				$return = "km/h";
 				break;
-			case 'WindGust':
+			case 'WindSpeed':
 				$return = "km/h";
 				break;
 			case 'WindDirection':
@@ -44,60 +44,41 @@ class GlobalHelper {
 			throw new Exception("Cannot open zip archive");
 		}
 
+		include (APPPATH . "models/Sources/Measurements.php");
+		$meas = (new Measurements());
+		$columns = $meas->_default_columns;
 		try {
 			if (is_array($assocDataArray) && !empty($assocDataArray)) {
 				foreach($assocDataArray as $i => $station) {
-
-					#GlobalHelper::debug($station);
-					#continue;
-
 
 					$fp = fopen('php://output', 'w');
 					if ($fp === false) {
 						throw new Exception("unable to open php's output buffer");
 					}
 
+					$names[0] = "Timestamp";
+					foreach($columns as $columnName => $value) {
+						$names[] = $columnName;
+					}
+
+					$types = [];
+					foreach($names as $name) {
+						$types[] = GlobalHelper::meaningOf($name);
+					}
+
 					ob_start();
 					$arr = [];
 
-
-					$timeKey = null;
-					foreach($station->columns as $columnKey => $column) {
-						if ($column == "time") {
-							$timeKey = $columnKey;
-						}
-						$types[$columnKey] = GlobalHelper::meaningOf($column);
-					}
-
-					/* Header */
-					fputcsv($fp, $station->columns);
-
-					/* Second header */
+					fputcsv($fp, $names);
 					fputcsv($fp, $types);
 
-					/* Content */
-					foreach($station->values as $values) {
-						if ($timeKey !== null) {
-							if (isset($values[$timeKey])) {
-								$miliseconds = $values[$timeKey];
-								$seconds = $miliseconds / 1000;
-
-								$now = DateTime::createFromFormat('U', $seconds);
-								$values[$timeKey] = $now->format("d-m-Y H:i:s");
-							}
+					if (isset($station->data)) {
+						foreach($station->data as $data) {
+							fputcsv($fp, $data);
 						}
-
-						fputcsv($fp, $values);
 					}
 
-					/*if ($station->values[0][2] !== null) {
-						$stationKey = $station->name . ";deviceId=" . $station->values[0][2];
-					} else {
-						$stationKey = $station->name;
-					}*/
-
-					$currentStationName = $station->name . " - " . $i;
-					//$station = (new Station())->findByStationId($stationKey);
+					$currentStationName = $station->name;
 					$station = false;
 					if ($station !== false) {
 						$currentStationName = ucfirst($station->getName());
@@ -110,7 +91,6 @@ class GlobalHelper {
 				}
 				$zip->close();
 
-				#die();
 				if (file_exists($zipFile)) {
 					header('Pragma: public');
 					header('Expires: 0');

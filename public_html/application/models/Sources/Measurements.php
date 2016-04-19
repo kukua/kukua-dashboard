@@ -14,7 +14,7 @@ class Measurements extends Source {
 	private $_db_name;
 	private $_db;
 
-	protected $_default_columns;
+	public $_default_columns;
 
 	/**
 	 * @access public
