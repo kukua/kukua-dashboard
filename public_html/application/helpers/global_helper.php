@@ -47,6 +47,11 @@ class GlobalHelper {
 		try {
 			if (is_array($assocDataArray) && !empty($assocDataArray)) {
 				foreach($assocDataArray as $i => $station) {
+
+					#GlobalHelper::debug($station);
+					#continue;
+
+
 					$fp = fopen('php://output', 'w');
 					if ($fp === false) {
 						throw new Exception("unable to open php's output buffer");
@@ -54,6 +59,7 @@ class GlobalHelper {
 
 					ob_start();
 					$arr = [];
+
 
 					$timeKey = null;
 					foreach($station->columns as $columnKey => $column) {
@@ -104,6 +110,7 @@ class GlobalHelper {
 				}
 				$zip->close();
 
+				#die();
 				if (file_exists($zipFile)) {
 					header('Pragma: public');
 					header('Expires: 0');

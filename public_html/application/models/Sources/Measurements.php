@@ -95,9 +95,9 @@ class Measurements extends Source {
 				$columns = $this->_default_columns;
 			}
 
-			foreach($columns as $column) {
-				$data[$key]["name"] = $station->getName();
-				while($rows = $dbResult->fetch_assoc()) {
+			$data[$key]["name"] = $station->getName();
+			while($rows = $dbResult->fetch_assoc()) {
+				foreach($columns as $column) {
 					$data[$key]["data"][] = [(int) $rows["timestamp"], (float) $rows[$column["name"]]];
 				}
 			}

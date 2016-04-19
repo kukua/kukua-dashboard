@@ -45,6 +45,8 @@ class Graph extends MyController {
 	}
 
 	/**
+	 * Download SensorData
+	 *
 	 * @access public
 	 * @return void
 	 */
@@ -55,9 +57,8 @@ class Graph extends MyController {
 		$data["dateTo"] = $this->input->post("to");
 		$data["interval"] = $this->input->post("interval");
 		$result = $this->_call($data);
-		GlobalHelper::debug($result->response);
-		die();
-		GlobalHelper::outputCsv("export-stations", $result);
+		$decoded = json_decode($result->response);
+		GlobalHelper::outputCsv("export-stations", $decoded);
 		exit;
 	}
 
