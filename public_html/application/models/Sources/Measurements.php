@@ -41,7 +41,7 @@ class Measurements extends Source {
 			],
 			'Rainfall' => [
 				'calc' => 'sum',
-				'name' => 'rainTicks'
+				'name' => 'rain'
 			],
 			'Humidity' => [
 				'calc' => 'avg',
@@ -49,7 +49,7 @@ class Measurements extends Source {
 			],
 			'WindSpeed' => [
 				'calc' => 'avg',
-				'name' => 'windTicks'
+				'name' => 'windSpeed'
 			]
 		];
 	}
