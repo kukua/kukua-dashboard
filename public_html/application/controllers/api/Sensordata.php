@@ -38,7 +38,12 @@ class Sensordata extends MyController {
 			$source = new Source($this->_request);
 			$res = $source->gather($this->_user);
 			if ($forecast != false) {
-				array_push($res, $source->gatherForecast($this->_user)[0]);
+				if ($this->_user) {
+					$result = $source->gatherForecast($this->_user);
+					if (isset($result[0])) {
+						array_push($res, $result[0]);
+					}
+				}
 			}
 			echo json_encode($res);
 		} else {
