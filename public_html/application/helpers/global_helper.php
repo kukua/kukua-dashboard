@@ -49,6 +49,7 @@ class GlobalHelper {
 		$columns = $meas->_default_columns;
 		try {
 			if (is_array($assocDataArray) && !empty($assocDataArray)) {
+				$iterator = 0;
 				foreach($assocDataArray as $i => $station) {
 
 					$fp = fopen('php://output', 'w');
@@ -60,7 +61,7 @@ class GlobalHelper {
 					$arr = [];
 
 					/* Only execute headers once! */
-					if ($i == 0) {
+					if ($iterator == 0) {
 						$names[0] = "Timestamp";
 						foreach($columns as $columnName => $value) {
 							$names[] = $columnName;
@@ -74,6 +75,7 @@ class GlobalHelper {
 						fputcsv($fp, $names);
 						fputcsv($fp, $types);
 					}
+					$iterator++;
 
 					if (isset($station->data)) {
 						foreach($station->data as $data) {
