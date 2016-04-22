@@ -56,21 +56,24 @@ class GlobalHelper {
 						throw new Exception("unable to open php's output buffer");
 					}
 
-					$names[0] = "Timestamp";
-					foreach($columns as $columnName => $value) {
-						$names[] = $columnName;
-					}
-
-					$types = [];
-					foreach($names as $name) {
-						$types[] = GlobalHelper::meaningOf($name);
-					}
-
 					ob_start();
 					$arr = [];
 
-					fputcsv($fp, $names);
-					fputcsv($fp, $types);
+					/* Only execute headers once! */
+					if ($i == 0) {
+						$names[0] = "Timestamp";
+						foreach($columns as $columnName => $value) {
+							$names[] = $columnName;
+						}
+
+						$types = [];
+						foreach($names as $name) {
+							$types[] = GlobalHelper::meaningOf($name);
+						}
+
+						fputcsv($fp, $names);
+						fputcsv($fp, $types);
+					}
 
 					if (isset($station->data)) {
 						foreach($station->data as $data) {
