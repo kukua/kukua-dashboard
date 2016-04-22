@@ -18,6 +18,7 @@ class Forecast extends MyController {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		$body = curl_exec($ch);
 		$body = str_replace('<head>', '<head><base href="http://vip.foreca.com/kukua/" />', $body);
+		$body = str_replace('http://', '//', $body);
 		echo $body;
 		exit;
 	}
