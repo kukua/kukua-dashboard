@@ -60,25 +60,20 @@ class GlobalHelper {
 					ob_start();
 					$arr = [];
 
+					$names = [];
+					$types = [];
 					if (isset($station->data)) {
-
-						/* Only execute headers once! */
-						if ($iterator == 0) {
-							$names[0] = "Timestamp";
-							foreach($columns as $columnName => $value) {
-								$names[] = $columnName;
-							}
-
-							$types = [];
-							foreach($names as $name) {
-								$types[] = GlobalHelper::meaningOf($name);
-							}
-
-							fputcsv($fp, $names);
-							fputcsv($fp, $types);
+						$names[0] = "Timestamp";
+						foreach($columns as $columnName => $value) {
+							$names[] = $columnName;
 						}
-						$iterator++;
 
+						foreach($names as $name) {
+							$types[] = GlobalHelper::meaningOf($name);
+						}
+
+						fputcsv($fp, $names);
+						fputcsv($fp, $types);
 						foreach($station->data as $data) {
 							fputcsv($fp, $data);
 						}
