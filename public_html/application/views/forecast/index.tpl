@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="pull-left js-iframe">
-					<iframe src="http://vip.foreca.com/kukua/maps-tanzania.html?rain" frameborder="0" width="802px" height="802px"></iframe>
+					<iframe src="{$baseUrl}forecast/content?rain" height="802px" width="802px" frameborder="0">{$content}</iframe>
                 </div>
                 <div class="pull-right">
                     <small>mm = millimeter</small>

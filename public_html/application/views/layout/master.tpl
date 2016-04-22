@@ -379,10 +379,10 @@
 					{if $user !== false}
 						<li><a href="{$baseUrl}graph">Weather graph</a></li>
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi {$user->first_name}! <span class="caret"></span></a>
+							<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi {$user->first_name}! <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li><a href="{$baseUrl}user/update/{$user->id}">My account</a></li>
-								<li><a href="{$baseUrl}forecast">Forecast map</a></li>
+								<li><a href="{$baseUrl}forecast?rain">Forecast map</a></li>
 								<li role="separator" class="divider"></li>
 								{if $isAdmin}
 									<li><a href="{$baseUrl}user">Users</a></li>
