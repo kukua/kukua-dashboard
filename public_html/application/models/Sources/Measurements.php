@@ -151,7 +151,7 @@ class Measurements extends Source {
 	 * @return string from query part
 	 */
 	public function buildFrom($deviceId) {
-		return " FROM " . $deviceId;
+		return " FROM `" . $deviceId . "`";
 	}
 
 	/**
