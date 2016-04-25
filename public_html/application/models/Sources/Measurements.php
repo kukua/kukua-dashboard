@@ -96,13 +96,15 @@ class Measurements extends Source {
 			}
 
 			$data[$key]["name"] = $station->getName();
-            $iterator = 0;
-            while($rows = $dbResult->fetch_assoc()) {
-                    $data[$key]["data"][$iterator][] = (int) $rows["timestamp"];
-                    foreach($columns as $column) {
-                            $data[$key]["data"][$iterator][] = (float) number_format($rows[$column["name"]], 2);
-                    }
-                    $iterator++;
+			$iterator = 0;
+			if ($dbResult) {
+				while($rows = $dbResult->fetch_assoc()) {
+            	        $data[$key]["data"][$iterator][] = (int) $rows["timestamp"];
+            	        foreach($columns as $column) {
+            	                $data[$key]["data"][$iterator][] = (float) number_format($rows[$column["name"]], 2);
+            	        }
+            	        $iterator++;
+            	}
             }
 		}
 
