@@ -5,11 +5,21 @@
 		<div class="row">
 			<div class="col-sm-12">
 
-				<div class="text-center">
-					<h1 class="text-center">Stations</h1>
-					{include file="global/notification.tpl"}
-				</div>
+				<h1>
+					Stations
+					<a href="/stations/create/" class="btn btn-primary pull-right">Add station</a>
+				</h1>
+			</div>
+		</div>
 
+		<div class="row">
+			<div class="col-sm-12">
+				{include file="global/notification.tpl"}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
 				<table class="table js-datatable">
 					<thead>
 						<th>Name</th>
@@ -47,7 +57,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-8 col-sm-offset-2">
+			<div class="col-sm-12">
 				<a href="/stations/create/" class="btn btn-primary">Add station</a>
 			</div>
 		</div>
