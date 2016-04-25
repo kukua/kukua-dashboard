@@ -69,7 +69,14 @@
         
             <ul>
             
-                <li class="toctree-l3"><a href="#api">API</a></li>
+                <li class="toctree-l3"><a href="#basics">Basics</a></li>
+                
+                    <li><a class="toctree-l4" href="#post-parameters">POST Parameters</a></li>
+                
+                    <li><a class="toctree-l4" href="#php-example-curl">PHP Example (curl)</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#response">Response</a></li>
                 
             
             </ul>
@@ -109,7 +116,69 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="api">API</h1>
+                <h1 id="basics">Basics</h1>
+<p>The URL of our api is</p>
+<pre><code class="url">https://dashboard.kukua.cc/api/sensordata/get
+</code></pre>
+
+<h2 id="post-parameters">POST Parameters</h2>
+<p>We require 5 parameters to get a successfull call. If any of these are missing you will get a Bad Request.</p>
+<h3 id="region">Region</h3>
+<p>This is currently the ID of the region you want to request data from:</p>
+<ul>
+<li>1 Tanzania</li>
+<li>2 Nigeria</li>
+<li>3 Kenya</li>
+<li>4 Ghana</li>
+<li>5 Mozambique</li>
+<li>7 London Business School</li>
+</ul>
+<h3 id="type">Type</h3>
+<ul>
+<li>Temperature</li>
+<li>Rainfall</li>
+<li>Humidity</li>
+<li>WindSpeed</li>
+<li><strong>all</strong></li>
+</ul>
+<p>The <strong>all</strong> parameter returns all 4 parameters.</p>
+<h3 id="datefrom-dateto">DateFrom &amp; DateTo</h3>
+<p>Must be a UNIX Timestamp.</p>
+<h3 id="interval">Interval</h3>
+<ul>
+<li>5m</li>
+<li>1h</li>
+<li>12h</li>
+<li>24h</li>
+</ul>
+<h2 id="php-example-curl">PHP Example (curl)</h2>
+<p>Using composer: <a href="https://packagist.org/packages/curl/curl">curl</a></p>
+<pre><code class="PHP">$data = [
+    &quot;region&quot;    =&gt; 1
+    &quot;type&quot;      =&gt; Temperature,
+    &quot;dateFrom&quot;  =&gt; now(),
+    &quot;dateTo&quot;    =&gt; now(),
+    &quot;interval&quot;  =&gt; '5m'
+];
+
+$curl = new \Curl\Curl();
+$curl-&gt;post(&quot;https://dashboard.kukua.cc/api/sensordata/get&quot;,
+    $data
+);
+if ($curl-&gt;error) {
+    return $curl-&gt;errorMessage;
+}
+return $curl-&gt;response;
+</code></pre>
+
+<h1 id="response">Response</h1>
+<p>The return value is a json string with the data per station.</p>
+<pre><code class="JSON">[
+    {&quot;name&quot;:&quot;&lt;StationName&gt;&quot;,&quot;data&quot;:[[&lt;microseconds&gt;,&lt;value&gt;],[&lt;microseconds&gt;,&lt;value&gt;], ...]},
+    {&quot;name&quot;:&quot;&lt;StationName&gt;&quot;,&quot;data&quot;:[[&lt;microseconds&gt;,&lt;value&gt;],[&lt;microseconds&gt;,&lt;value&gt;], ...]},
+    ...
+]
+</code></pre>
               
             </div>
           </div>

@@ -67,13 +67,28 @@
         },
         {
             "location": "/api/",
-            "text": "API",
+            "text": "Basics\n\n\nThe URL of our api is\n\n\nhttps://dashboard.kukua.cc/api/sensordata/get\n\n\n\n\nPOST Parameters\n\n\nWe require 5 parameters to get a successfull call. If any of these are missing you will get a Bad Request.\n\n\nRegion\n\n\nThis is currently the ID of the region you want to request data from:\n\n\n\n\n1 Tanzania\n\n\n2 Nigeria\n\n\n3 Kenya\n\n\n4 Ghana\n\n\n5 Mozambique\n\n\n7 London Business School\n\n\n\n\nType\n\n\n\n\nTemperature\n\n\nRainfall\n\n\nHumidity\n\n\nWindSpeed\n\n\nall\n\n\n\n\nThe \nall\n parameter returns all 4 parameters.\n\n\nDateFrom \n DateTo\n\n\nMust be a UNIX Timestamp.\n\n\nInterval\n\n\n\n\n5m\n\n\n1h\n\n\n12h\n\n\n24h\n\n\n\n\nPHP Example (curl)\n\n\nUsing composer: \ncurl\n\n\n$data = [\n    \nregion\n    =\n 1\n    \ntype\n      =\n Temperature,\n    \ndateFrom\n  =\n now(),\n    \ndateTo\n    =\n now(),\n    \ninterval\n  =\n '5m'\n];\n\n$curl = new \\Curl\\Curl();\n$curl-\npost(\nhttps://dashboard.kukua.cc/api/sensordata/get\n,\n    $data\n);\nif ($curl-\nerror) {\n    return $curl-\nerrorMessage;\n}\nreturn $curl-\nresponse;\n\n\n\n\nResponse\n\n\nThe return value is a json string with the data per station.\n\n\n[\n    {\nname\n:\nStationName\n,\ndata\n:[[\nmicroseconds\n,\nvalue\n],[\nmicroseconds\n,\nvalue\n], ...]},\n    {\nname\n:\nStationName\n,\ndata\n:[[\nmicroseconds\n,\nvalue\n],[\nmicroseconds\n,\nvalue\n], ...]},\n    ...\n]",
             "title": "Api"
         },
         {
-            "location": "/api/#api",
-            "text": "",
-            "title": "API"
+            "location": "/api/#basics",
+            "text": "The URL of our api is  https://dashboard.kukua.cc/api/sensordata/get",
+            "title": "Basics"
+        },
+        {
+            "location": "/api/#post-parameters",
+            "text": "We require 5 parameters to get a successfull call. If any of these are missing you will get a Bad Request.  Region  This is currently the ID of the region you want to request data from:   1 Tanzania  2 Nigeria  3 Kenya  4 Ghana  5 Mozambique  7 London Business School   Type   Temperature  Rainfall  Humidity  WindSpeed  all   The  all  parameter returns all 4 parameters.  DateFrom   DateTo  Must be a UNIX Timestamp.  Interval   5m  1h  12h  24h",
+            "title": "POST Parameters"
+        },
+        {
+            "location": "/api/#php-example-curl",
+            "text": "Using composer:  curl  $data = [\n     region     =  1\n     type       =  Temperature,\n     dateFrom   =  now(),\n     dateTo     =  now(),\n     interval   =  '5m'\n];\n\n$curl = new \\Curl\\Curl();\n$curl- post( https://dashboard.kukua.cc/api/sensordata/get ,\n    $data\n);\nif ($curl- error) {\n    return $curl- errorMessage;\n}\nreturn $curl- response;",
+            "title": "PHP Example (curl)"
+        },
+        {
+            "location": "/api/#response",
+            "text": "The return value is a json string with the data per station.  [\n    { name : StationName , data :[[ microseconds , value ],[ microseconds , value ], ...]},\n    { name : StationName , data :[[ microseconds , value ],[ microseconds , value ], ...]},\n    ...\n]",
+            "title": "Response"
         }
     ]
 }
