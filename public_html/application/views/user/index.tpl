@@ -17,12 +17,11 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <table class="table table-striped">
+                <table class="table table-striped js-datatable">
                     <thead>
                         <tr>
                             <td>Name</td>
                             <td>E-mail address</td>
-                            <td>Payed untill</td>
                             <td>Last login</td>
                             <td></td>
                             <td></td>
@@ -40,7 +39,6 @@
                             <tr>
                                 <td class="{$class}">{$user->first_name} {$user->last_name}</td>
                                 <td class="{$class}">{$user->email}</td>
-                                <td class="{$class}">-</td>
                                 <td class="{$class}">{$user->last_login|date_format:"%B %e, %Y"}</td>
                                 <td class="{$class} text-center">
                                     <p>

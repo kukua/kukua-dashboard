@@ -12,6 +12,8 @@
 
 		helpers.tableRowClick()
 		helpers.stationsInRegions()
+
+		helpers.dataTables();
 	};
 
 	/**
@@ -159,6 +161,10 @@
 				mainInput.prop("checked", false);
 			}
 		});
+	}
+
+	helpers.dataTables = function() {
+		$('.js-datatable').dataTable();
 	}
 
 })(window.helpers = window.helpers || {});

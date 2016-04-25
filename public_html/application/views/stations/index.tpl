@@ -3,14 +3,14 @@
 {block name="content"}
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-8 col-sm-offset-2">
+			<div class="col-sm-12">
 
 				<div class="text-center">
 					<h1 class="text-center">Stations</h1>
 					{include file="global/notification.tpl"}
 				</div>
 
-				<table class="table">
+				<table class="table js-datatable">
 					<thead>
 						<th>Name</th>
 						<th>Device_id</th>

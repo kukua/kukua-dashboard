@@ -6,6 +6,8 @@
     "mailcheck": "~1.1.1",
     "moment": "~2.10.6",
     "highcharts": "highcharts-release#~4.2.1",
-    "bootstrap-daterangepicker": "~2.1.17"
+    "bootstrap-daterangepicker": "~2.1.17",
+    "datatables.net": "^1.10.11",
+    "datatables.net-bs": "^1.10.11"
   }
 }

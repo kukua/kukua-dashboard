@@ -28,6 +28,8 @@ var js_files = [
     js_plugin_path + 'highcharts/highcharts.src.js',
     js_plugin_path + 'highcharts/highcharts-more.src.js',
     js_plugin_path + 'mailcheck/src/mailcheck.js',
+	js_plugin_path + 'datatables.net/js/jquery.dataTables.js',
+	js_plugin_path + 'datatables.net-bs/js/dataTables.bootstrap.js',
 
     js_script_path + 'chart.js',
     js_script_path + 'graph.js',
