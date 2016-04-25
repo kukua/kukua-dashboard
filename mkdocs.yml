@@ -1,6 +1,9 @@
 docs_dir: doc
 site_dir: latest
 site_name: Dashboard
+dev_addr: 0.0.0.0:8000
 theme: readthedocs
 pages:
     - Home: index.md
+    - Usage: usage.md
+    - Api: api.md

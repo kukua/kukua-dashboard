@@ -2,13 +2,78 @@
     "docs": [
         {
             "location": "/",
-            "text": "Dashboard",
+            "text": "Dashboard\n\n\nIntroduction\n\n\nThis product is used to view the data provided by Kukua Weather Stations in charts.",
             "title": "Home"
         },
         {
             "location": "/#dashboard",
             "text": "",
             "title": "Dashboard"
+        },
+        {
+            "location": "/#introduction",
+            "text": "This product is used to view the data provided by Kukua Weather Stations in charts.",
+            "title": "Introduction"
+        },
+        {
+            "location": "/usage/",
+            "text": "Basics\n\n\nGetting access\n\n\nAccess can be requested by filling out the form on \ndashboard.kukua.cc/auth/request\n.\n\n\nForgot / reset password\n\n\nThe forgot password functionality can be found \nhere\n. Here you can fill out the e-mail address you registered with, and you will receive instructions per e-mail.\nIf you only need to change the password, you can do that on the \naccount page\n while being logged in.\n\n\nInterface\n\n\nNavigation\n\n\nThe navigation is visible on every page.\n\n\n\n\nWeather graph\n\n\nHi [User]!\n\n\nAccount\n\n\nForecast map\n\n\nLog out\n\n\n\n\n\n\n\n\nWeather graph\n\n\nIn the green bar on \nthis\n page there are multiple view options for the graph.\n\n\n\n\nRegion\n\n\nGraph\n\n\nDate range\n\n\nDisplay per\n\n\n\n\nRegion\n\n\n\n\nBy selecting a region the chart will redraw with weather data within that region, visible for the currently viewing user.\n\n\n\n\nSelect graph\n\n\n\n\nWith this selection, the measurement from the stations within the selected region will be displayed. The only available measurements are \nTemperature\n, \nRainfaill\n, \nHumidity\n and \nWind speed\n.\n\n\n\n\nDate range\n\n\n\n\nA custom date range can be supplied. It has several options build in for you, like \nToday\n, \nYesterday\n, \nLast week\n e.t.c.\n\n\n\n\nDownload CSV\n\n\n\n\nWith this button you can download the currently visible data in CSV format. You can import this in programs like Excel. Make sure the divider is a comma.\n\n\n\n\nAccount\n\n\nForecast map\n\n\nThe forecast map is provided by Foreca. It shows the expected rainfall over Tanzania. The colors show if its going to be light or heavy rain. By pressing the play button on the bottom right the rainclouds start moving.\n\n\nLog out\n\n\nThis button ends the current session. Everything but the \nlogin\n and \nforgot password\n page is now restricted untill logged in.",
+            "title": "Usage"
+        },
+        {
+            "location": "/usage/#basics",
+            "text": "",
+            "title": "Basics"
+        },
+        {
+            "location": "/usage/#getting-access",
+            "text": "Access can be requested by filling out the form on  dashboard.kukua.cc/auth/request .",
+            "title": "Getting access"
+        },
+        {
+            "location": "/usage/#forgot-reset-password",
+            "text": "The forgot password functionality can be found  here . Here you can fill out the e-mail address you registered with, and you will receive instructions per e-mail.\nIf you only need to change the password, you can do that on the  account page  while being logged in.",
+            "title": "Forgot / reset password"
+        },
+        {
+            "location": "/usage/#interface",
+            "text": "",
+            "title": "Interface"
+        },
+        {
+            "location": "/usage/#navigation",
+            "text": "The navigation is visible on every page.   Weather graph  Hi [User]!  Account  Forecast map  Log out",
+            "title": "Navigation"
+        },
+        {
+            "location": "/usage/#weather-graph",
+            "text": "In the green bar on  this  page there are multiple view options for the graph.   Region  Graph  Date range  Display per   Region   By selecting a region the chart will redraw with weather data within that region, visible for the currently viewing user.   Select graph   With this selection, the measurement from the stations within the selected region will be displayed. The only available measurements are  Temperature ,  Rainfaill ,  Humidity  and  Wind speed .   Date range   A custom date range can be supplied. It has several options build in for you, like  Today ,  Yesterday ,  Last week  e.t.c.   Download CSV   With this button you can download the currently visible data in CSV format. You can import this in programs like Excel. Make sure the divider is a comma.",
+            "title": "Weather graph"
+        },
+        {
+            "location": "/usage/#account",
+            "text": "",
+            "title": "Account"
+        },
+        {
+            "location": "/usage/#forecast-map",
+            "text": "The forecast map is provided by Foreca. It shows the expected rainfall over Tanzania. The colors show if its going to be light or heavy rain. By pressing the play button on the bottom right the rainclouds start moving.",
+            "title": "Forecast map"
+        },
+        {
+            "location": "/usage/#log-out",
+            "text": "This button ends the current session. Everything but the  login  and  forgot password  page is now restricted untill logged in.",
+            "title": "Log out"
+        },
+        {
+            "location": "/api/",
+            "text": "API",
+            "title": "Api"
+        },
+        {
+            "location": "/api/#api",
+            "text": "",
+            "title": "API"
         }
     ]
 }
