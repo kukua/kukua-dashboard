@@ -387,7 +387,7 @@
 								{if $isAdmin}
 									<li><a href="{$baseUrl}user"><i class="glyphicon glyphicon-user"></i> Users</a></li>
 									<li><a href="{$baseUrl}regions"><i class="glyphicon glyphicon-globe"></i> Regions</a></li>
-									<li><a href="{$baseUrl}stations"><i class="glyphicon glyphicon-bullhorn"></i> Stations</a></li>
+									<li><a href="{$baseUrl}stations"><i class="glyphicon glyphicon-record"></i> Stations</a></li>
 									<li role="separator" class="divider"></li>
 									<li><a href="{$baseUrl}smsclients"><i class="glyphicon glyphicon-phone"></i> SMS Clients</a></li>
 									<li><a href="{$baseUrl}sim"><i class="glyphicon glyphicon-signal"></i> SIM activity</a></li>

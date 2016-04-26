@@ -144,6 +144,7 @@ $autoload['model'] = array(
 	'UserFeedback',
 	'UserStations',
 	'Station',
+	'StationMeasurement',
 	'Eseye',
 	'Source',
 	'Smsclient',

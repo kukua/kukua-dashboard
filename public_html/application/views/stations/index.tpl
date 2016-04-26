@@ -6,7 +6,7 @@
 			<div class="col-sm-12">
 
 				<h1>
-					<i class="glyphicon glyphicon-bullhorn"></i> Stations
+					<i class="glyphicon glyphicon-record"></i> Stations
 					<a href="/stations/create/" class="btn btn-primary pull-right">Add station</a>
 				</h1>
 			</div>
@@ -41,11 +41,13 @@
 									<td>{$station->getSimId()}</td>
 									<td>{$station->getLatitude()} / {$station->getLongitude()}</td>
 									<td class="text-right">
-										{if $station->getActive() == 1}
+										<a href="/measurements/index/{$station->getId()}" class="text-success" title="View and edit specific measurements"><i class="glyphicon glyphicon-stats"></i></a>
+										{* {if $station->getActive() == 1}
 											<a href="/stations/disable/{$station->getId()}" class="text-info js-confirm-disable" title="Don't display station in chart"><i class="glyphicon glyphicon-eye-close"></i></a>
 										{else}
 											<a href="/stations/enable/{$station->getId()}" class="text-warning" title="Display station in chart"><i class="glyphicon glyphicon-eye-open"></i></a>
 										{/if}
+										*}
 										<a href="/stations/update/{$station->getId()}" class="text-muted"><i class="glyphicon glyphicon-pencil"></i></a>
 										<a href="/stations/delete/{$station->getId()}" class="text-danger js-confirm-delete"><i class="glyphicon glyphicon-remove"></i></a>
 									</td>
