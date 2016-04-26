@@ -5,6 +5,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<h1>
+					<i class="glyphicon glyphicon-user"></i>
 					Users
 					<a href="{$baseUrl}user/invite" class="btn btn-primary pull-right">Invite user</a>
 				</h1>
@@ -23,7 +24,7 @@
 							<td>Name</td>
 							<td>E-mail address</td>
 							<td>Last login</td>
-							<td></td>
+							<td>Group</td>
 							<td></td>
 						</tr>
 					</thead>
@@ -31,21 +32,23 @@
 						{foreach $users as $user}
 							{$class = ""}
 							{if $user->isAdmin}
+								{$class = "bg-success"}
+							{elseif $user->isManager}
 								{$class = "bg-info"}
 							{/if}
 							{if $user->active == "0"}
-								{$class = "bg-danger"}
+								{$class = "bg-info"}
 							{/if}
 							<tr>
 								<td class="{$class}">{$user->first_name} {$user->last_name}</td>
 								<td class="{$class}">{$user->email}</td>
 								<td class="{$class}">{$user->last_login|date_format:"%B %e, %Y"}</td>
-								<td class="{$class} text-center">
+								<td class="{$class}">
 									<p>
 										{if $user->isAdmin}
-											<a href="{$baseUrl}user/revoke/{$smarty.const.GROUP_ADMIN}/{$user->id}" class="label label-default js-confirm-revoke" title="Revoke admin access">admin</i></a>
-										{else}
-											<a href="{$baseUrl}user/grant/{$smarty.const.GROUP_ADMIN}/{$user->id}" class="text-danger js-confirm-grant" title="Grant admin access"><i class="glyphicon glyphicon-fire"></i></a>
+											<span class="label label-default" style="position:relative;top:3px;">admin</span>
+										{elseif $user->isManager}
+											<span class="label label-default" style="position:relative;top:3px;">manager</span>
 										{/if}
 									</p>
 								</td>

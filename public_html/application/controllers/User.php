@@ -25,6 +25,7 @@ class User extends MyController {
 		foreach($users as $user) {
 			//Check if user is admin, and set extra value
 			$user->isAdmin = $this->ion_auth->in_group(1,$user->id);
+			$user->isManager = $this->ion_auth->in_group(3, $user->id);
 		}
 
 		$this->data["users"] = $users;

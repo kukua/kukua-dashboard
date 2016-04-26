@@ -3,13 +3,20 @@
 {block name="content"}
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-8 col-sm-offset-2">
-
-				<div class="text-center">
-					<h1 class="text-center">Regions</h1>
-					{include file="global/notification.tpl"}
-				</div>
-
+			<div class="col-sm-12">
+				<h1>
+					<i class="glyphicon glyphicon-globe"></i>
+					Regions
+				</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				{include file="global/notification.tpl"}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
 				<table class="table">
 					<thead>
 						<th>Name</th>

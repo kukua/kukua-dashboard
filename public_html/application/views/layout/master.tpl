@@ -385,16 +385,16 @@
 								<li><a href="{$baseUrl}forecast?rain">Forecast map</a></li>
 								<li role="separator" class="divider"></li>
 								{if $isAdmin}
-									<li><a href="{$baseUrl}user">Users</a></li>
-									<li><a href="{$baseUrl}regions">Regions</a></li>
-									<li><a href="{$baseUrl}stations">Stations</a></li>
+									<li><a href="{$baseUrl}user"><i class="glyphicon glyphicon-user"></i> Users</a></li>
+									<li><a href="{$baseUrl}regions"><i class="glyphicon glyphicon-globe"></i> Regions</a></li>
+									<li><a href="{$baseUrl}stations"><i class="glyphicon glyphicon-bullhorn"></i> Stations</a></li>
 									<li role="separator" class="divider"></li>
-									<li><a href="{$baseUrl}smsclients">SMS Clients</a></li>
-									<li><a href="{$baseUrl}sim">SIM activity</a></li>
-									<li><a href="{$baseUrl}feedback">Feedback</a></li>
+									<li><a href="{$baseUrl}smsclients"><i class="glyphicon glyphicon-phone"></i> SMS Clients</a></li>
+									<li><a href="{$baseUrl}sim"><i class="glyphicon glyphicon-signal"></i> SIM activity</a></li>
+									<li><a href="{$baseUrl}feedback"><i class="glyphicon glyphicon-blackboard"></i> Feedback</a></li>
 									<li role="separator" class="divider"></li>
 								{/if}
-								<li><a href="{$baseUrl}auth/logout">Logout</a></li>
+								<li><a href="{$baseUrl}auth/logout"><i class="glyphicon glyphicon-off"></i> Logout</a></li>
 							</ul>
 						</li>
 					{else}

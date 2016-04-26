@@ -6,7 +6,7 @@
 			<div class="col-sm-12">
 
 				<h1>
-					Stations
+					<i class="glyphicon glyphicon-bullhorn"></i> Stations
 					<a href="/stations/create/" class="btn btn-primary pull-right">Add station</a>
 				</h1>
 			</div>
