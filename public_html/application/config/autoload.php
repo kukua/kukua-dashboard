@@ -140,6 +140,7 @@ $autoload['language'] = [];
 */
 $autoload['model'] = array(
 	'ion_auth_model',
+	'UserGroup',
 	'UserFeedback',
 	'UserStations',
 	'Station',

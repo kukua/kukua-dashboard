@@ -143,9 +143,16 @@ class UserStations extends CI_Model {
 	}
 
 	/**
-	 *
+	 * @access public
+	 * @param  int $userId
+	 * @param  array $data
+	 * @return boolean
 	 */
 	public function saveBatch($userId, $data) {
+		if (!is_numeric($userId) || empty($data)) {
+			throw new InvalidArgumentException("Invalid params supplied");
+		}
+
 		$this->db->where("user_id", $userId);
 		$this->db->delete(self::TABLE);
 

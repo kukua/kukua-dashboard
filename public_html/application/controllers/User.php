@@ -72,9 +72,16 @@ class User extends MyController {
 				}
 
 				if ($isAdmin) {
+
+					/* User station management */
 					$postUserStations = $this->input->post('userStations');
 					$dbUserStations = new UserStations();
 					$dbUserStations->saveBatch($id, $postUserStations);
+
+					/* User group management */
+					$postGroups = $this->input->post('user_groups');
+					$dbUserGroups = new UserGroup();
+					$dbUserGroups->saveBatch($id, $postGroups);
 				}
 
 				if ($this->ion_auth->update($id, $userData) === true) {
@@ -88,9 +95,11 @@ class User extends MyController {
 		}
 
 		$this->_userStations($id);
+		$this->_groups($id);
 
-		$user = $this->ion_auth->user($id)->row();
-		$this->data["user"] = $user;
+		$currentUser = $this->ion_auth->user($id)->row();
+		$this->data["member"] = $currentUser;
+
 		$this->load->view("user/update", $this->data);
 	}
 
@@ -320,6 +329,24 @@ class User extends MyController {
 			$this->data["regions"] = $regionStations;
 		}
 		$this->data["userStations"] = $userStations;
+	}
+
+	/**
+	 * Build view data for user groups
+	 *
+	 * @access private
+	 * @param  int | null $userId
+	 * @return void
+	 */
+	private function _groups($userId = null) {
+		$this->data["groups"]		= null;
+		$this->data["usergroups"]	= null;
+
+		/* If the current logged in user is admin */
+		if ($this->ion_auth->in_group('admin')) {
+			$this->data["groups"]		= $this->ion_auth->groups()->result();
+			$this->data["usergroups"]	= $this->ion_auth->get_users_groups($userId)->result();
+		}
 	}
 
 	/**
