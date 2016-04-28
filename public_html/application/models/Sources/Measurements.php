@@ -115,12 +115,23 @@ class Measurements extends Source {
 		foreach($stations as $i => $station) {
 
 			$sensors = (new StationMeasurement())->findById($source->getWeatherType());
-			$columns[$sensors->getName()]["name"] = $sensors->getColumn();
-			$columns[$sensors->getName()]["calc"] = "AVG";
+
+			/* If download */
+			if ($source->getWeatherType() == "all") {
+				$sensorData = (new StationMeasurements())->findByStationId($station->getId());
+				foreach($sensorData as $sensor) {
+					$columns = $this->_default_columns;
+					$columns[$sensor->getName()]["name"] = $sensor->getColumn();
+					$columns[$sensor->getName()]["calc"] = "AVG";
+				}
+			} else {
+				$columns[$sensors->getName()]["name"] = $sensors->getColumn();
+				$columns[$sensors->getName()]["calc"] = "AVG";
+			}
 
 			$select = $this->buildSelect($columns, $source->getInterval());
-
 			$from  = $this->buildFrom($station->getDeviceId());
+
 			$query = $select . $from . $where . $group . $sort;
 			log_message("ERROR", $query);
 			$dbResult = $this->_db->query($query);

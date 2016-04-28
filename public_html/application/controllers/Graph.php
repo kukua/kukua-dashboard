@@ -49,14 +49,21 @@ class Graph extends MyController {
 	 */
 	public function download() {
 		if ($this->input->post()) {
-			$data["region"] = $this->input->post("region");
+
+			if ($this->input->post("region")) {
+				$data["region"] = $this->input->post("region");
+			}
+			if ($this->input->post("station")) {
+				$data["station"] = $this->input->post("station");
+			}
+
 			$data["type"] = "all";
 			$data["dateFrom"] = $this->input->post("from");
 			$data["dateTo"] = $this->input->post("to");
 			$data["interval"] = $this->input->post("interval");
 			$result = $this->_call($data);
 			$decoded = json_decode($result->response);
-			GlobalHelper::outputCsv("export-stations", $decoded);
+			//GlobalHelper::outputCsv("export-stations", $decoded);
 			exit;
 		} else {
 			redirect("/graph");
