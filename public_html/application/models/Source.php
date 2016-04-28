@@ -272,7 +272,7 @@ class Source extends CI_Model {
 	public function getBatteryLevel($deviceId) {
 		require_once(APPPATH . "models/Sources/Measurements.php");
 		$object = new Measurements();
-		$query = "SELECT `batVolt` FROM `" + $deviceId . "` ORDER BY timestamp DESC LIMIT 1";
+		$query = "SELECT `batVolt` FROM `" . $deviceId . "` ORDER BY timestamp DESC LIMIT 1";
 		$value = $object->single($query);
 		if (isset($value["batVolt"])) {
 			return $value["batVolt"];
