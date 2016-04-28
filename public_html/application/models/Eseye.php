@@ -83,17 +83,23 @@ class Eseye extends CI_Model {
 	 * @throws Exception
 	 * @return StdClass
 	 */
-	public function getSim($sim, $cookieName, $cookieValue) {
+	public function getSim($sim) {
 		$curl = new Curl();
 		$curl->setHeader("Content-type", "application/json");
+		$curl->post($this->_url . "/getCookieName");
+
+		$cookieName = $curl->response;
+		$cookieValue = $this->_login_eseye();
+
 		try {
+			$curl->setHeader("Content-type", "application/json");
 			$curl->setCookie($cookieName, $cookieValue);
 			$curl->post($this->_url . "/getSIMLastActivity", [
-				"ICCID" => $sim->ICCID
+				"ICCID" => $sim
 			]);
+
 			$response = $curl->response;
-			$sim->LastRadiusStop  = $response->info->LastRadiusStop;
-			$sim->LastRadiusBytes = $response->info->LastRadiusBytes;
+			$result = $response->info;
 
 			$difference = 96;
 			if (!empty($sim->LastRadiusStop)) {
@@ -102,21 +108,26 @@ class Eseye extends CI_Model {
 				$difference = abs($now->getTimestamp() - $date->getTimestamp()) / 60 / 60;
 			}
 
-			$status = "red"; 
-			if ($difference <= 1)
-				$status = "green";
+			switch ($difference) {
+				case $difference <= 1:
+					$status = "green";
+					break;
+				case $difference > 1 && $difference < 24:
+					$status = "blue";
+					break;
+				case $difference >= 24 && $difference < 48:
+					$status = "yellow";
+					break;
+				case $difference >= 48 && $difference < 96:
+					$status = "orange";
+					break;
+				default:
+					$status = "red";
+					break;
+			}
 
-			if ($difference > 1 && $difference < 24)
-				$status = "blue";
-
-			if ($difference >= 24 && $difference < 48)
-				$status = "yellow";
-
-			if ($difference >= 48 && $difference < 96)
-				$status = "orange";
-
-			$sim->Status = $status;
-			return $sim;
+			$result->status = $status;
+			return $result;
 		} catch (Exception $e) {
 			throw $e;
 		}
