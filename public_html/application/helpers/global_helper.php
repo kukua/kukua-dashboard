@@ -37,7 +37,7 @@ class GlobalHelper {
 		return $return;
 	}
 
-	public static function outputCsv($fileName, $assocDataArray = Array()) {
+	public static function outputCsv($fileName, $assocDataArray = Array(), $allColumns = false) {
 		$zipFile = '/tmp/' . $fileName . '.zip';
 		$zip = new ZipArchive;
 		if ($zip->open($zipFile, ZipArchive::CREATE) !== true) {
@@ -62,7 +62,16 @@ class GlobalHelper {
 
 					$names = [];
 					$types = [];
+
 					if (isset($station->data)) {
+						if ($allColumns !== false) {
+							$sensorData = (new StationMeasurement())->findByStationId($allColumns);
+							foreach($sensorData as $sensor) {
+								$columns[$sensor->getName()]["name"] = $sensor->getColumn();
+								$columns[$sensor->getName()]["calc"] = "AVG";
+							}
+						}
+
 						$names[0] = "Timestamp";
 						foreach($columns as $columnName => $value) {
 							$names[] = $columnName;
