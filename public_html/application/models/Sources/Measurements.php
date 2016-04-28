@@ -116,7 +116,7 @@ class Measurements extends Source {
 
 			/* If download */
 			if ($source->getWeatherType() == "all") {
-				$sensorData = (new StationMeasurements())->findByStationId($station->getId());
+				$sensorData = (new StationMeasurement())->findByStationId($station->getId());
 				foreach($sensorData as $sensor) {
 					$columns = $this->_default_columns;
 					$columns[$sensor->getName()]["name"] = $sensor->getColumn();
