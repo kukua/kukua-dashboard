@@ -63,7 +63,7 @@ class Graph extends MyController {
 			$data["interval"] = $this->input->post("interval");
 			$result = $this->_call($data);
 			$decoded = json_decode($result->response);
-			//GlobalHelper::outputCsv("export-stations", $decoded);
+			GlobalHelper::outputCsv("export-stations", $decoded);
 			exit;
 		} else {
 			redirect("/graph");
