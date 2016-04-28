@@ -117,8 +117,8 @@ class Measurements extends Source {
 			/* If download */
 			if ($source->getWeatherType() == "all") {
 				$sensorData = (new StationMeasurement())->findByStationId($station->getId());
+				$columns = $this->_default_columns;
 				foreach($sensorData as $sensor) {
-					$columns = $this->_default_columns;
 					$columns[$sensor->getName()]["name"] = $sensor->getColumn();
 					$columns[$sensor->getName()]["calc"] = "AVG";
 				}
