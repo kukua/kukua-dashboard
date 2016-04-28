@@ -114,8 +114,6 @@ class Measurements extends Source {
 		$stations = $this->_getStations($source, $user);
 		foreach($stations as $i => $station) {
 
-			$sensors = (new StationMeasurement())->findById($source->getWeatherType());
-
 			/* If download */
 			if ($source->getWeatherType() == "all") {
 				$sensorData = (new StationMeasurements())->findByStationId($station->getId());
@@ -125,6 +123,7 @@ class Measurements extends Source {
 					$columns[$sensor->getName()]["calc"] = "AVG";
 				}
 			} else {
+				$sensors = (new StationMeasurement())->findById($source->getWeatherType());
 				$columns[$sensors->getName()]["name"] = $sensors->getColumn();
 				$columns[$sensors->getName()]["calc"] = "AVG";
 			}
