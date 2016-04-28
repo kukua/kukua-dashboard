@@ -33,50 +33,6 @@ class Eseye extends CI_Model {
 	}
 
 	/**
-	 * Get sim cards from Eseye API
-	 *
-	 * @access public
-	 * @throws Exception
-	 * @return Array
-	 */
-	public function getSims() {
-		$curl = new Curl();
-		$curl->setHeader("Content-type", "application/json");
-		$curl->post($this->_url . "/getCookieName");
-
-		$cookieName = $curl->response;
-		$cookieValue = $this->_login_eseye();
-
-		try {
-			$curl->setCookie($cookieName, $cookieValue);
-			$curl->post($this->_url . "/getSIMs", [
-				'sortOrder' => "I",
-				'startRec' => 0,
-				'numRecs' => 50,
-			]);
-			$simcards = isset($curl->response->sims) ? $curl->response->sims : Array();
-
-			$result = Array();
-			foreach($simcards as $sim) {
-				$result[] = $this->getSim($sim, $cookieName, $cookieValue);
-			}
-
-			usort($result, function($a, $b) {
-				if ($a->LastRadiusStop == $b->LastRadiusStop) {
-					return 0;
-				}
-				return ($a->LastRadiusStop < $b->LastRadiusStop) ? -1 : 1;
-			});
-
-			return $result;
-
-		} catch (Exception $e) {
-			throw $e;
-			exit;
-		}
-	}
-
-	/**
 	 * Get single SIM card details
 	 *
 	 * @access public
@@ -102,23 +58,23 @@ class Eseye extends CI_Model {
 			$result = $response->info;
 
 			$difference = 96;
-			if (!empty($sim->LastRadiusStop)) {
-				$now = new DateTime();
-				$date = DateTime::createFromFormat("Y-m-d H:i:s", $sim->LastRadiusStop);
+			if (!empty($result->LastRadiusStop)) {
+				$now = new DateTime("now", (new DateTimeZone("UTC")));
+				$date = DateTime::createFromFormat("Y-m-d H:i:s", $result->LastRadiusStop);
 				$difference = abs($now->getTimestamp() - $date->getTimestamp()) / 60 / 60;
 			}
 
 			switch ($difference) {
-				case $difference <= 1:
+				case ($difference <= 1):
 					$status = "green";
 					break;
-				case $difference > 1 && $difference < 24:
+				case ($difference > 1 && $difference < 24):
 					$status = "blue";
 					break;
-				case $difference >= 24 && $difference < 48:
+				case ($difference >= 24 && $difference < 48):
 					$status = "yellow";
 					break;
-				case $difference >= 48 && $difference < 96:
+				case ($difference >= 48 && $difference < 96):
 					$status = "orange";
 					break;
 				default:
