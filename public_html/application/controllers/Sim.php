@@ -16,7 +16,7 @@ class Sim extends MyController {
 		foreach($stations as $station) {
 			if ($station->getSimId()) {
 				$eseye = new Eseye();
-				$simCards[] = $eseye->getSim($station->getSimId());
+				$simCards[] = $eseye->getSim($station);
 			}
 		}
 

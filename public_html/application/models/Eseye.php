@@ -83,7 +83,7 @@ class Eseye extends CI_Model {
 	 * @throws Exception
 	 * @return StdClass
 	 */
-	public function getSim($sim) {
+	public function getSim($station) {
 		$curl = new Curl();
 		$curl->setHeader("Content-type", "application/json");
 		$curl->post($this->_url . "/getCookieName");
@@ -95,7 +95,7 @@ class Eseye extends CI_Model {
 			$curl->setHeader("Content-type", "application/json");
 			$curl->setCookie($cookieName, $cookieValue);
 			$curl->post($this->_url . "/getSIMLastActivity", [
-				"ICCID" => $sim
+				"ICCID" => $station->getSimId()
 			]);
 
 			$response = $curl->response;
@@ -126,6 +126,8 @@ class Eseye extends CI_Model {
 					break;
 			}
 
+			$result->name   = $station->getName();
+			$result->ICCID  = $station->getSimId();
 			$result->status = $status;
 			return $result;
 		} catch (Exception $e) {
