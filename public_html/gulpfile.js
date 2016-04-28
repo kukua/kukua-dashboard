@@ -33,6 +33,7 @@ var js_files = [
 
     js_script_path + 'chart.js',
     js_script_path + 'graph.js',
+    js_script_path + 'sensors.js',
     js_script_path + 'mailcheck.js',
     js_script_path + 'helpers.js'
 ];

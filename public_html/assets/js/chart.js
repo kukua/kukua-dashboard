@@ -13,9 +13,14 @@
             var selectedDate = kukua.getDateRangePicker()
             var interval     = kukua.getGraphInterval()
             var region		 = kukua.getGraphRegion()
+			var stationValue = null;
+			if (sensors.getStation().length > 0) {
+				var stationValue = sensors.getStation().val()
+			}
 
             var postdata = {
                 'region': region.val(),
+				'station': stationValue,
                 'type': graphType.val(),
                 'dateFrom': selectedDate.data('daterangepicker').startDate.startOf('day').format('X'),
                 'dateTo': selectedDate.data('daterangepicker').endDate.endOf('day').format('X'),

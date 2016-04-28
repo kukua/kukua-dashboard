@@ -9,6 +9,7 @@
 class Source extends CI_Model {
 
 	protected $_region;
+	protected $_station;
 	protected $_type;
 	protected $_dateFrom;
 	protected $_dateTo;
@@ -20,7 +21,7 @@ class Source extends CI_Model {
 	 * If params given, populate object
 	 *
 	 * @fix me
-	 * @fixme  authentication (JWT?)
+	 * @fixme  authentication
 	 * @fix me
 	 */
 	public function __construct($request = null) {
@@ -35,7 +36,7 @@ class Source extends CI_Model {
 	 * @access public
 	 * @param  string $region
 	 * @throws InvalidArgumentException
-	 * @return string
+	 * @return void
 	 */
 	public function setRegion($region) {
 		if (!is_numeric($region)) {
@@ -52,6 +53,26 @@ class Source extends CI_Model {
 		return $this->_region;
 	}
 
+	/**
+	 * @access public
+	 * @param  int $station
+	 * @throws InvalidArgumentException
+	 * @return void
+	 */
+	public function setStation($station) {
+		if (!is_numeric($station)) {
+			throw new InvalidArgumentException("Invalid param supplied");
+		}
+		$this->_station = $station;
+	}
+
+	/**
+	 * @access public
+	 * @return int
+	 */
+	public function getStation() {
+		return $this->_station;
+	}
 	/**
 	 * @access public
 	 * @param string
@@ -176,6 +197,9 @@ class Source extends CI_Model {
 
 		if (isset($data["region"])) {
 			$this->setRegion($data["region"]);
+		}
+		if (isset($data["station"])) {
+			$this->setStation($data["station"]);
 		}
 		if (isset($data["type"])) {
 			$this->setWeatherType($data["type"]);

@@ -92,6 +92,7 @@
 	kukua.datePickerChange = function() {
 		kukua.getDateRangePicker().on("apply.daterangepicker", function(ev, picker) {
 			kukua.graph()
+			sensors.graph()
 		})
 	};
 
@@ -102,9 +103,11 @@
 		kukua.datePickerChange();
 		kukua.getGraphInterval().on("change", function() {
 			kukua.graph()
+			sensors.graph()
 		})
 		kukua.getGraphType().on("change", function() {
 			kukua.graph()
+			sensors.graph()
 		})
 	};
 

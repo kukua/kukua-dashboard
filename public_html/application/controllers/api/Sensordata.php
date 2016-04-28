@@ -77,6 +77,9 @@ class Sensordata extends MyController {
 		if (isset($data["region"])) {
 			$this->_request["region"] = $data["region"];
 		}
+		if (isset($data["station"]) && $data["station"] != "") {
+			$this->_request["station"] = $data["station"];
+		}
 		if (isset($data["type"])) {
 			$this->_request["type"] = $data["type"];
 		}

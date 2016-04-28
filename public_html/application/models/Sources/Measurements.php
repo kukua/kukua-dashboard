@@ -40,15 +40,15 @@ class Measurements extends Source {
 				'name' => 'temp'
 			],
 			'Rainfall' => [
-				'calc' => 'sum',
+				'calc' => 'SUM',
 				'name' => 'rain'
 			],
 			'Humidity' => [
-				'calc' => 'avg',
+				'calc' => 'AVG',
 				'name' => 'humid'
 			],
 			'WindSpeed' => [
-				'calc' => 'avg',
+				'calc' => 'AVG',
 				'name' => 'windSpeed'
 			]
 		];
@@ -62,25 +62,23 @@ class Measurements extends Source {
 	 * @return Array
 	 */
 	public function get($source, $user = null) {
+		if ($source->getStation() != "") {
+			return $this->getSensors($source, $user);
+		} else {
+			return $this->getDefault($source, $user);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function getDefault($source, $user = null) {
 		$select = $this->buildSelect($source->getWeatherType(), $source->getInterval());
-		$where  = $this->buildWhere($source->getDateFrom(), $source->getDateTo());
-		$group  = $this->buildGroup($source->getInterval());
-		$sort   = $this->buildSort();
+		$where	= $this->buildWhere($source->getDateFrom(), $source->getDateTo());
+		$group	= $this->buildGroup($source->getInterval());
+		$sort	= $this->buildSort();
 
-		/** If user AND region is set */
-		if ($source->getRegion() !== null && $user) {
-			$stations = (new Station())->findByRegionIdAndUserId($source->getRegion(), $user->id);
-		}
-
-		/** If user is set */
-		if ($source->getRegion() == null && $user) {
-			$stations = (new UserStations())->findStationsByUserId($user->id);
-		}
-
-		/** If region is set */
-		if ($source->getRegion() !== null && !$user) {
-			$stations = (new Station())->findByRegionId($source->getRegion());
-		}
+		$stations = $this->_getStations($source, $user);
 
 		$data = [];
 		foreach($stations as $key => $station) {
@@ -89,50 +87,144 @@ class Measurements extends Source {
 			log_message("ERROR", $query);
 			$dbResult = $this->_db->query($query);
 
-			if ($source->getWeatherType() != "all") {
-				$columns[] = $this->_default_columns[$source->getWeatherType()];
-			} else {
+			if ($source->getWeatherType() == "all") {
 				$columns = $this->_default_columns;
+			} else {
+				$columns[] = $this->_default_columns[$source->getWeatherType()];
 			}
 
 			$data[$key]["name"] = $station->getName();
-			$iterator = 0;
-			if ($dbResult) {
-				while($rows = $dbResult->fetch_assoc()) {
-            	        $data[$key]["data"][$iterator][] = (int) $rows["timestamp"];
-            	        foreach($columns as $column) {
-            	                $data[$key]["data"][$iterator][] = (float) number_format($rows[$column["name"]], 2);
-            	        }
-            	        $iterator++;
-            	}
-            }
+			$data[$key]["data"] = $this->_processQuery($dbResult, $columns);
 		}
 
 		return $data;
 	}
 
 	/**
+	 * Get sensor data
+	 *
+	 * @access public
+	 * @return Array
+	 */
+	public function getSensors($source, $user = null) {
+		$where	= $this->buildWhere($source->getDateFrom(), $source->getDateTo());
+		$group	= $this->buildGroup($source->getInterval());
+		$sort	= $this->buildSort();
+
+		$stations = $this->_getStations($source, $user);
+		foreach($stations as $i => $station) {
+
+			$sensors = (new StationMeasurement())->findById($source->getWeatherType());
+			$columns[$sensors->getName()]["name"] = $sensors->getColumn();
+			$columns[$sensors->getName()]["calc"] = "AVG";
+
+			$select = $this->buildSelect($columns, $source->getInterval());
+
+			$from  = $this->buildFrom($station->getDeviceId());
+			$query = $select . $from . $where . $group . $sort;
+			log_message("ERROR", $query);
+			$dbResult = $this->_db->query($query);
+
+			$data[$i]["name"] = $station->getName();
+			$data[$i]["data"] = $this->_processQuery($dbResult, $columns);
+		}
+		return $data;
+	}
+
+	/**
+	 * @access protected
+	 * @param  int   $i		iterator
+	 * @param  mixed $dbQuery
+	 * @param  array $columns
+	 * @return Array
+	 */
+	protected function _processQuery($dbResult, $columns) {
+		$iterator = 0;
+		$data = [];
+		if ($dbResult) {
+			while($rows = $dbResult->fetch_assoc()) {
+				$data[$iterator][] = (int) $rows["timestamp"];
+				foreach($columns as $column) {
+					$data[$iterator][] = (float) $rows[$column["name"]];
+				}
+				$iterator++;
+			}
+		}
+		return $data;
+	}
+
+	/**
+	 * Return stations based on request
+	 *
+	 * @access protected
+	 * @param  Source $source
+	 * @return Array
+	 */
+	protected function _getStations($source, $user = null) {
+
+		/** If station is supplied **/
+		if ($source->getStation() !== null) {
+
+			/* If multiple stations requested */
+			if (is_array($source->getStation())) {
+				foreach($source->getStations() as $station) {
+					$stations[] = (new Station())->findById($source->getStation());
+				}
+
+			/* If single station requested */
+			} else {
+				$stations[] = (new Station())->findById($source->getStation());
+			}
+
+		} else {
+
+			/** If user AND region is set */
+			if ($source->getRegion() !== null && $user) {
+				$stations = (new Station())->findByRegionIdAndUserId($source->getRegion(), $user->id);
+			}
+
+			/** If user is set */
+			if ($source->getRegion() == null && $user) {
+				$stations = (new UserStations())->findStationsByUserId($user->id);
+			}
+
+			/** If region is set */
+			if ($source->getRegion() !== null && !$user) {
+				$stations = (new Station())->findByRegionId($source->getRegion());
+			}
+		}
+
+		return $stations;
+	}
+
+	/**
 	 * Build the select part of the query
 	 *
 	 * @access public
-	 * @param  string $weatherType
+	 * @param  mixed  $param
 	 * @return string select query part
 	 */
 	public function buildSelect($weatherType, $interval) {
-		/* Query all params */
-		if ($weatherType == "all") {
-			$columns = $this->_default_columns;
 
-		/* Query specific params */
-		} else {
-			#Alternative: Build a switch statement
-			$keys = array_keys($this->_default_columns);
-			foreach($keys as $name) {
-				if ($weatherType == $name) {
-					$columns[] = $this->_default_columns[$name];
-					break;
+		/* Query all params */
+		switch($weatherType) {
+			case is_array($weatherType):
+				$columns = $weatherType;
+				break;
+
+			case "all":
+				$columns = $this->_default_columns;
+				break;
+
+			default:
+				$keys = array_keys($this->_default_columns);
+				foreach($keys as $name) {
+					if ($weatherType == $name) {
+						$columns[] = $this->_default_columns[$name];
+						break;
+					}
 				}
-			}
+				break;
 		}
 
 		$div = $this->getInterval($interval);

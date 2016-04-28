@@ -377,6 +377,9 @@
 			<div id="navbar" class="collapse navbar-collapse">
 				<ul class="nav navbar-nav navbar-right">
 					{if $user !== false}
+						{if $isManager}
+							<li><a href="{$baseUrl}graph/sensors">Misc. sensors</a></li>
+						{/if}
 						<li><a href="{$baseUrl}graph">Weather graph</a></li>
 						<li class="dropdown">
 							<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi {$user->first_name}! <span class="caret"></span></a>

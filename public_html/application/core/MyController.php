@@ -31,12 +31,16 @@ class MyController extends CI_Controller {
      */
     protected function setUser() {
         $this->_user = false;
-        $this->data["isAdmin"] = false;
+		$this->data["isAdmin"] = false;
+		$this->data["isManager"] = false;
         if ($this->ion_auth->logged_in()) {
             $this->_user = $this->ion_auth->user()->row();
             if ($this->ion_auth->in_group("admin")) {
                 $this->data["isAdmin"] = true;
-            }
+			}
+			if ($this->ion_auth->in_group('manager')) {
+				$this->data["isManager"] = true;
+			}
         }
         $this->data["user"] = $this->_user;
     }

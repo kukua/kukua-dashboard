@@ -143,6 +143,10 @@ class StationMeasurement extends CI_Model {
 	 * @return Array
 	 */
 	public function findByStationId($stationId) {
+		if (!is_numeric($stationId)) {
+			throw new InvalidArgumentException("Invalid param supplied");
+		}
+
 		$this->db->select("*");
 		$this->db->where("station_id", $stationId);
 		$this->db->from(self::TABLE);
@@ -162,6 +166,10 @@ class StationMeasurement extends CI_Model {
 	 * @return StationMeasurement
 	 */
 	public function findById($id) {
+		if (!is_numeric($id)) {
+			throw new InvalidArgumentException("Invalid param supplied");
+		}
+
 		$this->db->select("*");
 		$this->db->where("id", $id);
 		$this->db->from(self::TABLE);
