@@ -23,7 +23,7 @@
 								<td>{$card->ICCID}</td>
 								<td>{$card->LastRadiusStop}</td>
 								<td>{$card->LastRadiusBytes}</td>
-								<td class="bg-{$card->Status}"></td>
+								<td class="bg-{$card->status}"></td>
 							</tr>
 						{/foreach}
 					</tbody>
