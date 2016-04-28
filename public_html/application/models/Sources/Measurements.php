@@ -142,72 +142,6 @@ class Measurements extends Source {
 	}
 
 	/**
-	 * @access protected
-	 * @param  int   $i		iterator
-	 * @param  mixed $dbQuery
-	 * @param  array $columns
-	 * @return Array
-	 */
-	protected function _processQuery($dbResult, $columns) {
-		$iterator = 0;
-		$data = [];
-		if ($dbResult) {
-			while($rows = $dbResult->fetch_assoc()) {
-				$data[$iterator][] = (int) $rows["timestamp"];
-				foreach($columns as $column) {
-					$data[$iterator][] = (float) $rows[$column["name"]];
-				}
-				$iterator++;
-			}
-		}
-		return $data;
-	}
-
-	/**
-	 * Return stations based on request
-	 *
-	 * @access protected
-	 * @param  Source $source
-	 * @return Array
-	 */
-	protected function _getStations($source, $user = null) {
-
-		/** If station is supplied **/
-		if ($source->getStation() !== null) {
-
-			/* If multiple stations requested */
-			if (is_array($source->getStation())) {
-				foreach($source->getStations() as $station) {
-					$stations[] = (new Station())->findById($source->getStation());
-				}
-
-			/* If single station requested */
-			} else {
-				$stations[] = (new Station())->findById($source->getStation());
-			}
-
-		} else {
-
-			/** If user AND region is set */
-			if ($source->getRegion() !== null && $user) {
-				$stations = (new Station())->findByRegionIdAndUserId($source->getRegion(), $user->id);
-			}
-
-			/** If user is set */
-			if ($source->getRegion() == null && $user) {
-				$stations = (new UserStations())->findStationsByUserId($user->id);
-			}
-
-			/** If region is set */
-			if ($source->getRegion() !== null && !$user) {
-				$stations = (new Station())->findByRegionId($source->getRegion());
-			}
-		}
-
-		return $stations;
-	}
-
-	/**
 	 * Build the select part of the query
 	 *
 	 * @access public
@@ -323,5 +257,78 @@ class Measurements extends Source {
 				break;
 		}
 		return $div;
+	}
+
+	/**
+	 * @access protected
+	 * @param  int   $i		iterator
+	 * @param  mixed $dbQuery
+	 * @param  array $columns
+	 * @return Array
+	 */
+	protected function _processQuery($dbResult, $columns) {
+		$iterator = 0;
+		$data = [];
+		if ($dbResult) {
+			while($rows = $dbResult->fetch_assoc()) {
+				$data[$iterator][] = (int) $rows["timestamp"];
+				foreach($columns as $column) {
+					$data[$iterator][] = (float) $rows[$column["name"]];
+				}
+				$iterator++;
+			}
+		}
+		return $data;
+	}
+
+	/**
+	 * Return stations based on request
+	 *
+	 * @access protected
+	 * @param  Source $source
+	 * @return Array
+	 */
+	protected function _getStations($source, $user = null) {
+
+		/** If station is supplied **/
+		if ($source->getStation() !== null) {
+
+			/* If multiple stations requested */
+			if (is_array($source->getStation())) {
+				foreach($source->getStations() as $station) {
+					$stations[] = (new Station())->findById($source->getStation());
+				}
+
+			/* If single station requested */
+			} else {
+				$stations[] = (new Station())->findById($source->getStation());
+			}
+
+		} else {
+
+			/** If user AND region is set */
+			if ($source->getRegion() !== null && $user) {
+				$stations = (new Station())->findByRegionIdAndUserId($source->getRegion(), $user->id);
+			}
+
+			/** If user is set */
+			if ($source->getRegion() == null && $user) {
+				$stations = (new UserStations())->findStationsByUserId($user->id);
+			}
+
+			/** If region is set */
+			if ($source->getRegion() !== null && !$user) {
+				$stations = (new Station())->findByRegionId($source->getRegion());
+			}
+		}
+
+		return $stations;
+	}
+
+	public function single($query) {
+		$dbResult = $this->_db->query($query);
+		if ($dbResult) {
+			return $dbResult->fetch_assoc();
+		}
 	}
 }

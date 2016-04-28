@@ -12,7 +12,8 @@
 							<th>ICCID</th>
 							<th>Last connection time</th>
 							<th>Size of upload</th>
-							<th>Status</th>
+							<th>Battery voltage</th>
+							<th>Sim connected x h?</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -23,6 +24,7 @@
 								<td>{$card->ICCID}</td>
 								<td>{$card->LastRadiusStop}</td>
 								<td>{$card->LastRadiusBytes}</td>
+								<td>{$card->voltage}</td>
 								<td class="bg-{$card->status}"></td>
 							</tr>
 						{/foreach}

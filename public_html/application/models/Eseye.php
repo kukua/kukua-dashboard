@@ -85,6 +85,7 @@ class Eseye extends CI_Model {
 			$result->name   = $station->getName();
 			$result->ICCID  = $station->getSimId();
 			$result->status = $status;
+			$result->voltage = (new Source())->getBatteryLevel($station->getDeviceId());
 			return $result;
 		} catch (Exception $e) {
 			throw $e;

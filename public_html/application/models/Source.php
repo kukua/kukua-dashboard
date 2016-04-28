@@ -267,4 +267,13 @@ class Source extends CI_Model {
 		}
 		return $result;
 	}
+
+
+	public function getBatteryLevel($deviceId) {
+		require_once(APPPATH . "models/Sources/Measurements.php");
+		$object = new Measurements();
+		$query = "SELECT `battery` FROM `" + $deviceId . "` ORDER BY timestamp DESC LIMIT 1";
+		$value = $object->single($query);
+		return $value;
+	}
 }

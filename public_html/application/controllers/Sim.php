@@ -10,7 +10,6 @@ class Sim extends MyController {
     }
 
 	public function index() {
-
 		$stations = (new Station())->load();
 		$simCards = [];
 		foreach($stations as $station) {
