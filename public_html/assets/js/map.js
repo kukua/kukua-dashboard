@@ -29,7 +29,7 @@
 					// Create a map object and specify the DOM element for display.
 					var map = new google.maps.Map(el, {
 						center: centerLatLng,
-						scrollwheel: false,
+						scrollwheel: true,
 						styles: styles,
 						zoom: 4
 					});
