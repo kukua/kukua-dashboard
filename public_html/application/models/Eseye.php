@@ -77,9 +77,6 @@ class Eseye extends CI_Model {
 			}
 
 			$statusText = $date->format("d-m-Y H:i:s") . " | " . $result->LastRadiusBytes;
-			if ($difference > 96) {
-				$statusText = "unknown | " . $result->LastRadiusBytes;
-			}
 
 			switch ($difference) {
 				case ($difference <= 1):
