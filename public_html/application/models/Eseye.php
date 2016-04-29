@@ -76,7 +76,7 @@ class Eseye extends CI_Model {
 				$difference = abs($now->getTimestamp() - $date->getTimestamp()) / 60 / 60;
 			}
 
-			$statusText = $date->format("d-m-Y H:i:s") . " | " . $result->LastRadiusBytes;
+			$statusText = $date->format("Y-m-d H:i:s") . " | " . $result->LastRadiusBytes;
 
 			switch ($difference) {
 				case ($difference <= 1):
