@@ -17,7 +17,7 @@
 							<th width="80px" class="text-center">Buffers</th>
 							<th width="80px" class="text-center">Records</th>
 							<th width="80px" class="text-center">Voltage</th>
-							<th width="80px" class="text-center">Connection</th>
+							<th width="150px" class="text-center">Connection</th>
 						</tr>
 					</thead>
 					<tbody>
