@@ -55,7 +55,19 @@ class Eseye extends CI_Model {
 			]);
 
 			$response = $curl->response;
-			$result = $response->info;
+
+			if (!isset($response->info)) {
+				$result = new StdClass();
+			} else {
+				$result = $response->info;
+			}
+
+			if (!isset($result->LastRadiusStop)) {
+				$result->LastRadiusStop = "0000-00-00 00:00:00";
+			}
+			if (!isset($result->LastRadiusBytes)) {
+				$result->LastRadiusBytes = "0";
+			}
 
 			$difference = 96;
 			if (!empty($result->LastRadiusStop)) {
@@ -64,28 +76,48 @@ class Eseye extends CI_Model {
 				$difference = abs($now->getTimestamp() - $date->getTimestamp()) / 60 / 60;
 			}
 
+			$statusText = $date->format("d-m-Y H:i:s") . " | " . $result->LastRadiusBytes;
+			if ($difference > 96) {
+				$statusText = "unknown | " . $result->LastRadiusBytes;
+			}
+
 			switch ($difference) {
 				case ($difference <= 1):
-					$status = "green";
+					$statusBg = "green";
 					break;
 				case ($difference > 1 && $difference < 24):
-					$status = "blue";
+					$statusBg = "blue";
 					break;
 				case ($difference >= 24 && $difference < 48):
-					$status = "yellow";
+					$statusBg = "yellow";
 					break;
 				case ($difference >= 48 && $difference < 96):
-					$status = "orange";
+					$statusBg = "orange";
 					break;
 				default:
-					$status = "red";
+					$statusBg = "red";
+					break;
+			}
+
+			$batteryVoltage = (new Source())->getBatteryLevel($station->getDeviceId());
+			switch($batteryVoltage) {
+				case ($batteryVoltage >= 4000):
+					$batteryBg = "green";
+					break;
+				case ($batteryVoltage >= 3500 && $batteryVoltage < 4000):
+					$batteryBg = "orange";
+					break;
+				default:
+					$batteryBg = "red";
 					break;
 			}
 
 			$result->name   = $station->getName();
 			$result->ICCID  = $station->getSimId();
-			$result->status = $status;
-			$result->voltage = (new Source())->getBatteryLevel($station->getDeviceId());
+			$result->status = $statusText;
+			$result->statusColor = $statusBg;
+			$result->voltage = $batteryVoltage;
+			$result->voltageColor = $batteryBg;
 			return $result;
 		} catch (Exception $e) {
 			throw $e;

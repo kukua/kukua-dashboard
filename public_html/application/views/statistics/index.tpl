@@ -4,30 +4,35 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12">
-				<table class="table js-datatable table-striped">
+				<h1><i class="glyphicon glyphicon-stats"></i> Statistics</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<table class="table js-datatable table-striped table-condensed">
 					<thead>
 						<tr>
-							<th></th>
 							<th>Name</th>
 							<th>ICCID</th>
-							<th>Last connection time</th>
-							<th>Size of upload</th>
-							<th>Battery voltage</th>
-							<th>Sim connected x h?</th>
+							<th width="80px" class="text-center">Buffers</th>
+							<th width="80px" class="text-center">Records</th>
+							<th width="80px" class="text-center">Voltage</th>
+							<th width="80px" class="text-center">Connection</th>
 						</tr>
 					</thead>
 					<tbody>
-						{foreach $simcards as $key => $card}
-							<tr>
-								<td>#{$key}</td>
-								<td>{$card->name}</td>
-								<td>{$card->ICCID}</td>
-								<td>{$card->LastRadiusStop}</td>
-								<td>{$card->LastRadiusBytes}</td>
-								<td>{$card->voltage}</td>
-								<td class="bg-{$card->status}"></td>
-							</tr>
-						{/foreach}
+						{if count($simcards)}
+							{foreach $simcards as $card}
+								<tr>
+									<td>{$card->name}</td>
+									<td>{$card->ICCID}</td>
+									<td class="text-center">NYI</td>
+									<td class="text-center">NYI</td>
+									<td class="text-center bg-{$card->voltageColor}">{$card->voltage}</td>
+									<td class="text-center bg-{$card->statusColor}">{$card->status}</td>
+								</tr>
+							{/foreach}
+						{/if}
 					</tbody>
 				</table>
 			</div>
