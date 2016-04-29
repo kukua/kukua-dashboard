@@ -268,7 +268,13 @@ class Source extends CI_Model {
 		return $result;
 	}
 
-
+	/**
+	 * Get latest battery level
+	 *
+	 * @access public
+	 * @param  DeviceId
+	 * @return int
+	 */
 	public function getBatteryLevel($deviceId) {
 		require_once(APPPATH . "models/Sources/Measurements.php");
 		$object = new Measurements();
@@ -284,5 +290,21 @@ class Source extends CI_Model {
 		else {
 			return 0;
 		}
+	}
+
+	/**
+	 * Get latest Timestamp
+	 *
+	 * @access public
+	 * @param  DeviceId
+	 * @return int
+	 */
+	public function getLatestTimestamp($deviceId) {
+		require_once(APPPATH . "models/Sources/Measurements.php");
+		$object = new Measurements();
+		$query = "SELECT `timestamp` FROM `" . $deviceId . "` ORDER BY timestamp DESC LIMIT 1";
+		$value = $object->single($query);
+
+		return (isset($value["timestamp"])) ? $value['timestamp'] : '0000-00-00 00:00:00';
 	}
 }

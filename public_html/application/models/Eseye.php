@@ -109,12 +109,15 @@ class Eseye extends CI_Model {
 					break;
 			}
 
+			$timestamp = (new Source())->getLatestTimestamp($station->getDeviceId());
+
 			$result->name   = $station->getName();
 			$result->ICCID  = $station->getSimId();
 			$result->status = $statusText;
 			$result->statusColor = $statusBg;
 			$result->voltage = $batteryVoltage;
 			$result->voltageColor = $batteryBg;
+			$result->timestamp = $timestamp;
 			return $result;
 		} catch (Exception $e) {
 			throw $e;

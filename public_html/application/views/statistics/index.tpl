@@ -16,6 +16,7 @@
 							<th>ICCID</th>
 							<th width="80px" class="text-center">Buffers</th>
 							<th width="80px" class="text-center">Records</th>
+							<th width="150px" class="text-center">Last DB TS</th>
 							<th width="80px" class="text-center">Voltage</th>
 							<th width="150px" class="text-center">Connection</th>
 						</tr>
@@ -28,6 +29,7 @@
 									<td>{$card->ICCID}</td>
 									<td class="text-center">NYI</td>
 									<td class="text-center">NYI</td>
+									<td class="text-center">{$card->timestamp}</td>
 									<td class="text-center bg-{$card->voltageColor}">{$card->voltage}</td>
 									<td class="text-center bg-{$card->statusColor}">{$card->status}</td>
 								</tr>
