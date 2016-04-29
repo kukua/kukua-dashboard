@@ -393,7 +393,7 @@
 									<li><a href="{$baseUrl}stations"><i class="glyphicon glyphicon-record"></i> Stations</a></li>
 									<li role="separator" class="divider"></li>
 									<li><a href="{$baseUrl}smsclients"><i class="glyphicon glyphicon-phone"></i> SMS Clients</a></li>
-									<li><a href="{$baseUrl}sim"><i class="glyphicon glyphicon-signal"></i> SIM activity</a></li>
+									<li><a href="{$baseUrl}statistics"><i class="glyphicon glyphicon-signal"></i> Statistics</a></li>
 									<li><a href="{$baseUrl}feedback"><i class="glyphicon glyphicon-blackboard"></i> Feedback</a></li>
 									<li role="separator" class="divider"></li>
 								{/if}

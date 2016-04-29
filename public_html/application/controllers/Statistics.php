@@ -2,7 +2,7 @@
 
 use \Curl\Curl;
 
-class Sim extends MyController {
+class Statistics extends MyController {
 
     public function __construct() {
         parent::__construct();
@@ -20,6 +20,6 @@ class Sim extends MyController {
 		}
 
         $this->data["simcards"] = $simCards;
-        $this->load->view("sim/index", $this->data);
+        $this->load->view("statistics/index", $this->data);
     }
 }
