@@ -30,12 +30,14 @@ var js_files = [
     js_plugin_path + 'mailcheck/src/mailcheck.js',
 	js_plugin_path + 'datatables.net/js/jquery.dataTables.js',
 	js_plugin_path + 'datatables.net-bs/js/dataTables.bootstrap.js',
+	js_plugin_path + 'google-maps/lib/Google.js',
 
     js_script_path + 'chart.js',
     js_script_path + 'graph.js',
     js_script_path + 'sensors.js',
     js_script_path + 'mailcheck.js',
-    js_script_path + 'helpers.js'
+    js_script_path + 'helpers.js',
+	js_script_path + 'map.js'
 ];
 
 /* process the js files and make it a minified js */

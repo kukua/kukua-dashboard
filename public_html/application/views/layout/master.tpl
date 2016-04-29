@@ -386,6 +386,7 @@
 							<ul class="dropdown-menu">
 								<li><a href="{$baseUrl}user/update/{$user->id}">My account</a></li>
 								<li><a href="{$baseUrl}forecast?rain">Forecast map</a></li>
+								<li><a href="{$baseUrl}map">Location map</a></li>
 								<li role="separator" class="divider"></li>
 								{if $isAdmin}
 									<li><a href="{$baseUrl}user"><i class="glyphicon glyphicon-user"></i> Users</a></li>

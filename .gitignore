@@ -1,5 +1,6 @@
 .env
 tools/*.log
+.tern-project
 
 public_html/node_modules
 public_html/bower_components
