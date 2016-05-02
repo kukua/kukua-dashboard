@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker exec -it hhvm php index.php cli cronjobs smsForecast
+docker exec -t hhvm php index.php cli cronjobs smsForecast
