@@ -385,7 +385,6 @@
 							<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi {$user->first_name}! <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li><a href="{$baseUrl}user/update/{$user->id}">My account</a></li>
-								<li><a href="{$baseUrl}forecast?rain">Forecast map</a></li>
 								<li><a href="{$baseUrl}map">Location map</a></li>
 								<li role="separator" class="divider"></li>
 								{if $isAdmin}
@@ -402,6 +401,7 @@
 							</ul>
 						</li>
 					{else}
+						<li><a href="{$baseUrl}map">Location map</a></li>
 						<li><a href="{$baseUrl}auth/request">Request access</a></li>
 						<li><a href="{$baseUrl}auth/login">Login</a></li>
 					{/if}
