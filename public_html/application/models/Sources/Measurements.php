@@ -273,7 +273,9 @@ class Measurements extends Source {
 			while($rows = $dbResult->fetch_assoc()) {
 				$data[$iterator][] = (int) $rows["timestamp"];
 				foreach($columns as $column) {
-					$data[$iterator][] = (float) $rows[$column["name"]];
+					if (isset($rows[$column["name"]])) {
+						$data[$iterator][] = (float) $rows[$column["name"]];
+					}
 				}
 				$iterator++;
 			}
