@@ -295,7 +295,7 @@ class Measurements extends Source {
 		/** If station is supplied **/
 		if ($source->getStation() !== null) {
 
-			/* If multiple stations requested */
+			/* If multiple stations requested NYI */
 			if (is_array($source->getStation())) {
 				foreach($source->getStations() as $station) {
 					$stations[] = (new Station())->findById($source->getStation());

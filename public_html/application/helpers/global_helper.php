@@ -5,39 +5,44 @@ class GlobalHelper {
 	public static function meaningOf($values) {
 		$return = null;
 
-		switch($values) {
-			case 'Timestamp':
-				$return = "UTC (d-m-Y)";
+		switch(true) {
+			case stristr($values, 'timestamp'):
+				$return = 'UTC (d-m-Y)';
 			break;
-			case 'Temperature':
-				$return = "Celcius";
+			case stristr($values, 'temp'):
+				$return = 'Celcius';
 				break;
-			case 'Rainfall':
-				$return = "mm";
+			case stristr($values, 'rain'):
+				$return = 'mm';
 				break;
-			case 'Humidity':
-				$return = "%";
+			case stristr($values, 'soilmoist'):
+			case stristr($values, 'humid'):
+				$return = '%';
 				break;
-			case 'Wind':
-				$return = "km/h";
+			case stristr($values, 'gustspeed'):
+			case stristr($values, 'windspeed'):
+				$return = 'km/h';
 				break;
-			case 'WindSpeed':
-				$return = "km/h";
+			case stristr($values, 'windgustdir'):
+			case stristr($values, 'winddir'):
+				$return = 'degrees';
 				break;
-			case 'WindDirection':
-				$return = "degrees";
+			case stristr($values, 'batvolt'):
+			case stristr($values, 'batt'):
+				$return = 'Voltage';
 				break;
-			case 'WindGustDirection':
-				$return = "degrees";
+			case stristr($values, 'gas'):
+			case stristr($values, 'press'):
+				$return = 'hPa';
 				break;
-			case 'Battery':
-				$return = "Voltage";
+			case stristr($values, 'solar'):
+				$return = 'W/m2';
 				break;
 		}
 		return $return;
 	}
 
-	public static function outputCsv($fileName, $assocDataArray = Array(), $allColumns = false) {
+	public static function outputCsv($fileName, $assocDataArray = Array(), $specificStationId = false) {
 		$zipFile = '/tmp/' . $fileName . '.zip';
 		$zip = new ZipArchive;
 		if ($zip->open($zipFile, ZipArchive::CREATE) !== true) {
@@ -64,8 +69,9 @@ class GlobalHelper {
 					$types = [];
 
 					if (isset($station->data)) {
-						if ($allColumns !== false) {
-							$sensorData = (new StationMeasurement())->findByStationId($allColumns);
+						if ($specificStationId !== false) {
+
+							$sensorData = (new StationMeasurement())->findByStationId($specificStationId);
 							foreach($sensorData as $sensor) {
 								$columns[$sensor->getName()]["name"] = $sensor->getColumn();
 								$columns[$sensor->getName()]["calc"] = "AVG";
