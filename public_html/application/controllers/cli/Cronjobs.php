@@ -9,6 +9,8 @@
  */
 class Cronjobs extends CI_Controller {
 
+	private $_content;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -67,7 +69,7 @@ class Cronjobs extends CI_Controller {
 
 		/* Gathering stations */
 		log_message ('error', 'Gathering stations...');
-		$stations = (new Station())->load();
+		$regions  = (new Region())->load();
 		$startTS  = (new DateTime())->setTime(00, 00, 00);
 		$endTS    = (new DateTime())->setTime(06, 00, 00);
 
@@ -76,10 +78,11 @@ class Cronjobs extends CI_Controller {
 		$data['interval'] = '5m';
 
 		/* Looping through stations  */
-		foreach ($stations as $station) {
-			log_message('error', 'Debugging station ' . $station->getName());
-			$this->_debug($station, $data);
+		foreach ($regions as $region) {
+			log_message('error', 'Debugging station ' . $region->getName());
+			$this->_debug($region, $data);
 		}
+		$this->_sendMail();
 	}
 
 	/**
@@ -88,13 +91,13 @@ class Cronjobs extends CI_Controller {
 	 * @param  Array $data
 	 * @return void
 	 */
-	protected function _debug(Station $station, $data) {
+	protected function _debug(Region $region, $data) {
 		$measurements = new Measurements();
 		$columns = $measurements->_default_columns;
-		foreach ($columns as $column) {
-			$data['region'] = $station->getRegionId();
-			$data['type']   = $column["name"];
-			$this->_execDebug($station, $data);
+		foreach ($columns as $column => $values) {
+			$data['region'] = $region->getId();
+			$data['type']   = $column;
+			$this->_execDebug($region, $data);
 		}
 	}
 
@@ -104,14 +107,94 @@ class Cronjobs extends CI_Controller {
 	 * @param  Array $data
 	 * @return void
 	 */
-	protected function _execDebug(Station $station, $data) {
+	protected function _execDebug(Region $region, $data) {
 		$curl = new \Curl\Curl();
 		$curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
 		$curl->post("https://dashboard.kukua.cc/api/sensordata/get",
 			$data
 		);
 
-		$result = json_decode($curl->response);
-		print_r($station->getName() . "\t-\t" . count($result));
+		$rows = json_decode($curl->response);
+
+		foreach($rows as $row) {
+			$content = "";
+			$counter = count($row->data);
+
+			$color = "#BEF781"; //green
+			switch($counter) {
+				case $counter <= 0:
+					$color = "#FFFFFF"; //white
+					break;
+				case ($counter <= 30 && $counter > 0):
+					$color = "#F78181"; //red
+					break;
+				case ($counter <= 50 && $counter > 30):
+					$color = "#F7BE81"; //orange
+					break;
+				case ($counter <= 71 && $counter > 50):
+					$color = "#81DAF5"; //blue
+					break;
+			}
+
+			$content .= "<tr>";
+			$content .= "<td bgcolor='" . $color . "'>" . $region->getName(). "</td>";
+			$content .= "<td bgcolor='" . $color . "'>" . $row->name. "</td>";
+			$content .= "<td bgcolor='" . $color . "'>" . $data["type"]. "</td>";
+			$content .= "<td bgcolor='" . $color . "'>" . $counter. "</td>";
+			$content .= "</tr>";
+
+			$this->_addMailContent($content);
+		}
+	}
+
+	protected function _addMailContent($content) {
+		$this->_content .= $content;
+	}
+
+	protected function getMailContent() {
+		return $this->_content;
+	}
+
+	protected function _sendMail() {
+
+		$content = "
+<html>
+	<head>
+		<title>Error reporting</title>
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+		<style>
+			table {
+				width: 100%;
+				border: 0;
+			}
+			table tr td {
+				padding: 5px 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Error reporting</h1>
+		<table border='0' cellpadding='0' width='600px' cellspacing='0'>
+			<thead>
+				<tr>
+					<th align='left'>Region</th>
+					<th align='left'>Station</th>
+					<th align='left'>Type</th>
+					<th align='left'>DB Rows</th>
+				</tr>
+			</thead>
+			<tbody>
+				" . $this->getMailContent() . "
+			</tbody>
+		</table>
+	</body>
+</html>";
+
+        $lib = new Email();
+        $lib->setFrom("Kukua B.V. <info@kukua.cc>");
+        $lib->setTo("Siebren Kranenburg <siebren@kukua.cc>");
+        $lib->setSubject("Daily report");
+        $lib->setContent($content);
+		$lib->send();
 	}
 }
