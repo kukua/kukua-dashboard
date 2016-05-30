@@ -299,9 +299,8 @@ class Measurements extends Source {
 	 * @return Array
 	 */
 	protected function _getStations($source, $user = null) {
-
 		/** If station is supplied **/
-		if ($source->getStation() !== null) {
+		if ($source->getStation() !== null && $source->getStation() != 0) {
 
 			/* If multiple stations requested NYI */
 			if (is_array($source->getStation())) {
