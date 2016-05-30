@@ -50,6 +50,10 @@ class Foreca extends Source {
 			'WindSpeed' => [
 				'calc' => 'avg',
 				'name' => 'windSpeed'
+			],
+			'WindDir' => [
+				'calc' => 'avg',
+				'name' => 'windDir'
 			]
 		];
 	}
@@ -72,10 +76,12 @@ class Foreca extends Source {
 			log_message("ERROR", $query);
 			$dbResult = $this->_db->query($query);
 
-			$column = $this->_default_columns[$source->getWeatherType()]['name'];
-			$data[$key]["name"] = "Forecast";
-			while($rows = $dbResult->fetch_assoc()) {
-				$data[$key]["data"][] = [(int) $rows["timestamp"], (float) $rows[$column]];
+			if (isset($this->_default_columns[$source->getWeatherType()])) {
+				$column = $this->_default_columns[$source->getWeatherType()]['name'];
+				$data[$key]["name"] = "Forecast";
+				while($rows = $dbResult->fetch_assoc()) {
+					$data[$key]["data"][] = [(int) $rows["timestamp"], (float) $rows[$column]];
+				}
 			}
 		}
 
@@ -96,6 +102,8 @@ class Foreca extends Source {
 
 		/* Query specific params */
 		} else {
+			$columns = [];
+
 			#Alternative: Build a switch statement
 			$keys = array_keys($this->_default_columns);
 			foreach($keys as $name) {

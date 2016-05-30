@@ -43,6 +43,10 @@ class Measurements extends Source {
 				'calc' => 'SUM',
 				'name' => 'rain'
 			],
+			'Pressure' => [
+				'calc' => 'AVG',
+				'name' => 'pressure'
+			],
 			'Humidity' => [
 				'calc' => 'AVG',
 				'name' => 'humid'
@@ -50,6 +54,10 @@ class Measurements extends Source {
 			'WindSpeed' => [
 				'calc' => 'AVG',
 				'name' => 'windSpeed'
+			],
+			'WindDir' => [
+				'calc' => 'AVG',
+				'name' => 'windDir'
 			]
 		];
 	}
