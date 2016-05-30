@@ -83,7 +83,7 @@ class Cronjobs extends CI_Controller {
 			$this->_debug($region, $data);
 		}
 
-		if ($email === true) {
+		if ($email == true) {
 			$this->_sendMail();
 		} else {
 			$this->_outputBash();
