@@ -148,5 +148,6 @@ $autoload['model'] = array(
 	'Eseye',
 	'Source',
 	'Smsclient',
-	'Region'
+	'Region',
+	'Report'
 );

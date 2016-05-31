@@ -10,7 +10,7 @@ class GlobalHelper {
 				$return = 'UTC (d-m-Y)';
 			break;
 			case stristr($values, 'temp'):
-				$return = 'Celcius';
+				$return = 'celcius';
 				break;
 			case stristr($values, 'rain'):
 				$return = 'mm';
@@ -29,14 +29,16 @@ class GlobalHelper {
 				break;
 			case stristr($values, 'batvolt'):
 			case stristr($values, 'batt'):
-				$return = 'Voltage';
+				$return = 'voltage';
 				break;
 			case stristr($values, 'gas'):
+				$return = 'bar';
+				break;
 			case stristr($values, 'press'):
 				$return = 'hPa';
 				break;
 			case stristr($values, 'solar'):
-				$return = 'W/m2';
+				$return = 'w/m2';
 				break;
 		}
 		return $return;

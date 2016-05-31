@@ -34,13 +34,38 @@ class Smsclients extends MyController {
             $client = new Smsclient();
             $client->populate($this->input->post());
             if ($client->save() !== false) {
-                Notification::set(Smsclients::SUCCESS, "Succesfully added the client");
+				Notification::set(Smsclients::SUCCESS, "Succesfully added the client");
+				redirect("/smsclients");
             } else {
                 Notification::set(Smsclients::DANGER, "Something went wrong");
             }
         }
         $this->load->view("smsclients/create", $this->data);
     }
+
+	/**
+	 * Update existing client
+	 *
+	 * @access public
+	 * @param  int $id
+	 * @return void
+	 */
+	public function update($id) {
+		$client = new Smsclient();
+		$client->findById($id);
+		if ($this->input->post()) {
+			$client->populate($this->input->post());
+            if ($client->save() !== false) {
+                Notification::set(Smsclients::SUCCESS, "Succesfully updated the client");
+				redirect("/smsclients");
+            } else {
+                Notification::set(Smsclients::DANGER, "Something went wrong");
+            }
+		}
+
+		$this->data["client"] = $client;
+		$this->load->view("smsclients/update", $this->data);
+	}
 
     /**
      * Delete a sms client

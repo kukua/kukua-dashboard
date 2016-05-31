@@ -63,19 +63,22 @@ class Cronjobs extends CI_Controller {
 	 * @access public
 	 * @return void
 	 */
-	public function report($email = false) {
+	public function report($save = false) {
 		require_once(APPPATH . "models/Sources/Measurements.php");
 		log_message ('error', 'Starting error report');
 
 		/* Gathering stations */
 		log_message ('error', 'Gathering stations...');
 		$regions  = (new Region())->load();
-		$startTS  = (new DateTime())->setTime(00, 00, 00);
-		$endTS    = (new DateTime())->setTime(06, 00, 00);
+
+		$today    = (new DateTime());
+		$startTS  = (new DateTime())->sub(new DateInterval('P1D'))->setTime(00,00,00);
+		$endTS    = (new DateTime())->sub(new DateInterval('P1D'))->setTime(23,59,59);
 
 		$data['dateFrom'] = $startTS->getTimestamp();
 		$data['dateTo']   = $endTS->getTimestamp();
 		$data['interval'] = '5m';
+		$data['created']  = (new DateTime())->format("Y-m-d H:i:s");
 
 		/* Looping through stations  */
 		foreach ($regions as $region) {
@@ -83,8 +86,8 @@ class Cronjobs extends CI_Controller {
 			$this->_debug($region, $data);
 		}
 
-		if ($email == true) {
-			$this->_sendMail();
+		if ($save == true) {
+			$this->_save();
 		} else {
 			$this->_outputBash();
 		}
@@ -99,6 +102,7 @@ class Cronjobs extends CI_Controller {
 	protected function _debug(Region $region, $data) {
 		$measurements = new Measurements();
 		$columns = $measurements->_default_columns;
+
 		foreach ($columns as $column => $values) {
 			$data['region'] = $region->getId();
 			$data['type']   = $column;
@@ -122,90 +126,46 @@ class Cronjobs extends CI_Controller {
 		$rows = json_decode($curl->response);
 
 		foreach($rows as $row) {
-			$content = [];
 			$counter = count($row->data);
 
-			$color = "#BEF781"; //green
-			switch($counter) {
-				case $counter <= 0:
-					$color = "#FFFFFF"; //white
-					break;
-				case ($counter <= 30 && $counter > 0):
-					$color = "#F78181"; //red
-					break;
-				case ($counter <= 50 && $counter > 30):
-					$color = "#F7BE81"; //orange
-					break;
-				case ($counter <= 71 && $counter > 50):
-					$color = "#81DAF5"; //blue
-					break;
-			}
-
-			$content["color"] = $color;
-			$content["regionName"] = $region->getName();
-			$content["stationName"] = $row->name;
-			$content["type"] = $data["type"];
-			$content["counter"] = $counter;
+			$content = [];
+			$content["region"] = $region->getName();
+			$content["station"] = $row->name;
+			$content["measurement"] = $data["type"];
+			$content["count"] = $counter;
+			$content["created"] = $data["created"];
 
 			$this->_addContent($content);
 		}
 	}
 
+	/**
+	 * @access protected
+	 * @param  array $content
+	 * @return void
+	 */
 	protected function _addContent($content) {
 		$this->_content[] = $content;
 	}
 
+	/**
+	 * @access protected
+	 * @return $this->_content
+	 */
 	protected function getContent() {
 		return $this->_content;
 	}
 
-	protected function _sendMail() {
-		$body = '';
-		foreach($this->getContent() as $val) {
-			$body .= "<tr>";
-			$body .= "<td bgcolor='" . $val['color'] . "'>" . $val['regionName']. "</td>";
-			$body .= "<td bgcolor='" . $val['color'] . "'>" . $val['stationName']. "</td>";
-			$body .= "<td bgcolor='" . $val['color'] . "'>" . $val['type']. "</td>";
-			$body .= "<td bgcolor='" . $val['color'] . "'>" . $val['counter'] . "</td>";
-			$body .= "</tr>";
+	/**
+	 * @access protected
+	 * @return True
+	 */
+	protected function _save() {
+		foreach($this->getContent() as $content) {
+			$object = new Report($content);
+			$object->save();
 		}
-		$content = "
-<html>
-	<head>
-		<title>Error reporting</title>
-		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-		<style>
-			table {
-				width: 100%;
-				border: 0;
-			}
-			table tr td {
-				padding: 5px 10px;
-			}
-		</style>
-	</head>
-	<body>
-		<h1>Error reporting</h1>
-		<table border='0' cellpadding='0' width='600px' cellspacing='0'>
-			<thead>
-				<tr>
-					<th align='left'>Region</th>
-					<th align='left'>Station</th>
-					<th align='left'>Type</th>
-					<th align='left'>DB Rows</th>
-				</tr>
-			</thead>
-			<tbody>" . $body . "</tbody>
-		</table>
-	</body>
-</html>";
-
-        $lib = new Email();
-        $lib->setFrom("Kukua B.V. <info@kukua.cc>");
-        $lib->setTo("Siebren Kranenburg <siebren@kukua.cc>");
-        $lib->setSubject("Daily report");
-        $lib->setContent($content);
-		$lib->send();
+		return true;
 	}
 
 	/**
@@ -214,10 +174,10 @@ class Cronjobs extends CI_Controller {
 	 */
 	protected function _outputBash() {
 		foreach($this->getContent() as $content) {
-			printf("%-20s", $content["regionName"]);
-			printf("%-30s", $content["stationName"]);
-			printf("%-20s", $content["type"]);
-			printf("%-2s", $content["counter"]);
+			printf("%-20s", $content["region"]);
+			printf("%-30s", $content["station"]);
+			printf("%-20s", $content["measurement"]);
+			printf("%-2s",  $content["count"]);
 			echo "\n";
 		}
 	}
