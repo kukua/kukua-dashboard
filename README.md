@@ -16,8 +16,10 @@
 * [Gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md)
 
 ### How to use
+
 ```bash
 $ cp .env.sample .env
+$ chmod 600 .env
 # > Edit configuration in .env
 
 $ docker-compose up -d
@@ -31,3 +33,9 @@ $ bower install
 $ npm install
 $ gulp build
 ```
+
+## License
+
+This software is licensed under the [MIT license](https://github.com/kukua/dashboard/blob/master/LICENSE).
+
+© 2016 Kukua BV
