@@ -70,10 +70,10 @@ class Auth extends MyController {
 			$this->ion_auth->deactivate($user);
 
 			/* Save selected countries */
-			$userCountries = new UserCountry();
-			$postCountries = ["1"];
+			$userStations = new UserStations();
+			$stations = [1,2,3,4,5,6,7,8,9];
 
-			if ($userCountries->save($user, $postCountries)) {
+			if ($userStations->saveBatch($user, $stations)) {
 				Notification::set(Auth::SUCCESS, "Your request has been succesfully received. We will get back to you as soon as possible.");
 				redirect("auth/request", "refresh");
 			}
