@@ -69,6 +69,9 @@ class Auth extends MyController {
 			/* Deactivate user on request */
 			$this->ion_auth->deactivate($user);
 
+			/* Notify admin */
+			$this->_send_user_request_email($user);
+
 			/* Save selected countries */
 			$userStations = new UserStations();
 			$stations = [1,2,3,4,5,6,7,8,9];
@@ -77,6 +80,7 @@ class Auth extends MyController {
 				Notification::set(Auth::SUCCESS, "Your request has been succesfully received. We will get back to you as soon as possible.");
 				redirect("auth/request", "refresh");
 			}
+
 		}
 		$this->load->view("auth/request", $this->data);
 	}
@@ -303,6 +307,25 @@ class Auth extends MyController {
         $lib->setSubject("Password reset");
         $lib->setContent($content);
         $lib->send();
-        return true;
-    }
+	}
+
+	/**
+	 * Send email to kukua
+	 *
+	 * @access protected
+	 * @param  User
+	 * @return void
+	 */
+	protected function _send_user_request_email($userId) {
+		$data["base"] = base_url();
+		$data["userId"] = $userId;
+
+		$content = $this->load->view("auth/email/request", $data, true);
+		$lib = new Email();
+        $lib->setFrom("Kukua B.V. <info@kukua.cc>");
+        $lib->setTo("info@kukua.cc");
+        $lib->setSubject("Access requested");
+        $lib->setContent($content);
+        $lib->send();
+	}
 }
