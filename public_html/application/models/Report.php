@@ -233,6 +233,27 @@ class Report extends CI_Model {
 	}
 
 	/**
+	 * Load report
+	 *
+     * @access public
+     * @return Array
+     */
+    public function load() {
+        $this->db->select("*");
+        $this->db->from(self::TABLE);
+        $get = $this->db->get()->result_array();
+
+		$result = [];
+		if (!is_null($get)) {
+			foreach($get as $row) {
+				$object = new Report();
+        	    $result[] = $object->populate($row);
+			}
+		}
+        return $result;
+    }
+
+	/**
 	 * Validate object
 	 *
 	 * @access public

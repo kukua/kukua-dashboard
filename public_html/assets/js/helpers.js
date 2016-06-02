@@ -164,7 +164,9 @@
 	}
 
 	helpers.dataTables = function() {
-		$('.js-datatable').dataTable();
+		$('.js-datatable').dataTable({
+			"iDisplayLength": 25
+		});
 	}
 
 })(window.helpers = window.helpers || {});

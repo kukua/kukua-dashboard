@@ -2,6 +2,8 @@
 tools/*.log
 .tern-project
 
+npm-debug.log
+
 public_html/node_modules
 public_html/bower_components
 public_html/.environment/config.php
