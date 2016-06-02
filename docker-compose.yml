@@ -27,5 +27,8 @@ mysql:
     image: mariadb:10.1
     container_name: mysql
     env_file: .env
+    environment:
+        # Fix https://goo.gl/fUTycl
+        MYSQL_HOST:
     ports:
         - "3306:3306"

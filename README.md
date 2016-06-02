@@ -1,4 +1,5 @@
 # Dashboard
+
 > Graphical interface for sensor data from ConCaVa.
 
 ## Requirements
@@ -16,18 +17,28 @@
 * [Gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md)
 
 ### How to use
+
 ```bash
-$ cp .env.sample .env
+git clone https://github.com/kukua/dashboard.git
+cd dashboard
+cp .env.example .env
+chmod 600 .env
 # > Edit configuration in .env
 
-$ docker-compose up -d
+docker-compose up -d
 # Navigate to http://<container ip>:80/ for the dashboard
 
-$ cp public_html/.environment/default.php public_html/.environment/config.php
+cp public_html/.environment/default.php public_html/.environment/config.php
 # Set your environment to development if needed error reporting etc
 
 # CSS / JS compiling
-$ bower install
-$ npm install
-$ gulp build
+bower install
+npm install
+gulp build
 ```
+
+## License
+
+This software is licensed under the [MIT license](https://github.com/kukua/dashboard/blob/master/LICENSE).
+
+© 2016 Kukua BV
