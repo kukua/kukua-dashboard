@@ -39,7 +39,7 @@
 
             call.done(function(request) {
                 var result = []
-				options.series = [];
+				options.series = []
                 if (request != null && request.length > 0) {
 					options.series = request;
                 }

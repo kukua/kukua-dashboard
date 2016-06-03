@@ -268,6 +268,22 @@ class Measurements extends Source {
 	}
 
 	/**
+	 *
+	 * HEADS UP
+	 * If the param type = "all" the keys in the returning array are
+	 * filled with column names from the database.
+	 * This occurs when downloading data for a station.
+	 *
+	 * For type = "all" the timestamp is converted to date / time
+	 *
+	 * @example Download
+	 *			$data[0]['timestamp'] = '';
+	 *			$data[1]['temp'] = '';
+	 *
+	 * @example Chart
+	 *			$data[0][0] = ''; (timestamp)
+	 *			$data[0][1] = ''; (value, i.e. temp)
+	 *
 	 * @access protected
 	 * @param  int   $i		iterator
 	 * @param  mixed $dbQuery
@@ -279,18 +295,25 @@ class Measurements extends Source {
 		$data = [];
 		if ($dbResult) {
 			while($rows = $dbResult->fetch_assoc()) {
-				$data[$iterator]['timestamp'] = (int) $rows["timestamp"];
 
 				/* Convert timestamp to human readable DateTime for downloads */
 				if ($type == "all") {
 					$date = new DateTime();
 					$date->setTimestamp( ($rows["timestamp"] / 1000) );
 					$data[$iterator]['timestamp'] = $date->format("Y-m-d H:i:s");
+				} else {
+					$data[$iterator][] = (int) $rows["timestamp"];
 				}
 
 				foreach($columns as $column) {
 					if (isset($rows[$column["name"]])) {
-						$data[$iterator][$column["name"]] = (float) round($rows[$column["name"]], 2);
+
+						/* Convert number to type for downloads */
+						if ($type == "all") {
+							$data[$iterator][$column["name"]] = (float) round($rows[$column["name"]], 2);
+						} else {
+							$data[$iterator][] = (float) round($rows[$column["name"]], 2);
+						}
 					}
 				}
 				$iterator++;

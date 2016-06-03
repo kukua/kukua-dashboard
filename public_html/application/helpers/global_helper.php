@@ -23,22 +23,49 @@ class GlobalHelper {
 			case stristr($values, 'windspeed'):
 				$return = 'km/h';
 				break;
-			case stristr($values, 'windgustdir'):
+			case stristr($values, 'gustdir'):
 			case stristr($values, 'winddir'):
 				$return = 'degrees';
 				break;
 			case stristr($values, 'batvolt'):
-			case stristr($values, 'batt'):
-				$return = 'voltage';
+			case stristr($values, 'battery'):
+				$return = 'millivolt';
 				break;
 			case stristr($values, 'gas'):
 				$return = 'bar';
 				break;
-			case stristr($values, 'press'):
+			case stristr($values, 'pressure'):
 				$return = 'hPa';
 				break;
 			case stristr($values, 'solar'):
 				$return = 'w/m2';
+				break;
+		}
+		return $return;
+	}
+
+	public static function translate($name) {
+		$return = null;
+
+		switch($name) {
+			case 'timestamp':
+				$return = "Date";
+				break;
+			case 'temp':
+				$return = "Temperature";
+				break;
+			case 'tempBMP':
+				$return = "BMP Temperature";
+				break;
+			case 'humid':
+				$return = "Humidity";
+				break;
+			case 'battery':
+			case 'batVolt':
+				$return = "Battery voltage";
+				break;
+			default:
+				$return = ucfirst($name);
 				break;
 		}
 		return $return;
@@ -65,28 +92,21 @@ class GlobalHelper {
 					}
 
 					ob_start();
-					$arr = [];
 
 					$names = [];
 					$types = [];
 
 					if (isset($station->data)) {
-						if ($specificStationId !== false) {
 
-							$sensorData = (new StationMeasurement())->findByStationId($specificStationId);
-							foreach($sensorData as $sensor) {
-								$columns[$sensor->getName()]["name"] = $sensor->getColumn();
-								$columns[$sensor->getName()]["calc"] = "AVG";
-							}
+						/* Gather columns */
+						if (isset($station->data[0])) {
+							$columns = array_keys( (array) $station->data[0] );
 						}
 
-						$names[0] = "Timestamp";
-						foreach($columns as $columnName => $value) {
-							$names[] = $columnName;
-						}
-
-						foreach($names as $name) {
-							$types[] = GlobalHelper::meaningOf($name);
+						/* Add name & meaning of measurement */
+						foreach($columns as $type) {
+							$names[] = GlobalHelper::translate($type);
+							$types[] = GlobalHelper::meaningOf($type);
 						}
 
 						fputcsv($fp, $names);
