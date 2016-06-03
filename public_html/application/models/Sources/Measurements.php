@@ -279,25 +279,23 @@ class Measurements extends Source {
 		$data = [];
 		if ($dbResult) {
 			while($rows = $dbResult->fetch_assoc()) {
+				$data[$iterator]['timestamp'] = (int) $rows["timestamp"];
 
 				/* Convert timestamp to human readable DateTime for downloads */
 				if ($type == "all") {
 					$date = new DateTime();
 					$date->setTimestamp( ($rows["timestamp"] / 1000) );
-					$data[$iterator][] = $date->format("Y-m-d H:i:s");
-				} else {
-					$data[$iterator][] = (int) $rows["timestamp"];
+					$data[$iterator]['timestamp'] = $date->format("Y-m-d H:i:s");
 				}
 
 				foreach($columns as $column) {
 					if (isset($rows[$column["name"]])) {
-						$data[$iterator][] = (float) round($rows[$column["name"]], 2);
+						$data[$iterator][$column["name"]] = (float) round($rows[$column["name"]], 2);
 					}
 				}
 				$iterator++;
 			}
 		}
-
 		return $data;
 	}
 
