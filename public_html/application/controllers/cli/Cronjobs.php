@@ -118,10 +118,7 @@ class Cronjobs extends CI_Controller {
 	 */
 	protected function _execDebug(Region $region, $data) {
 		$curl = new \Curl\Curl();
-		$curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
-		$curl->post("https://dashboard.kukua.cc/api/sensordata/get",
-			$data
-		);
+		$curl->post(API_URL, $data);
 
 		$rows = json_decode($curl->response);
 

@@ -98,15 +98,10 @@ class Graph extends MyController {
 	/**
 	 * @access protected
 	 * @return Curl::response
-	 * @todo   fix security
-	 * @fixme  Insecure
 	 */
 	protected function _call($data = Array()) {
 		$curl = new \Curl\Curl();
-		$curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
-		$curl->post("https://dashboard.kukua.cc/api/sensordata/get",
-			$data
-		);
+		$curl->post(API_URL, $data);
 		return $curl;
 	}
 }

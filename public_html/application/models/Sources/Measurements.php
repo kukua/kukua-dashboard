@@ -102,7 +102,7 @@ class Measurements extends Source {
 			}
 
 			$data[$key]["name"] = $station->getName();
-			$data[$key]["data"] = $this->_processQuery($dbResult, $columns);
+			$data[$key]["data"] = $this->_processQuery($dbResult, $columns, $source->getWeatherType());
 		}
 
 		return $data;
@@ -274,15 +274,24 @@ class Measurements extends Source {
 	 * @param  array $columns
 	 * @return Array
 	 */
-	protected function _processQuery($dbResult, $columns) {
+	protected function _processQuery($dbResult, $columns, $type = "") {
 		$iterator = 0;
 		$data = [];
 		if ($dbResult) {
 			while($rows = $dbResult->fetch_assoc()) {
-				$data[$iterator][] = (int) $rows["timestamp"];
+
+				/* Convert timestamp to human readable dateTime */
+				if ($type === "all") {
+					$date = new DateTime();
+					$date->setTimestamp( ($rows["timestamp"] / 1000) );
+					$data[$iterator][] = $date->format("Y-m-d H:i:s");
+				} else {
+					$data[$iterator][] = (int) $rows["timestamp"];
+				}
+
 				foreach($columns as $column) {
 					if (isset($rows[$column["name"]])) {
-						$data[$iterator][] = (float) $rows[$column["name"]];
+						$data[$iterator][] = (float) round($rows[$column["name"]], 2);
 					}
 				}
 				$iterator++;
