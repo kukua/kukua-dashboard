@@ -102,7 +102,7 @@ class Measurements extends Source {
 			}
 
 			$data[$key]["name"] = $station->getName();
-			$data[$key]["data"] = $this->_processQuery($dbResult, $columns, $source->getWeatherType());
+			$data[$key]["data"] = $this->_processQuery($dbResult, $columns);
 		}
 
 		return $data;
@@ -144,7 +144,7 @@ class Measurements extends Source {
 			$dbResult = $this->_db->query($query);
 
 			$data[$i]["name"] = $station->getName();
-			$data[$i]["data"] = $this->_processQuery($dbResult, $columns);
+			$data[$i]["data"] = $this->_processQuery($dbResult, $columns, $source->getWeatherType());
 		}
 		return $data;
 	}
@@ -280,8 +280,8 @@ class Measurements extends Source {
 		if ($dbResult) {
 			while($rows = $dbResult->fetch_assoc()) {
 
-				/* Convert timestamp to human readable dateTime */
-				if ($type === "all") {
+				/* Convert timestamp to human readable DateTime for downloads */
+				if ($type == "all") {
 					$date = new DateTime();
 					$date->setTimestamp( ($rows["timestamp"] / 1000) );
 					$data[$iterator][] = $date->format("Y-m-d H:i:s");
@@ -297,6 +297,7 @@ class Measurements extends Source {
 				$iterator++;
 			}
 		}
+
 		return $data;
 	}
 
