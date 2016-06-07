@@ -13,8 +13,7 @@ class Report extends CI_Model {
 	protected $_id;
 	protected $_region;
 	protected $_station;
-	protected $_measurement;
-	protected $_count;
+	protected $_rows;
 	protected $_created;
 
 	/**
@@ -93,44 +92,23 @@ class Report extends CI_Model {
 
 	/**
 	 * @access public
-	 * @param  string $measurement
+	 * @param  string $row
 	 * @throws InvalidArgumentException
 	 * @return void
 	 */
-	public function setMeasurement($measurement) {
-		if (!is_string($measurement)) {
+	public function setRows($row) {
+		if (!is_string($row)) {
 			throw new InvalidArgumentException("No valid param supplied");
 		}
-		$this->_measurement = $measurement;
+		$this->_rows = $row;
 	}
 
 	/**
 	 * @access public
-	 * @return string $this->_measurement
+	 * @return string $this->_rows
 	 */
-	public function getMeasurement() {
-		return $this->_measurement;
-	}
-
-	/**
-	 * @access public
-	 * @param  int $count
-	 * @throws InvalidArgumentException
-	 * @return void
-	 */
-	public function setCount($count) {
-		if (!is_numeric($count)) {
-			throw new InvalidArgumentException("No valid param supplied");
-		}
-		$this->_count = $count;
-	}
-
-	/**
-	 * @access public
-	 * @return int $this->_count
-	 */
-	public function getCount() {
-		return $this->_count;
+	public function getRows() {
+		return $this->_rows;
 	}
 
 	/**
@@ -174,11 +152,8 @@ class Report extends CI_Model {
 		if (isset($data["station"])) {
 			$this->setStation($data["station"]);
 		}
-		if (isset($data["measurement"])) {
-			$this->setMeasurement($data["measurement"]);
-		}
-		if (isset($data["count"])) {
-			$this->setCount($data["count"]);
+		if (isset($data["rows"])) {
+			$this->setRows($data["rows"]);
 		}
 		if (isset($data["created"])) {
 			$this->setCreated($data["created"]);
@@ -198,8 +173,7 @@ class Report extends CI_Model {
 			'id' => $this->getId(),
 			'region' => $this->getRegion(),
 			'station' => $this->getStation(),
-			'measurement' => $this->getMeasurement(),
-			'count' => $this->getCount(),
+			'rows' => $this->getRows(),
 			'created' => $this->getCreated()
 		];
 	}

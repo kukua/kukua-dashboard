@@ -29,12 +29,18 @@ class Sensordata extends MyController {
 	 * @fixme  Authentication / request validation
 	 * @return void
 	 */
-	public function get($forecast = false) {
+	public function get($forecast = false, $data = false) {
 		$validRequest	= $this->_validateRequest() !== False;
 		$validAuth		= $this->_validateAuth() !== False;
 
+		if ($data !== false) {
+			$post = $data;
+		} else {
+			$post = $this->input->post();
+		}
+
 		if ($validRequest && $validAuth) {
-			$this->_populate($this->input->post());
+			$this->_populate($post);
 			$source = new Source($this->_request);
 			$res = $source->gather($this->_user);
 			if ($forecast != false) {

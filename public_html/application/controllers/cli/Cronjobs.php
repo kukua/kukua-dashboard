@@ -64,26 +64,23 @@ class Cronjobs extends CI_Controller {
 	 * @return void
 	 */
 	public function report($save = false) {
-		require_once(APPPATH . "models/Sources/Measurements.php");
 		log_message ('error', 'Starting error report');
 
 		/* Gathering stations */
 		log_message ('error', 'Gathering stations...');
-		$regions  = (new Region())->load();
+		$stations = (new Station())->load();
 
 		$today    = (new DateTime());
 		$startTS  = (new DateTime())->sub(new DateInterval('P1D'))->setTime(00,00,00);
 		$endTS    = (new DateTime())->sub(new DateInterval('P1D'))->setTime(23,59,59);
 
-		$data['dateFrom'] = $startTS->getTimestamp();
-		$data['dateTo']   = $endTS->getTimestamp();
+		$data['dateFrom'] = (string) $startTS->getTimestamp();
+		$data['dateTo']   = (string) $endTS->getTimestamp();
 		$data['interval'] = '5m';
-		$data['created']  = (new DateTime())->format("Y-m-d H:i:s");
 
-		/* Looping through stations  */
-		foreach ($regions as $region) {
-			log_message('error', 'Debugging station ' . $region->getName());
-			$this->_debug($region, $data);
+		foreach($stations as $station) {
+			log_message('error', 'Debugging station ' . $station->getName());
+			$this->_debug($station, $data);
 		}
 
 		if ($save == true) {
@@ -99,41 +96,28 @@ class Cronjobs extends CI_Controller {
 	 * @param  Array $data
 	 * @return void
 	 */
-	protected function _debug(Region $region, $data) {
+	protected function _debug(Station $station, $data) {
+		require(APPPATH . "models/Sources/Measurements.php");
 		$measurements = new Measurements();
 		$columns = $measurements->_default_columns;
 
-		foreach ($columns as $column => $values) {
-			$data['region'] = $region->getId();
-			$data['type']   = $column;
-			$this->_execDebug($region, $data);
+		$final = [];
+		$data['station'] = $station->getId();
+		foreach($columns as $column => $value) {
+			$data['type'] = $column;
+
+			$source = new Source($data);
+			$res = $source->gather();
+			$result[$value["name"]] = count($res[0]['data']);
 		}
-	}
 
-	/**
-	 * @access protected
-	 * @param  Station $station
-	 * @param  Array $data
-	 * @return void
-	 */
-	protected function _execDebug(Region $region, $data) {
-		$curl = new \Curl\Curl();
-		$curl->post(API_URL, $data);
+		$region = (new Region())->findById($station->getRegionId());
+		$final['rows']    = json_encode($result);
+		$final['station']   = $station->getName();
+		$final['region']  = $region->getName();
+		$final['created']   = (new DateTime())->format("Y-m-d H:i:s");
 
-		$rows = json_decode($curl->response);
-
-		foreach($rows as $row) {
-			$counter = count($row->data);
-
-			$content = [];
-			$content["region"] = $region->getName();
-			$content["station"] = $row->name;
-			$content["measurement"] = $data["type"];
-			$content["count"] = $counter;
-			$content["created"] = $data["created"];
-
-			$this->_addContent($content);
-		}
+		$this->_addContent($station->getId(), $final);
 	}
 
 	/**
@@ -141,8 +125,8 @@ class Cronjobs extends CI_Controller {
 	 * @param  array $content
 	 * @return void
 	 */
-	protected function _addContent($content) {
-		$this->_content[] = $content;
+	protected function _addContent($stationId, $content) {
+		$this->_content[$stationId] = $content;
 	}
 
 	/**
@@ -170,12 +154,7 @@ class Cronjobs extends CI_Controller {
 	 * @return void
 	 */
 	protected function _outputBash() {
-		foreach($this->getContent() as $content) {
-			printf("%-20s", $content["region"]);
-			printf("%-30s", $content["station"]);
-			printf("%-20s", $content["measurement"]);
-			printf("%-2s",  $content["count"]);
-			echo "\n";
-		}
+		print_r($this->getContent());
+		exit;
 	}
 }

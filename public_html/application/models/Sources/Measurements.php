@@ -131,13 +131,11 @@ class Measurements extends Source {
 					$columns[$sensor->getName()]["calc"] = "AVG";
 				}
 			} else {
-				$sensors = (new StationMeasurement())->findById($source->getWeatherType());
-				$columns[$sensors->getName()]["name"] = $sensors->getColumn();
-				$columns[$sensors->getName()]["calc"] = "AVG";
+				$columns[$source->getWeatherType()] = $this->_default_columns[$source->getWeatherType()];
 			}
 
 			$select = $this->buildSelect($columns, $source->getInterval());
-			$from  = $this->buildFrom($station->getDeviceId());
+			$from   = $this->buildFrom($station->getDeviceId());
 
 			$query = $select . $from . $where . $group . $sort;
 			log_message("ERROR", $query);
