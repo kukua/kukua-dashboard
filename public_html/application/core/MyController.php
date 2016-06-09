@@ -20,7 +20,10 @@ class MyController extends CI_Controller {
         parent::__construct();
         date_default_timezone_set("Europe/Amsterdam");
         $this->setDefaultData();
-        $this->setUser();
+		$this->setUser();
+
+		require_once(APPPATH . "models/Sources/Measurements.php");
+		require_once(APPPATH . "models/Sources/Foreca.php");
     }
 
     /**

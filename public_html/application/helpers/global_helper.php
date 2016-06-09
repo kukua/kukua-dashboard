@@ -71,84 +71,55 @@ class GlobalHelper {
 		return $return;
 	}
 
-	public static function outputCsv($fileName, $assocDataArray = Array(), $specificStationId = false) {
+	public static function outputCsv($fileName, $assocData = Array()) {
 		$zipFile = '/tmp/' . $fileName . '.zip';
 		$zip = new ZipArchive;
 		if ($zip->open($zipFile, ZipArchive::CREATE) !== true) {
 			throw new Exception("Cannot open zip archive");
 		}
 
-		include (APPPATH . "models/Sources/Measurements.php");
-		$meas = (new Measurements());
-		$columns = $meas->_default_columns;
-		try {
-			if (is_array($assocDataArray) && !empty($assocDataArray)) {
-				$iterator = 0;
-				foreach($assocDataArray as $i => $station) {
+		if (is_array($assocData)) {
+			foreach($assocData as $data) {
+				$fp = fopen('php://output', 'w');
+				if (!$fp) throw new Exception("Unable to open output buffer");
+				ob_start();
 
-					$fp = fopen('php://output', 'w');
-					if ($fp === false) {
-						throw new Exception("unable to open php's output buffer");
-					}
-
-					ob_start();
-
-					$names = [];
-					$types = [];
-
-					if (isset($station->data)) {
-
-						/* Gather columns */
-						if (isset($station->data[0])) {
-							$columns = array_keys( (array) $station->data[0] );
-						}
-
-						/* Add name & meaning of measurement */
-						foreach($columns as $type) {
-							$names[] = GlobalHelper::translate($type);
-							$types[] = GlobalHelper::meaningOf($type);
-						}
-
-						fputcsv($fp, $names);
-						fputcsv($fp, $types);
-						foreach($station->data as $data) {
-							fputcsv($fp, $data);
-						}
-					}
-
-					$currentStationName = $station->name;
-					$station = false;
-					if ($station !== false) {
-						$currentStationName = ucfirst($station->getName());
-					}
-
-					$string = ob_get_contents();
-					$zip->addFromString($currentStationName . ".csv", $string);
-					ob_clean();
-					fclose($fp);
+				$names = [];
+				$types = [];
+				foreach($data["header"] as $column) {
+					$names[] = GlobalHelper::translate($column);
+					$types[] = GlobalHelper::meaningOf($column);
 				}
-				$zip->close();
 
-				if (file_exists($zipFile)) {
-					header('Pragma: public');
-					header('Expires: 0');
-					header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-					header('Cache-Control: private', false);
-					header('Content-Type: application/zip');
-					header('Content-Disposition: attachment;filename=' . $fileName . '.zip');
-					header('Content-Length: ' . filesize($zipFile));
-					header("Content-Transfer-Encoding: binary");
-					readfile($zipFile);
-					ob_flush();
-					unlink($zipFile);
-				} else {
-					throw Exception("The zip file couldn't handle this much data.");
+				fputcsv($fp, $names);
+				fputcsv($fp, $types);
+				foreach($data['data'] as $values) {
+					fputcsv($fp, $values);
 				}
-			} else {
-				die("There was no data");
+
+				$string = ob_get_contents();
+				$zip->addFromString($data['station']->getName() . ".csv", $string);
+				ob_clean();
+				fclose($fp);
 			}
-		} catch (Exception $e) {
-			throw $e;
+		}
+
+		$zip->close();
+
+		if (file_exists($zipFile)) {
+			header('Pragma: public');
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			header('Cache-Control: private', false);
+			header('Content-Type: application/zip');
+			header('Content-Disposition: attachment;filename=' . $fileName . '.zip');
+			header('Content-Length: ' . filesize($zipFile));
+			header("Content-Transfer-Encoding: binary");
+			readfile($zipFile);
+			ob_flush();
+			unlink($zipFile);
+		} else {
+			throw Exception("The zip file couldn't handle this much data.");
 		}
 	}
 

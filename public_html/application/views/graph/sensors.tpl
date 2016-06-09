@@ -15,7 +15,7 @@
 					</div>
 					<div class="col-sm-2">
 						<label class="ellipsis" title="Select graph">Select graph</label>
-						<select id='js-graph-type-swap' class="form-control" name="type">
+						<select id='js-graph-type-swap' class="form-control" name="measurement">
 						</select>
 					</div>
 					<div class="col-sm-4">

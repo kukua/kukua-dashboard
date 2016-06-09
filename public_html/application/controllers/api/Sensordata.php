@@ -33,16 +33,18 @@ class Sensordata extends MyController {
 		$validRequest	= $this->_validateRequest() !== False;
 		$validAuth		= $this->_validateAuth() !== False;
 
-		if ($data !== false) {
-			$post = $data;
+		$post = ($data !== false) ? $data : $this->input->post();
+
+		$post["download"] = false;
+		if (isset($post["region"])) {
+			$post["multiple"] = true;
 		} else {
-			$post = $this->input->post();
+			$post["multiple"] = false;
 		}
 
 		if ($validRequest && $validAuth) {
-			$this->_populate($post);
-			$source = new Source($this->_request);
-			$res = $source->gather($this->_user);
+			$source = new Source($post);
+			$res = $source->get($this->_user);
 			if ($forecast != false) {
 				if ($this->_user) {
 					$result = $source->gatherForecast($this->_user);
@@ -116,10 +118,6 @@ class Sensordata extends MyController {
 		$valid = True;
 		$err = Array();
 
-		if ($this->input->post("type") == False) {
-			$valid = False;
-			$err[] = "No type supplied";
-		}
 		if ($this->input->post("dateFrom") == False) {
 			$valid = False;
 			$err[] = "No date from supplied";
@@ -127,6 +125,10 @@ class Sensordata extends MyController {
 		if ($this->input->post("dateTo") == False) {
 			$valid = False;
 			$err[] = "No date to supplied";
+		}
+		if ($this->input->post("interval") == False) {
+			$valid = False;
+			$err[] = "No interval to supplied";
 		}
 
 		if ($valid !== True) {

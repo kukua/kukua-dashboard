@@ -17,23 +17,22 @@
 
 		/* on change fill station measurements */
 		sensors.getStation().on("change", function() {
+
 			sensors.getMeasurements($(this).val()).done(function(request) {
-				kukua.getGraphType().html("");
+				kukua.getGraphType().html("")
+
 				$.each(request, function(key, measurement) {
-					kukua.getGraphType().append('<option value="' + measurement.id + '">' + measurement.name + '</option>')
+					kukua.getGraphType().append('<option value="' + measurement.column + '">' + measurement.name + '</option>')
 				})
 
 				if (kukua.getGraphType().children().length <= 0) {
-					kukua.getGraphType().html('<option disabled="disabled">Nothing to display</option>');
+					kukua.getGraphType().html('<option disabled="disabled">Nothing to display</option>')
 				}
 
-				/* bind functions after trigger */
-				sensors.graph();
-				kukua.formChanges();
+				kukua.getGraphType().trigger('change')
 			})
-		}).trigger('change')
 
-		return
+		}).trigger('change')
 	}
 
 	/**

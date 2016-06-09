@@ -21,7 +21,7 @@
             var postdata = {
                 'region': region.val(),
 				'station': stationValue,
-                'type': graphType.val(),
+                'measurement': graphType.val(),
                 'dateFrom': selectedDate.data('daterangepicker').startDate.startOf('day').format('X'),
                 'dateTo': selectedDate.data('daterangepicker').endDate.endOf('day').format('X'),
                 'interval': interval.val()

@@ -10,11 +10,12 @@ class Source extends CI_Model {
 
 	protected $_region;
 	protected $_station;
-	protected $_type;
+	protected $_measurement;
 	protected $_dateFrom;
 	protected $_dateTo;
 	protected $_interval;
-	protected $_range;
+	protected $_multiple;
+	protected $_download;
 
 	/**
 	 * Class constructor
@@ -60,7 +61,7 @@ class Source extends CI_Model {
 	 * @return void
 	 */
 	public function setStation($station) {
-		if (!is_numeric($station)) {
+		if (!is_string($station)) {
 			throw new InvalidArgumentException("Invalid param supplied");
 		}
 		$this->_station = $station;
@@ -73,22 +74,23 @@ class Source extends CI_Model {
 	public function getStation() {
 		return $this->_station;
 	}
+
 	/**
 	 * @access public
 	 * @param string
 	 * @throws InvalidArgumentException
 	 * @return void
 	 */
-	public function setWeatherType($type) {
-		$this->_type = $type;
+	public function setMeasurement($measurement) {
+		$this->_measurement = $measurement;
 	}
 
 	/**
 	 * @access public
 	 * @return string
 	 */
-	public function getWeatherType() {
-		return $this->_type;
+	public function getMeasurement() {
+		return $this->_measurement;
 	}
 
 	/**
@@ -165,22 +167,20 @@ class Source extends CI_Model {
 		return $this->_interval;
 	}
 
-	/**
-	 *
-	 */
-	public function setRange($range) {
-		if (!is_string($range)) {
-			throw new InvalidArgumentException("Param supplied not a string");
-		}
-
-		$this->_range = $range;
+	public function setMultiple($multiple) {
+		$this->_multiple = $multiple;
 	}
 
-	/**
-	 *
-	 */
-	public function getRange() {
-		return $this->_range;
+	public function getMultiple() {
+		return $this->_multiple;
+	}
+
+	public function setDownload($download) {
+		$this->_download = $download;
+	}
+
+	public function getDownload() {
+		return $this->_download;
 	}
 
 	/**
@@ -201,8 +201,8 @@ class Source extends CI_Model {
 		if (isset($data["station"])) {
 			$this->setStation($data["station"]);
 		}
-		if (isset($data["type"])) {
-			$this->setWeatherType($data["type"]);
+		if (isset($data["measurement"])) {
+			$this->setMeasurement($data["measurement"]);
 		}
 		if (isset($data["dateFrom"])) {
 			$this->setDateFrom($data["dateFrom"]);
@@ -213,30 +213,44 @@ class Source extends CI_Model {
 		if (isset($data["interval"])) {
 			$this->setInterval($data["interval"]);
 		}
-		if (isset($data["range"])) {
-			$this->setRange($data["range"]);
+		if (isset($data["multiple"])) {
+			$this->setMultiple($data["multiple"]);
 		}
-
+		if (isset($data["download"])) {
+			$this->setDownload($data["download"]);
+		}
 		return $this;
 	}
 
+	public function get($user = null) {
+		return ($this->getMultiple() == true) ? $this->getMultipleStations($user) : $this->getSingleStation($user);
+	}
+
 	/**
-	 * Gather data from DB
+	 * Gather data from DB for multiple stations
 	 *
 	 * @access public
 	 * @param  User
 	 * @return Array
 	 */
-	public function gather($user = null) {
-		require_once(APPPATH . "models/Sources/Measurements.php");
-
+	public function getMultipleStations($user = null) {
 		$result = [];
-		$object = new Measurements();
-		$measurements = $object->get($this, $user);
+		$measurements = (new Measurements())->get($this, $user);
 		if (isset($measurements[0])) {
 			$result = $measurements;
 		}
 		return $result;
+	}
+
+	/**
+	 * Gather data from DB for a single station
+	 *
+	 * @access public
+	 * @param  User
+	 * @return Array
+	 */
+	public function getSingleStation($user = null) {
+		return (new Measurements())->get($this, $user);
 	}
 
 	/**
@@ -245,8 +259,6 @@ class Source extends CI_Model {
 	 * @return Array
 	 */
 	public function gatherForecast($user = null) {
-		require_once(APPPATH . "models/Sources/Foreca.php");
-
 		$result = [];
 		switch($this->getRegion()) {
 		case '1':
@@ -276,10 +288,9 @@ class Source extends CI_Model {
 	 * @return int
 	 */
 	public function getBatteryLevel($deviceId) {
-		require_once(APPPATH . "models/Sources/Measurements.php");
 		$object = new Measurements();
 		$query = "SELECT * FROM `" . $deviceId . "` ORDER BY timestamp DESC LIMIT 1";
-		$value = $object->single($query);
+		$value = $object->Single($query);
 
 		if (isset($value["batVolt"])) {
 			return $value["batVolt"];
@@ -300,7 +311,6 @@ class Source extends CI_Model {
 	 * @return int
 	 */
 	public function getLatestTimestamp($deviceId) {
-		require_once(APPPATH . "models/Sources/Measurements.php");
 		$object = new Measurements();
 		$query = "SELECT `timestamp` FROM `" . $deviceId . "` ORDER BY timestamp DESC LIMIT 1";
 		$value = $object->single($query);

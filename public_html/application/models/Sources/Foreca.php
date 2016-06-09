@@ -64,7 +64,7 @@ class Foreca extends Source {
 	 * @return Array
 	 */
 	public function get($source, $stations = Array()) {
-		$select = $this->buildSelect($source->getWeatherType(), $source->getInterval());
+		$select = $this->buildSelect($source->getMeasurement(), $source->getInterval());
 		$where  = $this->buildWhere($source->getDateFrom(), $source->getDateTo());
 		$group  = $this->buildGroup($source->getInterval());
 		$sort   = $this->buildSort();
@@ -73,14 +73,18 @@ class Foreca extends Source {
 		foreach($stations as $key => $station) {
 			$from  = $this->buildFrom($station);
 			$query = $select . $from . $where . $group . $sort;
+
 			log_message("ERROR", $query);
 			$dbResult = $this->_db->query($query);
 
-			if (isset($this->_default_columns[$source->getWeatherType()])) {
-				$column = $this->_default_columns[$source->getWeatherType()]['name'];
+			if ($dbResult) {
 				$data[$key]["name"] = "Forecast";
 				while($rows = $dbResult->fetch_assoc()) {
-					$data[$key]["data"][] = [(int) $rows["timestamp"], (float) $rows[$column]];
+					$fin = $this->_measurement($source->getMeasurement());
+					$data[$key]["data"][] = [
+						(int) $rows["timestamp"],
+						(float) round($rows[$fin['name']], 2)
+					];
 				}
 			}
 		}
@@ -95,34 +99,32 @@ class Foreca extends Source {
 	 * @param  Array $select
 	 * @return void
 	 */
-	public function buildSelect($weatherType) {
-		/* Query all params */
-		if ($weatherType == "all") {
-			$columns = $this->_default_columns;
-
-		/* Query specific params */
-		} else {
-			$columns = [];
-
-			#Alternative: Build a switch statement
-			$keys = array_keys($this->_default_columns);
-			foreach($keys as $name) {
-				if ($weatherType == $name) {
-					$columns[] = $this->_default_columns[$name];
-					break;
-				}
-			}
-		}
+	public function buildSelect($measurement) {
+		$column = $this->_measurement($measurement);
 
 		$div = 3600;
 		$select  = "SELECT ";
 		$select .= " (UNIX_TIMESTAMP(timestamp) - mod(UNIX_TIMESTAMP(timestamp)," . $div . ")) * 1000 as timestamp,";
-		foreach($columns as $column) {
-			$select .= $column['calc'] . "(" . $column['name'] . ") AS " . $column['name'] . ",";
-		}
+		$select .= $column['calc'] . "(" . $column['name'] . ") AS " . $column['name'] . ",";
 		return trim($select, ",");
 	}
 
+	protected function _measurement($measurement) {
+		switch($measurement) {
+			case 'rain':
+				return [
+					'name' => 'precip',
+					'calc' => 'sum'
+				];
+				break;
+			default:
+				return [
+					'name' => $measurement,
+					'calc' => 'AVG',
+				];
+				break;
+		}
+	}
 	/**
 	 * Build FROM
 	 *

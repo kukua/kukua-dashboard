@@ -18,13 +18,10 @@
 					</div>
 					<div class="col-sm-2">
 						<label class="ellipsis" title="Select graph">Select graph</label>
-						<select id='js-graph-type-swap' class="form-control" name="panelId">
-							<option value="Temperature">Temperature</option>
-							<option value="Rainfall">Rainfall</option>
-							<option value="Pressure">Pressure</option>
-							<option value="Humidity">Humidity</option>
-							<option value="WindSpeed">Wind speed</option>
-							<option value="WindDir">Wind direction</option>
+						<select id='js-graph-type-swap' class="form-control" name="measurement">
+							{foreach $measurements as $name => $measurement}
+								<option value="{$measurement.name}">{$name}</option>
+							{/foreach}
 						</select>
 					</div>
 					<div class="col-sm-4">

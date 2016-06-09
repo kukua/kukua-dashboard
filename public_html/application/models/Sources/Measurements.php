@@ -58,6 +58,10 @@ class Measurements extends Source {
 			'WindDir' => [
 				'calc' => 'AVG',
 				'name' => 'windDir'
+			],
+			'Battery' => [
+				'calc' => 'AVG',
+				'name' => 'battery'
 			]
 		];
 	}
@@ -70,81 +74,117 @@ class Measurements extends Source {
 	 * @return Array
 	 */
 	public function get($source, $user = null) {
-		if ($source->getStation() != "") {
-			return $this->getSensors($source, $user);
+		if ($source->getStation() != null) {
+			$station = $this->_getStations($source, $user);
+			$columns = [
+				$source->getMeasurement() => [
+					'name' => $source->getMeasurement(),
+					'calc' => 'AVG'
+				]
+			];
+			return [$this->getMeasurement($source, $user, $station, $columns)];
 		} else {
-			return $this->getDefault($source, $user);
+			return $this->getMeasurements($source, $user);
 		}
 	}
 
 	/**
-	 *
-	 */
-	public function getDefault($source, $user = null) {
-		$select = $this->buildSelect($source->getWeatherType(), $source->getInterval());
-		$where	= $this->buildWhere($source->getDateFrom(), $source->getDateTo());
-		$group	= $this->buildGroup($source->getInterval());
-		$sort	= $this->buildSort();
-
-		$stations = $this->_getStations($source, $user);
-
-		$data = [];
-		foreach($stations as $key => $station) {
-			$from  = $this->buildFrom($station->getDeviceId());
-			$query = $select . $from . $where . $group . $sort;
-			log_message("ERROR", $query);
-			$dbResult = $this->_db->query($query);
-
-			if ($source->getWeatherType() == "all") {
-				$columns = $this->_default_columns;
-			} else {
-				$columns[] = $this->_default_columns[$source->getWeatherType()];
-			}
-
-			$data[$key]["name"] = $station->getName();
-			$data[$key]["data"] = $this->_processQuery($dbResult, $columns);
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Get sensor data
-	 *
 	 * @access public
-	 * @return Array
+	 * @return void
 	 */
-	public function getSensors($source, $user = null) {
-		$where	= $this->buildWhere($source->getDateFrom(), $source->getDateTo());
-		$group	= $this->buildGroup($source->getInterval());
-		$sort	= $this->buildSort();
-
+	public function getMeasurements($source, $user = null) {
 		$stations = $this->_getStations($source, $user);
 		foreach($stations as $i => $station) {
 
-			/* If download */
-			if ($source->getWeatherType() == "all") {
-				$sensorData = (new StationMeasurement())->findByStationId($station->getId());
-				$columns = $this->_default_columns;
-				foreach($sensorData as $sensor) {
-					$columns[$sensor->getName()]["name"] = $sensor->getColumn();
-					$columns[$sensor->getName()]["calc"] = "AVG";
-				}
+			if ($source->getMeasurement()) {
+				$columns = [
+					$source->getMeasurement() => [
+						'name' => $source->getMeasurement(),
+						'calc' => 'AVG'
+					]
+				];
 			} else {
-				$columns[$source->getWeatherType()] = $this->_default_columns[$source->getWeatherType()];
+				$columns = $this->_default_columns;
 			}
 
-			$select = $this->buildSelect($columns, $source->getInterval());
-			$from   = $this->buildFrom($station->getDeviceId());
-
-			$query = $select . $from . $where . $group . $sort;
-			log_message("ERROR", $query);
-			$dbResult = $this->_db->query($query);
-
-			$data[$i]["name"] = $station->getName();
-			$data[$i]["data"] = $this->_processQuery($dbResult, $columns, $source->getWeatherType());
+			$result = $this->getMeasurement($source, $user, $station, $columns);
+			if (!is_null($result)) {
+				$data[] = $result;
+			}
 		}
+
 		return $data;
+	}
+
+	/**
+	 * @access public
+	 * @return Array
+	 */
+	public function getMeasurement($source, $user = null, $station = null, $columns = null) {
+
+		if ($station == null) {
+			$station = $this->_getStations($source, $user);
+		}
+
+		$dbResult = $this->_buildQuery($source, $station, $columns);
+
+		if ($dbResult) {
+
+			/* Output returns array key's numbered*/
+			return $this->_output($dbResult, $station, $columns, $source->getDownload());
+		}
+	}
+
+	/**
+	 * @access protected
+	 * @return void
+	 */
+	protected function _buildQuery($source, $station, $columns) {
+		$select = $this->buildSelect($columns, $source->getInterval());
+		$from   = $this->buildFrom($station->getDeviceId());
+		$where	= $this->buildWhere($source->getDateFrom(), $source->getDateTo());
+		$group	= $this->buildGroup($source->getInterval());
+		$sort	= $this->buildSort();
+
+		$query = $select . $from . $where . $group . $sort;
+		log_message("ERROR", $query);
+		return $this->_db->query($query);
+	}
+
+	/**
+	 * @access protected
+	 * @return void
+	 */
+	protected function _output($dbResult, $station, $column, $download) {
+		if ($download == true) {
+			$result = $dbResult->fetch_all(MYSQLI_ASSOC);
+			$return['station'] = $station;
+			$return['header'] = array_keys($column);
+
+			foreach ($result as $key => $values) {
+				if (isset($values['timestamp'])) {
+					$date = new DateTime();
+					$date->setTimestamp( ($values['timestamp'] / 1000) );
+					$convertedData['timestamp'] = $date->format('Y-m-d H:i:s');
+				}
+
+				foreach($column as $key => $val) {
+					if (isset($values[$val["name"]])) {
+						$convertedData[$key] = (float) round($values[$val["name"]], 2);
+					}
+				}
+				$return['data'][] = $convertedData;
+			}
+
+		} else {
+			$return["name"] = $station->getName();
+			foreach($dbResult->fetch_all(MYSQLI_NUM) as $i => $res) {
+				$return['data'][$i][0] = (int) $res[0];
+				$return['data'][$i][1] = (float) round($res[1], 2);
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -154,29 +194,7 @@ class Measurements extends Source {
 	 * @param  mixed  $param
 	 * @return string select query part
 	 */
-	public function buildSelect($weatherType, $interval) {
-
-		/* Query all params */
-		switch($weatherType) {
-			case is_array($weatherType):
-				$columns = $weatherType;
-				break;
-
-			case "all":
-				$columns = $this->_default_columns;
-				break;
-
-			default:
-				$keys = array_keys($this->_default_columns);
-				foreach($keys as $name) {
-					if ($weatherType == $name) {
-						$columns[] = $this->_default_columns[$name];
-						break;
-					}
-				}
-				break;
-		}
-
+	public function buildSelect($columns, $interval) {
 		$div = $this->getInterval($interval);
 		$select  = "SELECT ";
 		$select .= " (UNIX_TIMESTAMP(timestamp) - mod(UNIX_TIMESTAMP(timestamp)," . $div . ")) * 1000 as timestamp,";
@@ -328,36 +346,13 @@ class Measurements extends Source {
 	 * @return Array
 	 */
 	protected function _getStations($source, $user = null) {
-		/** If station is supplied **/
-		if ($source->getStation() !== null && $source->getStation() != 0) {
 
-			/* If multiple stations requested NYI */
-			if (is_array($source->getStation())) {
-				foreach($source->getStations() as $station) {
-					$stations[] = (new Station())->findById($source->getStation());
-				}
+		if ($source->getMultiple() === true) {
+			$stations = (new Station())->findByRegionId($source->getRegion());
+		}
 
-			/* If single station requested */
-			} else {
-				$stations[] = (new Station())->findById($source->getStation());
-			}
-
-		} else {
-
-			/** If user AND region is set */
-			if ($source->getRegion() !== null && $user) {
-				$stations = (new Station())->findByRegionIdAndUserId($source->getRegion(), $user->id);
-			}
-
-			/** If user is set */
-			if ($source->getRegion() == null && $user) {
-				$stations = (new UserStations())->findStationsByUserId($user->id);
-			}
-
-			/** If region is set */
-			if ($source->getRegion() !== null && !$user) {
-				$stations = (new Station())->findByRegionId($source->getRegion());
-			}
+		else {
+			$stations = (new Station())->findById($source->getStation());
 		}
 
 		return $stations;

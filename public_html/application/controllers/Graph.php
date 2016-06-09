@@ -26,6 +26,7 @@ class Graph extends MyController {
 	 */
 	public function index() {
 		$this->data["regions"] = (new UserStations())->findRegionsByUserId($this->_user->id);
+		$this->data["measurements"] = (new Measurements())->_default_columns;
 		$this->load->view("graph/index", $this->data);
 	}
 
@@ -50,23 +51,32 @@ class Graph extends MyController {
 	public function download() {
 		if ($this->input->post()) {
 
+			$data["dateFrom"]	= $this->input->post("from");
+			$data["dateTo"]		= $this->input->post("to");
+			$data["interval"]	= $this->input->post("interval");
+			$data["download"]	= true;
+
 			if ($this->input->post("region")) {
-				$data["region"] = $this->input->post("region");
-				$data["station"] = false;
+				$data["region"]		= $this->input->post("region");
+				$data["station"]	= null;
+				$data["measurement"]= null;
+				$data["multiple"]	= true;
 			}
+
 			if ($this->input->post("station")) {
-				$data["station"] = $this->input->post("station");
+				$data["region"]		= null;
+				$data["station"]	= $this->input->post("station");
+				$data["measurement"]= $this->input->post("measurement");
+				$data["multiple"]	= false;
 			}
 
-			$data["type"] = "all";
-			$data["dateFrom"] = $this->input->post("from");
-			$data["dateTo"] = $this->input->post("to");
-			$data["interval"] = $this->input->post("interval");
-
-			$result = $this->_call($data);
-			$decoded = json_decode($result->response);
-			GlobalHelper::outputCsv("export-stations", $decoded, $data["station"]);
-			exit;
+			$result = (new Source($data))->get($this->_user);
+			if (is_array($result)) {
+				GlobalHelper::outputCsv("export-stations", $result, $data["station"]);
+				exit;
+			} else {
+				redirect("/graph");
+			}
 		} else {
 			redirect("/graph");
 		}
@@ -93,15 +103,5 @@ class Graph extends MyController {
 
 		echo json_encode($result);
 		exit;
-	}
-
-	/**
-	 * @access protected
-	 * @return Curl::response
-	 */
-	protected function _call($data = Array()) {
-		$curl = new \Curl\Curl();
-		$curl->post(API_URL, $data);
-		return $curl;
 	}
 }
