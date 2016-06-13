@@ -59,10 +59,14 @@ class Measurements extends Source {
 				'calc' => 'AVG',
 				'name' => 'windDir'
 			],
+			'SolarRad' => [
+				'calc' => 'AVG',
+				'name' => 'solarIrrad'
+			],
 			'Battery' => [
 				'calc' => 'AVG',
 				'name' => 'battery'
-			]
+			],
 		];
 	}
 
@@ -93,9 +97,10 @@ class Measurements extends Source {
 	 * @return void
 	 */
 	public function getMeasurements($source, $user = null) {
-		$stations = $this->_getStations($source, $user);
-		foreach($stations as $i => $station) {
+		$data = [];
 
+		$stations = $this->_getStations($source, $user);
+		foreach ($stations as $i => $station) {
 			if ($source->getMeasurement()) {
 				$columns = [
 					$source->getMeasurement() => [
@@ -121,18 +126,17 @@ class Measurements extends Source {
 	 * @return Array
 	 */
 	public function getMeasurement($source, $user = null, $station = null, $columns = null) {
-
 		if ($station == null) {
 			$station = $this->_getStations($source, $user);
 		}
 
 		$dbResult = $this->_buildQuery($source, $station, $columns);
-
-		if ($dbResult) {
-
+		if ($dbResult !== false) {
 			/* Output returns array key's numbered*/
 			return $this->_output($dbResult, $station, $columns, $source->getDownload());
 		}
+
+		return null;
 	}
 
 	/**
@@ -140,14 +144,15 @@ class Measurements extends Source {
 	 * @return void
 	 */
 	protected function _buildQuery($source, $station, $columns) {
-		$select = $this->buildSelect($columns, $source->getInterval());
-		$from   = $this->buildFrom($station->getDeviceId());
+		$select = $this->buildSelect($columns, $source->getInterval(), $station->getDeviceId());
+		$from	= $this->buildFrom($station->getDeviceId());
 		$where	= $this->buildWhere($source->getDateFrom(), $source->getDateTo());
 		$group	= $this->buildGroup($source->getInterval());
 		$sort	= $this->buildSort();
 
 		$query = $select . $from . $where . $group . $sort;
 		log_message("ERROR", $query);
+
 		return $this->_db->query($query);
 	}
 
@@ -168,7 +173,7 @@ class Measurements extends Source {
 					$convertedData['timestamp'] = $date->format('Y-m-d H:i:s');
 				}
 
-				foreach($column as $key => $val) {
+				foreach ($column as $key => $val) {
 					if (isset($values[$val["name"]])) {
 						$convertedData[$key] = (float) round($values[$val["name"]], 2);
 					}
@@ -178,9 +183,11 @@ class Measurements extends Source {
 
 		} else {
 			$return["name"] = $station->getName();
-			foreach($dbResult->fetch_all(MYSQLI_NUM) as $i => $res) {
-				$return['data'][$i][0] = (int) $res[0];
-				$return['data'][$i][1] = (float) round($res[1], 2);
+			foreach ($dbResult->fetch_all(MYSQLI_NUM) as $i => $res) {
+				if (isset($res[1])) {
+					$return['data'][$i][0] = (int) $res[0];
+					$return['data'][$i][1] = (float) round($res[1], 2);
+				}
 			}
 		}
 
@@ -194,11 +201,17 @@ class Measurements extends Source {
 	 * @param  mixed  $param
 	 * @return string select query part
 	 */
-	public function buildSelect($columns, $interval) {
+	public function buildSelect($columns, $interval, $deviceId) {
 		$div = $this->getInterval($interval);
 		$select  = "SELECT ";
 		$select .= " (UNIX_TIMESTAMP(timestamp) - mod(UNIX_TIMESTAMP(timestamp)," . $div . ")) * 1000 as timestamp,";
 		foreach($columns as $column) {
+
+			/* skip SolarIrrad for classic devices */
+			if (substr($deviceId, 0, 8) == "4a000000" && $column["name"] == "solarIrrad") {
+				continue;
+			}
+
 			$select .= $column['calc'] . "(" . $column['name'] . ") AS " . $column['name'] . ",";
 		}
 
@@ -301,7 +314,7 @@ class Measurements extends Source {
 	 *			$data[0][1] = ''; (value, i.e. temp)
 	 *
 	 * @access protected
-	 * @param  int   $i		iterator
+	 * @param  int	 $i		iterator
 	 * @param  mixed $dbQuery
 	 * @param  array $columns
 	 * @return Array

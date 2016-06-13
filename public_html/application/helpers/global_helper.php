@@ -80,6 +80,10 @@ class GlobalHelper {
 
 		if (is_array($assocData)) {
 			foreach($assocData as $data) {
+				if (!isset($data["data"])) {
+					continue;
+				}
+
 				$fp = fopen('php://output', 'w');
 				if (!$fp) throw new Exception("Unable to open output buffer");
 				ob_start();
@@ -119,7 +123,7 @@ class GlobalHelper {
 			ob_flush();
 			unlink($zipFile);
 		} else {
-			throw Exception("The zip file couldn't handle this much data.");
+			throw new Exception("The zip file couldn't handle this much data.");
 		}
 	}
 
