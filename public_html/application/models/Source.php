@@ -293,9 +293,6 @@ class Source extends CI_Model {
 		$value = $object->single($query);
 
 		if (isset($value["battery"])) {
-			if ($value["battery"] >= 35000) {
-				return $value["battery"] / 10;
-			}
 			return $value["battery"];
 		}
 		else {
