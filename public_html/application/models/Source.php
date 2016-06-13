@@ -290,13 +290,13 @@ class Source extends CI_Model {
 	public function getBatteryLevel($deviceId) {
 		$object = new Measurements();
 		$query = "SELECT * FROM `" . $deviceId . "` ORDER BY timestamp DESC LIMIT 1";
-		$value = $object->Single($query);
+		$value = $object->single($query);
 
-		if (isset($value["batVolt"])) {
-			return $value["batVolt"];
-		}
-		elseif(isset($value["battery"])) {
-			return $value["battery"] / 10;
+		if (isset($value["battery"])) {
+			if ($value["battery"] >= 35000) {
+				return $value["battery"] / 10;
+			}
+			return $value["battery"];
 		}
 		else {
 			return 0;
