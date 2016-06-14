@@ -44,11 +44,19 @@
 					options.series = request;
                 }
 
-                //Combine given options with default options
-                var opt = $.extend({}, chart.getOptions(), options)
+				var displayChart = false;
+				$.each(options.series, function(key, station) {
+					if (station.data != undefined) {
+						displayChart = true;
+					}
+				});
 
-                //render
-                $(container).highcharts(opt)
+				if (displayChart) {
+					var opt = $.extend({}, chart.getOptions(), options)
+					$(container).highcharts(opt)
+				} else {
+					$(container).html('<h3 class="u-text-center">No measurements</h3>');
+				}
             })
         }
     };
