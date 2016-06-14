@@ -30,7 +30,7 @@
 									<td class="text-center">NYI</td>
 									<td class="text-center">NYI</td>
 									<td class="text-center">{$card->timestamp}</td>
-									<td class="text-center bg-{$card->voltageColor}">{$card->voltage}</td>
+									<td class="text-center bg-{$card->voltageColor}"><a href="/graph?region={$card->regionId}&graph=battery" target="_blank" class="text-black">{$card->voltage}</a></td>
 									<td class="text-center bg-{$card->statusColor}">{$card->status}</td>
 								</tr>
 							{/foreach}

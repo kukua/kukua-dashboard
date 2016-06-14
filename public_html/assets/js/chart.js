@@ -22,8 +22,8 @@
                 'region': region.val(),
 				'station': stationValue,
                 'measurement': graphType.val(),
-                'dateFrom': selectedDate.data('daterangepicker').startDate.startOf('day').format('X'),
-                'dateTo': selectedDate.data('daterangepicker').endDate.endOf('day').format('X'),
+                'dateFrom': kukua.getDateFrom().val(),
+                'dateTo': kukua.getDateTo().val(),
                 'interval': interval.val()
             }
 

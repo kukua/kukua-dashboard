@@ -112,6 +112,7 @@ class Eseye extends CI_Model {
 			$timestamp = (new Source())->getLatestTimestamp($station->getDeviceId());
 
 			$result->name   = $station->getName();
+			$result->regionId = $station->getRegionId();
 			$result->ICCID  = $station->getSimId();
 			$result->status = $statusText;
 			$result->statusColor = $statusBg;
