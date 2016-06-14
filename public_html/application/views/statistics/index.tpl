@@ -9,7 +9,7 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
-				<table class="table js-datatable table-striped table-condensed">
+				<table class="table js-statistics-datatable table-striped table-condensed">
 					<thead>
 						<tr>
 							<th>Name</th>
@@ -29,7 +29,7 @@
 									<td>{$card->ICCID}</td>
 									<td class="text-center">NYI</td>
 									<td class="text-center">NYI</td>
-									<td class="text-center">{$card->timestamp}</td>
+									<td class="text-center bg-{$card->timestampColor}">{$card->timestamp}</td>
 									<td class="text-center bg-{$card->voltageColor}"><a href="/graph?region={$card->regionId}&graph=battery" target="_blank" class="text-black">{$card->voltage}</a></td>
 									<td class="text-center bg-{$card->statusColor}">{$card->status}</td>
 								</tr>

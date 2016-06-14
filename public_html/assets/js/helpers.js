@@ -14,6 +14,7 @@
 		helpers.stationsInRegions()
 
 		helpers.dataTables();
+		helpers.statisticsDataTable();
 	};
 
 	/**
@@ -166,6 +167,14 @@
 	helpers.dataTables = function() {
 		$('.js-datatable').dataTable({
 			"iDisplayLength": 25
+		});
+	}
+
+	helpers.statisticsDataTable = function() {
+		$('.js-statistics-datatable').dataTable({
+			"iDisplayLength": 50,
+			"order": [[4, "asc"]]
+
 		});
 	}
 

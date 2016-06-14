@@ -69,32 +69,9 @@ class Eseye extends CI_Model {
 				$result->LastRadiusBytes = "0";
 			}
 
-			$difference = 96;
-			if (!empty($result->LastRadiusStop)) {
-				$now = new DateTime("now", (new DateTimeZone("UTC")));
-				$date = DateTime::createFromFormat("Y-m-d H:i:s", $result->LastRadiusStop);
-				$difference = abs($now->getTimestamp() - $date->getTimestamp()) / 60 / 60;
-			}
-
-			$statusText = $date->format("Y-m-d H:i:s") . " | " . $result->LastRadiusBytes;
-
-			switch ($difference) {
-				case ($difference <= 1):
-					$statusBg = "green";
-					break;
-				case ($difference > 1 && $difference < 24):
-					$statusBg = "blue";
-					break;
-				case ($difference >= 24 && $difference < 48):
-					$statusBg = "yellow";
-					break;
-				case ($difference >= 48 && $difference < 96):
-					$statusBg = "orange";
-					break;
-				default:
-					$statusBg = "red";
-					break;
-			}
+			$tsDate = (new DateTime())->createFromFormat("Y-m-d H:i:s", $result->LastRadiusStop, (new DateTimeZone("UTC")));
+			$statusBg   = $this->_getDifference($result->LastRadiusStop);
+			$statusText = $tsDate->format("Y-m-d H:i:s") . " | " . $result->LastRadiusBytes;
 
 			$batteryVoltage = (new Source())->getBatteryLevel($station->getDeviceId());
 			switch($batteryVoltage) {
@@ -110,6 +87,7 @@ class Eseye extends CI_Model {
 			}
 
 			$timestamp = (new Source())->getLatestTimestamp($station->getDeviceId());
+			$tsBg = $this->_getDifference($timestamp);
 
 			$result->name   = $station->getName();
 			$result->regionId = $station->getRegionId();
@@ -118,11 +96,38 @@ class Eseye extends CI_Model {
 			$result->statusColor = $statusBg;
 			$result->voltage = $batteryVoltage;
 			$result->voltageColor = $batteryBg;
+			$result->timestampColor = $tsBg;
 			$result->timestamp = $timestamp;
 			return $result;
 		} catch (Exception $e) {
 			throw $e;
 		}
+	}
+
+	public function _getDifference($date) {
+		$tsDate = (new DateTime())->createFromFormat("Y-m-d H:i:s", $date, (new DateTimeZone("UTC")));
+		$nowDate = new DateTime("now", (new DateTimeZone("UTC")));
+		$difference = abs($nowDate->getTimestamp() - $tsDate->getTimestamp()) / 60 / 60;
+
+		$color = 'red';
+		switch ($difference) {
+			case ($difference <= 1):
+				$color = "green";
+				break;
+			case ($difference > 1 && $difference < 24):
+				$color = "blue";
+				break;
+			case ($difference >= 24 && $difference < 48):
+				$color = "yellow";
+				break;
+			case ($difference >= 48 && $difference < 96):
+				$color = "orange";
+				break;
+			default:
+				$color = "red";
+				break;
+		}
+		return $color;
 	}
 
 	/**
