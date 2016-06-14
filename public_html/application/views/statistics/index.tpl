@@ -8,6 +8,34 @@
 			</div>
 		</div>
 		<div class="row">
+			<div class="col-xs-4">
+				Voltage colors
+				<table class="table table-condensed">
+					<tbody>
+						<tr>
+							<td class="text-center bg-green">> 4000</td>
+							<td class="text-center bg-orange">< 4000</td>
+							<td class="text-center bg-red">< 3500</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-xs-4 col-xs-offset-4">
+				Date difference colors
+				<table class="table table-condensed">
+					<tbody>
+						<tr>
+							<td class="text-center bg-green">< 1</td>
+							<td class="text-center bg-blue">> 1 </td>
+							<td class="text-center bg-yellow">> 24</td>
+							<td class="text-center bg-orange">> 48</td>
+							<td class="text-center bg-red">> 96</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-xs-12">
 				<table class="table js-statistics-datatable table-striped table-condensed">
 					<thead>
