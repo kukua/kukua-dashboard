@@ -46,7 +46,7 @@
 
 				var displayChart = false;
 				$.each(options.series, function(key, station) {
-					if (station.data != undefined) {
+					if (station != null && station.data != undefined) {
 						displayChart = true;
 					}
 				});
