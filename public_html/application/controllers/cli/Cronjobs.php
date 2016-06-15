@@ -81,7 +81,6 @@ class Cronjobs extends CI_Controller {
 		foreach($stations as $station) {
 			log_message('error', 'Debugging station ' . $station->getName());
 			$this->_debug($station, $data);
-			break;
 		}
 
 		if ($save == true) {
