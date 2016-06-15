@@ -41,8 +41,10 @@
 							<th align='left'>Rain</th>
 							<th align='left'>Pressure</th>
 							<th align='left'>Humid</th>
+							<th align='left'>Solar</th>
 							<th align='left'>Wind speed</th>
 							<th align='left'>Wind dir</th>
+							<th align='left'>Battery</th>
 						</tr>
 					</thead>
 
@@ -59,8 +61,10 @@
 								<td class="{getClass data=$measurement.rain}">{$measurement.rain}</td>
 								<td class="{getClass data=$measurement.pressure}">{$measurement.pressure}</td>
 								<td class="{getClass data=$measurement.humid}">{$measurement.humid}</td>
+								<td class="{getClass data=$measurement.solarIrrad}">{$measurement.solarIrrad}</td>
 								<td class="{getClass data=$measurement.windSpeed}">{$measurement.windSpeed}</td>
 								<td class="{getClass data=$measurement.windDir}">{$measurement.windDir}</td>
+								<td class="{getClass data=$measurement.battery}">{$measurement.battery}</td>
 							</tr>
 						{/foreach}
 					</tbody>

@@ -81,6 +81,7 @@ class Cronjobs extends CI_Controller {
 		foreach($stations as $station) {
 			log_message('error', 'Debugging station ' . $station->getName());
 			$this->_debug($station, $data);
+			break;
 		}
 
 		if ($save == true) {
@@ -102,19 +103,26 @@ class Cronjobs extends CI_Controller {
 		$columns = $measurements->_default_columns;
 
 		$final = [];
-		$data['station'] = $station->getId();
+		$data['station']	= $station->getId();
+		$data['multiple']	= false;
+		$data['download']	= false;
 		foreach($columns as $column => $value) {
-			$data['type'] = $column;
+			$data['measurement'] = $value['name'];
 
 			$source = new Source($data);
-			$res = $source->gather();
-			$result[$value["name"]] = count($res[0]['data']);
+			$res = $source->get();
+
+			if (isset($res[0]['data'])) {
+				$result[$value["name"]] = count($res[0]['data']);
+			} else {
+				$result[$value["name"]] = 0;
+			}
 		}
 
 		$region = (new Region())->findById($station->getRegionId());
-		$final['rows']    = json_encode($result);
+		$final['rows']		= json_encode($result);
 		$final['station']   = $station->getName();
-		$final['region']  = $region->getName();
+		$final['region']	= $region->getName();
 		$final['created']   = (new DateTime())->format("Y-m-d H:i:s");
 
 		$this->_addContent($station->getId(), $final);
