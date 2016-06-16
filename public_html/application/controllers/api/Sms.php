@@ -21,7 +21,7 @@ class Sms extends MyController {
     public function get() {
         $data = $this->input->post();
         if (isset($data["Body"])) {
-            $wap = "Hi, This afternoon there will be heavy rain for 2 hours and high temperatures (35 deg).";
+            $wap = "hallo, het weer vandaag wordt mooi.";
         } else {
             $wap = "Please reply only a name i.e. 'Amsterdam'";
         }
