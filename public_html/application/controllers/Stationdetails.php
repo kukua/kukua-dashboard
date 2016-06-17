@@ -7,7 +7,7 @@
  * @author	Siebren Kranenburg <siebren@kukua.cc>
  * @copyright 2016 Kukua B.V.
  */
-class Measurements extends MyController {
+class StationDetails extends MyController {
 
 	/**
 	 * @access public
@@ -31,7 +31,7 @@ class Measurements extends MyController {
 
 		$this->data["stationId"] = $stationId;
 		$this->data["measurements"] = (new StationMeasurement())->findByStationId($stationId);
-		$this->load->view("measurements/index", $this->data);
+		$this->load->view("stationdetails/index", $this->data);
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Measurements extends MyController {
 	 */
 	public function create($stationId) {
 		if (!is_numeric($stationId)) {
-			Notification::set(Measurements::WARNING, "No access allowed");
+			Notification::set(StationDetails::WARNING, "No access allowed");
 			redirect("/graph");
 		}
 
@@ -49,14 +49,14 @@ class Measurements extends MyController {
 		if ($this->input->post('column')) {
 			$measurement->populate($this->input->post());
 			if ($measurement->save()) {
-				Notification::set(Measurements::SUCCESS, "The measurement has been added");
-				redirect("/measurements/index/" . $stationId);
+				Notification::set(StationDetails::SUCCESS, "The measurement has been added");
+				redirect("/stationdetails/index/" . $stationId);
 			}
 		}
 
 		$this->data["stationId"] = $stationId;
 		$this->data["measurement"] = $measurement;
-		$this->load->view("measurements/create", $this->data);
+		$this->load->view("stationdetails/create", $this->data);
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Measurements extends MyController {
 	 */
 	public function update($id) {
 		if (!is_numeric($id)) {
-			Notification::set(Measurements::WARNING, "No access allowed");
+			Notification::set(StationDetails::WARNING, "No access allowed");
 			redirect("/graph");
 		}
 		$measurement = (new StationMeasurement())->findById($id);
@@ -74,13 +74,13 @@ class Measurements extends MyController {
 		if ($this->input->post('column')) {
 			$measurement->populate($this->input->post());
 			if ($measurement->save()) {
-				Notification::set(Measurements::SUCCESS, "The measurement has been updated");
-				redirect("/measurements/index/" . $measurement->getStationId());
+				Notification::set(StationDetails::SUCCESS, "The measurement has been updated");
+				redirect("/stationdetails/index/" . $measurement->getStationId());
 			}
 		}
 		$this->data["stationId"] = $measurement->getStationId();
 		$this->data["measurement"] = $measurement;
-		$this->load->view("measurements/update", $this->data);
+		$this->load->view("stationdetails/update", $this->data);
 	}
 
 	/**
@@ -90,9 +90,8 @@ class Measurements extends MyController {
 	 */
 	public function delete($id) {
 		if (!is_numeric($id)) {
-			Notification::set(Measurements::WARNING, "No access allowed");
+			Notification::set(StationDetails::WARNING, "No access allowed");
 			redirect("/graph");
 		}
-
 	}
 }

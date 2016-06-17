@@ -19,6 +19,6 @@
 		<input type="hidden" name="station_id" value="{$stationId}">
 	</div>
 	<div class="col-sm-3">
-		<a href="{$baseUrl}measurements/index/{$stationId}" class="btn btn-link">Cancel</a>
+		<a href="{$baseUrl}stationdetails/index/{$stationId}" class="btn btn-link">Cancel</a>
 	</div>
 </div>

@@ -41,7 +41,7 @@
 									<td>{$station->getSimId()}</td>
 									<td>{$station->getLatitude()} / {$station->getLongitude()}</td>
 									<td class="text-right">
-										<a href="/measurements/index/{$station->getId()}" class="text-success" title="View and edit specific measurements"><i class="glyphicon glyphicon-stats"></i></a>
+										<a href="/stationdetails/index/{$station->getId()}" class="text-success" title="View and edit specific measurements"><i class="glyphicon glyphicon-stats"></i></a>
 										{* {if $station->getActive() == 1}
 											<a href="/stations/disable/{$station->getId()}" class="text-info js-confirm-disable" title="Don't display station in chart"><i class="glyphicon glyphicon-eye-close"></i></a>
 										{else}

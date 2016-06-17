@@ -34,7 +34,7 @@
 									<td>{$measurement->getName()}</td>
 									<td>{$measurement->getColumn()}</td>
 									<td class="text-right">
-										<a href="/measurements/update/{$measurement->getId()}" class="text-muted"><i class="glyphicon glyphicon-pencil"></i></a>
+										<a href="/stationdetails/update/{$measurement->getId()}" class="text-muted"><i class="glyphicon glyphicon-pencil"></i></a>
 									</td>
 								</tr>
 							{/foreach}

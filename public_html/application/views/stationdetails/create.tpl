@@ -8,9 +8,9 @@
 				<div class="col-sm-9">
 					<h1 class="">Add measurement</h1>
 				</div>
-				<form method="post" action="{$baseUrl}measurements/create/{$stationId}" class="form-horizontal">
+				<form method="post" action="{$baseUrl}stationdetails/create/{$stationId}" class="form-horizontal">
 					{include file="global/notification.tpl"}
-					{include file="measurements/form.tpl"}
+					{include file="stationdetails/form.tpl"}
 				</form>
 			</div>
 		</div>

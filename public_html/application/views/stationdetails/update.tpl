@@ -8,9 +8,9 @@
 				<div class="col-sm-9">
 					<h1 class="">Update measurement</h1>
 				</div>
-				<form method="post" action="{$baseUrl}measurements/update/{$measurement->getId()}" class="form-horizontal">
+				<form method="post" action="{$baseUrl}stationdetails/update/{$measurement->getId()}" class="form-horizontal">
 					{include file="global/notification.tpl"}
-					{include file="measurements/form.tpl"}
+					{include file="stationdetails/form.tpl"}
 				</form>
 			</div>
 		</div>
