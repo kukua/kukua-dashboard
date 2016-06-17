@@ -13,10 +13,8 @@ class Statistics extends MyController {
 		$stations = (new Station())->load();
 		$simCards = [];
 		foreach($stations as $station) {
-			if ($station->getSimId()) {
-				$eseye = new Eseye();
-				$simCards[] = $eseye->getSim($station);
-			}
+			$eseye = new Eseye();
+			$simCards[] = $eseye->getSim($station);
 		}
 
         $this->data["simcards"] = $simCards;

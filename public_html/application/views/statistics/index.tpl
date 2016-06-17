@@ -46,7 +46,7 @@
 							<th width="80px" class="text-center">Records</th>
 							<th width="150px" class="text-center">Last DB TS</th>
 							<th width="80px" class="text-center">Voltage</th>
-							<th width="150px" class="text-center">Connection</th>
+							<th width="150px" class="text-center">ESEYE Conn</th>
 						</tr>
 					</thead>
 					<tbody>

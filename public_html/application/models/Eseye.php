@@ -40,68 +40,76 @@ class Eseye extends CI_Model {
 	 * @return StdClass
 	 */
 	public function getSim($station) {
-		$curl = new Curl();
-		$curl->setHeader("Content-type", "application/json");
-		$curl->post($this->_url . "/getCookieName");
+		$result = new StdClass();
+		$result->LastRadiusStop = "-";
+		$result->LastRadiusBytes = "";
 
-		$cookieName = $curl->response;
-		$cookieValue = $this->_login_eseye();
+		$statusBg = "";
+		$statusText = "-";
 
-		try {
+		if ($station->getSimId()) {
+			$curl = new Curl();
 			$curl->setHeader("Content-type", "application/json");
-			$curl->setCookie($cookieName, $cookieValue);
-			$curl->post($this->_url . "/getSIMLastActivity", [
-				"ICCID" => $station->getSimId()
-			]);
+			$curl->post($this->_url . "/getCookieName");
 
-			$response = $curl->response;
+			$cookieName = $curl->response;
+			$cookieValue = $this->_login_eseye();
 
-			if (!isset($response->info)) {
-				$result = new StdClass();
-			} else {
-				$result = $response->info;
+			try {
+				$curl->setHeader("Content-type", "application/json");
+				$curl->setCookie($cookieName, $cookieValue);
+				$curl->post($this->_url . "/getSIMLastActivity", [
+					"ICCID" => $station->getSimId()
+				]);
+
+				$response = $curl->response;
+
+				if (isset($response->info)) {
+					$result = $response->info;
+
+					if (!isset($result->LastRadiusStop)) {
+						$result->LastRadiusStop = "0000-00-00 00:00:00";
+					}
+					if (!isset($result->LastRadiusBytes)) {
+						$result->LastRadiusBytes = "0";
+					}
+
+					$tsDate = (new DateTime())->createFromFormat("Y-m-d H:i:s", $result->LastRadiusStop, (new DateTimeZone("UTC")));
+					$statusBg   = $this->_getDifference($result->LastRadiusStop);
+					$statusText = $tsDate->format("Y-m-d H:i:s") . " | " . $result->LastRadiusBytes;
+				}
+			} catch (Exception $e) {
+				throw $e;
 			}
-
-			if (!isset($result->LastRadiusStop)) {
-				$result->LastRadiusStop = "0000-00-00 00:00:00";
-			}
-			if (!isset($result->LastRadiusBytes)) {
-				$result->LastRadiusBytes = "0";
-			}
-
-			$tsDate = (new DateTime())->createFromFormat("Y-m-d H:i:s", $result->LastRadiusStop, (new DateTimeZone("UTC")));
-			$statusBg   = $this->_getDifference($result->LastRadiusStop);
-			$statusText = $tsDate->format("Y-m-d H:i:s") . " | " . $result->LastRadiusBytes;
-
-			$batteryVoltage = (new Source())->getBatteryLevel($station->getDeviceId());
-			switch($batteryVoltage) {
-				case ($batteryVoltage >= 4000):
-					$batteryBg = "green";
-					break;
-				case ($batteryVoltage >= 3500 && $batteryVoltage < 4000):
-					$batteryBg = "orange";
-					break;
-				default:
-					$batteryBg = "red";
-					break;
-			}
-
-			$timestamp = (new Source())->getLatestTimestamp($station->getDeviceId());
-			$tsBg = $this->_getDifference($timestamp);
-
-			$result->name   = $station->getName();
-			$result->regionId = $station->getRegionId();
-			$result->ICCID  = $station->getSimId();
-			$result->status = $statusText;
-			$result->statusColor = $statusBg;
-			$result->voltage = $batteryVoltage;
-			$result->voltageColor = $batteryBg;
-			$result->timestampColor = $tsBg;
-			$result->timestamp = $timestamp;
-			return $result;
-		} catch (Exception $e) {
-			throw $e;
 		}
+
+		$batteryBg = "";
+		$batteryVoltage = (new Source())->getBatteryLevel($station->getDeviceId());
+		switch($batteryVoltage) {
+			case ($batteryVoltage >= 4000):
+				$batteryBg = "green";
+				break;
+			case ($batteryVoltage >= 3500 && $batteryVoltage < 4000):
+				$batteryBg = "orange";
+				break;
+			default:
+				$batteryBg = "red";
+				break;
+		}
+
+		$timestamp = (new Source())->getLatestTimestamp($station->getDeviceId());
+		$tsBg = $this->_getDifference($timestamp);
+
+		$result->name   = $station->getName();
+		$result->regionId = $station->getRegionId();
+		$result->ICCID  = $station->getSimId();
+		$result->status = $statusText;
+		$result->statusColor = $statusBg;
+		$result->voltage = $batteryVoltage;
+		$result->voltageColor = $batteryBg;
+		$result->timestampColor = $tsBg;
+		$result->timestamp = $timestamp;
+		return $result;
 	}
 
 	public function _getDifference($date) {
