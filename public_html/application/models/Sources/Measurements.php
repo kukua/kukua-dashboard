@@ -77,7 +77,7 @@ class Measurements extends Source {
 	 * @param  Source
 	 * @return Array
 	 */
-	public function get($source, $user = null) {
+	public function get($source, $user = false) {
 		if ($source->getStation() != null) {
 			$station = $this->_getStations($source, $user);
 			$columns = [
@@ -96,7 +96,7 @@ class Measurements extends Source {
 	 * @access public
 	 * @return void
 	 */
-	public function getMeasurements($source, $user = null) {
+	public function getMeasurements($source, $user = false) {
 		$data = [];
 
 		$stations = $this->_getStations($source, $user);
@@ -125,7 +125,7 @@ class Measurements extends Source {
 	 * @access public
 	 * @return Array
 	 */
-	public function getMeasurement($source, $user = null, $station = null, $columns = null) {
+	public function getMeasurement($source, $user = false, $station = null, $columns = null) {
 		if ($station == null) {
 			$station = $this->_getStations($source, $user);
 		}
@@ -359,9 +359,9 @@ class Measurements extends Source {
 	 * @param  StdClass $user
 	 * @return Array
 	 */
-	protected function _getStations($source, $user = null) {
+	protected function _getStations($source, $user = false) {
 		if ($source->getMultiple() === true) {
-			if ($user !== null) {
+			if ($user !== false) {
 
 				#Find by region and user id
 				$stations = (new Station())->findByRegionIdAndUserId($source->getRegion(), $user->id);
