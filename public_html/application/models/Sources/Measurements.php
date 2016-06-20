@@ -356,21 +356,36 @@ class Measurements extends Source {
 	 *
 	 * @access protected
 	 * @param  Source $source
+	 * @param  StdClass $user
 	 * @return Array
 	 */
 	protected function _getStations($source, $user = null) {
-
 		if ($source->getMultiple() === true) {
-			$stations = (new Station())->findByRegionId($source->getRegion());
-		}
+			if ($user !== null) {
 
-		else {
+				#Find by region and user id
+				$stations = (new Station())->findByRegionIdAndUserId($source->getRegion(), $user->id);
+			} else {
+
+				#Find by region id
+				$stations = (new Station())->findByRegionId($source->getRegion());
+			}
+		} else {
+
+			#Specific station
 			$stations = (new Station())->findById($source->getStation());
 		}
 
 		return $stations;
 	}
 
+	/**
+	 * Single query
+	 *
+	 * @access public
+	 * @param  String $query
+	 * @return Array
+	 */
 	public function single($query) {
 		$dbResult = $this->_db->query($query);
 		if ($dbResult) {
