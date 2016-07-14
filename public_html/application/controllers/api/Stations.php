@@ -18,6 +18,7 @@ class Stations extends MyController {
 		$stations = (new Station())->load();
 		foreach($stations as $key => $station) {
 			if ($station->getLatitude() && $station->getLongitude()) {
+				$result[$key]["deviceId"] = $station->getDeviceId();
 				$result[$key]["elevation"] = $station->getElevation();
 				$result[$key]["title"] = $station->getName();
 				$result[$key]["lat"] = (float) $station->getLatitude();
