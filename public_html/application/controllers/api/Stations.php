@@ -34,8 +34,12 @@ class Stations extends MyController {
 	 * @access public
 	 * @return void
 	 */
-	public function find($request) {
-		$deviceIds = explode(';', $request);
+	public function find() {
+		if (!isset($_GET["ids"])) {
+			echo json_encode(['error' => 'An ; separated list of unique ids is expected, not given.']);
+			exit;
+		}
+		$deviceIds = explode(';', $_GET['ids']);
 		if (!is_array($deviceIds)) {
 			echo json_encode(['error' => 'An ; separated list of unique ids is expected, not given.']);
 			exit;

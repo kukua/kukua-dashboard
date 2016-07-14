@@ -341,10 +341,6 @@ class Station extends CI_Model {
 	 * @return null | Station
 	 */
     public function findByDeviceId($deviceId) {
-		if (!is_numeric($deviceId)) {
-			throw new InvalidArgumentException("Invalid param supplied");
-		}
-
         $this->db->select("*");
         $this->db->from(self::TABLE);
         $this->db->where("device_id", $deviceId);
