@@ -49,7 +49,10 @@ class Stations extends MyController {
 			try {
 				$station = (new Station())->findByDeviceId($deviceId);
 				if ($station !== false) {
-					$result[] = $station;
+					$result[$key]["title"] = $station->getName();
+					$result[$key]["elevation"] = $station->getElevation();
+					$result[$key]["lat"] = (float) $station->getLatitude();
+					$result[$key]["lng"] = (float) $station->getLongitude();
 				}
 			} catch (Exception $e) {
 				echo json_encode(['error' => 'The deviceID ' . $deviceId . ' is invalid']);

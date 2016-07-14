@@ -343,7 +343,8 @@ class Station extends CI_Model {
     public function findByDeviceId($deviceId) {
         $this->db->select("*");
         $this->db->from(self::TABLE);
-        $this->db->where("device_id", $deviceId);
+		$this->db->where("device_id", $deviceId);
+		$this->db->where("active", 1);
 		$get = $this->db->get()->row_array();
 		if (!is_null($get)) {
 			return $this->populate($get);
