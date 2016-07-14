@@ -27,4 +27,35 @@ class Stations extends MyController {
 		echo json_encode($result);
 		exit;
 	}
+
+	/**
+	 * Request stations by device IDs
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function find($deviceIds) {
+		if (!is_array($deviceIds)) {
+			echo json_encode(['error' => 'An array of unique ids is expected, not given.']);
+			exit;
+		}
+
+		foreach($deviceIds as $key => $deviceId) {
+			try {
+				$station = (new Station())->findByDeviceId($deviceId);
+				if ($station !== false) {
+					$result[$key]['elevation'] = $station->getElevation();
+					$result[$key]["title"] = $station->getName();
+					$result[$key]["lat"] = (float) $station->getLatitude();
+					$result[$key]["lng"] = (float) $station->getLongitude();
+				}
+			} catch (Exception $e) {
+				echo json_encode(['error' => 'The deviceID ' . $deviceId . ' is invalid']);
+				exit;
+			}
+		}
+
+		echo json_encode($result);
+		exit;
+	}
 }
