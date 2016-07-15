@@ -398,6 +398,10 @@
 									<li><a href="{$baseUrl}feedback"><i class="glyphicon glyphicon-blackboard"></i> Feedback</a></li>
 									<li role="separator" class="divider"></li>
 								{/if}
+								{if $isManager}
+									<li><a href="{$baseUrl}statistics"><i class="glyphicon glyphicon-signal"></i> Statistics</a></li>
+									<li role="separator" class="divider"></li>
+								{/if}
 								<li><a href="{$baseUrl}auth/logout"><i class="glyphicon glyphicon-off"></i> Logout</a></li>
 							</ul>
 						</li>
