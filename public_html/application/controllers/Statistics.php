@@ -6,11 +6,11 @@ class Statistics extends MyController {
 
     public function __construct() {
         parent::__construct();
-        $this->allow("admin");
+        $this->allow("manager");
     }
 
 	public function index() {
-		$stations = (new Station())->load();
+		$stations = (new Station())->findByUserId($this->_user->id);
 		$simCards = [];
 		foreach($stations as $station) {
 			$eseye = new Eseye();

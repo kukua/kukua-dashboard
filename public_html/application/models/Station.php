@@ -8,31 +8,31 @@
  */
 class Station extends CI_Model {
 
-    const TABLE = "stations";
+	const TABLE = "stations";
 
-    protected $_id;
-    protected $_region_id;
-    protected $_name;
+	protected $_id;
+	protected $_region_id;
+	protected $_name;
 	protected $_device_id;
 	protected $_sim_id;
 	protected $_latitude;
 	protected $_longitude;
 	protected $_elevation;
-    protected $_active;
+	protected $_active;
 
-    public function __construct() {
-        parent::__construct();
+	public function __construct() {
+		parent::__construct();
 
-        $this->_id = null;
-        $this->_region_id = null;
-        $this->_name = null;
+		$this->_id = null;
+		$this->_region_id = null;
+		$this->_name = null;
 		$this->_device_id = null;
 		$this->_sim_id = null;
 		$this->_latitude = null;
 		$this->_longitude = null;
 		$this->_elevation = null;
-        $this->_active = 1;
-    }
+		$this->_active = 1;
+	}
 
 	/**
 	 * @access public
@@ -233,35 +233,35 @@ class Station extends CI_Model {
 		if (!is_array($data)) {
 			throw new InvalidArgumentException("No valid data supplied");
 		}
-        if (isset($data["id"])) {
-            $this->setId($data["id"]);
-        }
-        if (isset($data["region_id"])) {
-            $this->setRegionId($data["region_id"]);
-        }
-        if (isset($data["device_id"])) {
-            $this->setDeviceId($this->db->escape_str($data["device_id"]));
+		if (isset($data["id"])) {
+			$this->setId($data["id"]);
 		}
-        if (isset($data["sim_id"])) {
-            $this->setSimId($this->db->escape_str($data["sim_id"]));
+		if (isset($data["region_id"])) {
+			$this->setRegionId($data["region_id"]);
 		}
-        if (isset($data["latitude"])) {
-            $this->setLatitude($this->db->escape_str($data["latitude"]));
+		if (isset($data["device_id"])) {
+			$this->setDeviceId($this->db->escape_str($data["device_id"]));
 		}
-        if (isset($data["longitude"])) {
-            $this->setLongitude($this->db->escape_str($data["longitude"]));
+		if (isset($data["sim_id"])) {
+			$this->setSimId($this->db->escape_str($data["sim_id"]));
 		}
-        if (isset($data["elevation"])) {
-            $this->setElevation($this->db->escape_str($data["elevation"]));
+		if (isset($data["latitude"])) {
+			$this->setLatitude($this->db->escape_str($data["latitude"]));
 		}
-        if (isset($data["name"])) {
-            $this->setName($this->db->escape_str($data["name"]));
-        }
-        if (isset($data["active"])) {
-            $this->setActive($data["active"]);
-        }
-        return $this;
-    }
+		if (isset($data["longitude"])) {
+			$this->setLongitude($this->db->escape_str($data["longitude"]));
+		}
+		if (isset($data["elevation"])) {
+			$this->setElevation($this->db->escape_str($data["elevation"]));
+		}
+		if (isset($data["name"])) {
+			$this->setName($this->db->escape_str($data["name"]));
+		}
+		if (isset($data["active"])) {
+			$this->setActive($data["active"]);
+		}
+		return $this;
+	}
 
 	/**
 	 * Converts object to array
@@ -286,51 +286,51 @@ class Station extends CI_Model {
 	/**
 	 * Save current state of object
 	 *
-     * @access public
-     * @return boolean
-     */
+	 * @access public
+	 * @return boolean
+	 */
 	public function save() {
-        $return = false;
+		$return = false;
 		if ($this->_validate() !== false) {
 
 			//insert new record
 			if (is_null($this->getId()) === true) {
-        	    if ($this->db->insert(self::TABLE, $this->toArray())) {
-        	        $this->setId($this->db->insert_id());
-        	        $return = $this;
+				if ($this->db->insert(self::TABLE, $this->toArray())) {
+					$this->setId($this->db->insert_id());
+					$return = $this;
 				}
 
 			//update existing record
-        	} else {
-        	    $this->db->where('id', $this->getId());
-        	    if ($this->db->update(self::TABLE, $this->toArray())) {
-        	        $return = $this;
-        	    }
-        	}
-        }
-        return $return;
-    }
+			} else {
+				$this->db->where('id', $this->getId());
+				if ($this->db->update(self::TABLE, $this->toArray())) {
+					$return = $this;
+				}
+			}
+		}
+		return $return;
+	}
 
 	/**
 	 * Load all stations
 	 *
-     * @access public
-     * @return Array
-     */
-    public function load() {
-        $this->db->select("*");
-        $this->db->from(self::TABLE);
-        $get = $this->db->get()->result_array();
+	 * @access public
+	 * @return Array
+	 */
+	public function load() {
+		$this->db->select("*");
+		$this->db->from(self::TABLE);
+		$get = $this->db->get()->result_array();
 
 		$result = [];
 		if (!is_null($get)) {
 			foreach($get as $row) {
 				$object = new Station();
-        	    $result[] = $object->populate($row);
+				$result[] = $object->populate($row);
 			}
 		}
-        return $result;
-    }
+		return $result;
+	}
 
 	/**
 	 * Find a station by device id
@@ -340,9 +340,9 @@ class Station extends CI_Model {
 	 * @throws InvalidArgumentException
 	 * @return null | Station
 	 */
-    public function findByDeviceId($deviceId) {
-        $this->db->select("*");
-        $this->db->from(self::TABLE);
+	public function findByDeviceId($deviceId) {
+		$this->db->select("*");
+		$this->db->from(self::TABLE);
 		$this->db->where("device_id", $deviceId);
 		$this->db->where("active", 1);
 		$get = $this->db->get()->row_array();
@@ -350,7 +350,7 @@ class Station extends CI_Model {
 			return $this->populate($get);
 		}
 		return false;
-    }
+	}
 
 	/**
 	 * Find a station by region id
@@ -365,20 +365,20 @@ class Station extends CI_Model {
 			throw new InvalidArgumentException("Invalid param supplied");
 		}
 
-        $this->db->select("*");
-        $this->db->from(self::TABLE);
-        $this->db->where("region_id", $regionId);
+		$this->db->select("*");
+		$this->db->from(self::TABLE);
+		$this->db->where("region_id", $regionId);
 		$get = $this->db->get()->result_array();
 
 		$result = [];
 		if (!is_null($get)) {
 			foreach($get as $row) {
 				$object = new Station();
-        	    $result[] = $object->populate($row);
+				$result[] = $object->populate($row);
 			}
 		}
-        return $result;
-    }
+		return $result;
+	}
 
 	/**
 	 * Find a station by region and user id
@@ -394,8 +394,8 @@ class Station extends CI_Model {
 			throw new InvalidArgumentException("Invalid param(s) supplied");
 		}
 
-        $this->db->select("main.*");
-        $this->db->from(self::TABLE . " as main");
+		$this->db->select("main.*");
+		$this->db->from(self::TABLE . " as main");
 		$this->db->where("region_id", $regionId);
 		$this->db->join(
 			"users_stations us",
@@ -408,11 +408,35 @@ class Station extends CI_Model {
 		if (!is_null($get)) {
 			foreach($get as $row) {
 				$object = new Station();
-        	    $result[] = $object->populate($row);
+				$result[] = $object->populate($row);
 			}
 		}
-        return $result;
-    }
+		return $result;
+	}
+
+	public function findByUserId($userId) {
+		if (!is_numeric($userId)) {
+			throw new InvalidArgumentException("Invalid param(s) supplied");
+		}
+
+		$this->db->select("main.*");
+		$this->db->from(self::TABLE . " as main");
+		$this->db->join(
+			"users_stations us",
+			"us.user_id = '". $userId . "' " .
+			"AND us.station_id = main.id"
+		);
+		$get = $this->db->get()->result_array();
+
+		$result = [];
+		if (!is_null($get)) {
+			foreach($get as $row) {
+				$object = new Station();
+				$result[] = $object->populate($row);
+			}
+		}
+		return $result;
+	}
 
 	/**
 	 * Find station by id
@@ -420,42 +444,42 @@ class Station extends CI_Model {
 	 * @access public
 	 * @param  int $id
 	 * @throws InvalidArgumentException
-     * @return Station
-     */
-    public function findById($id) {
+	 * @return Station
+	 */
+	public function findById($id) {
 		if (!is_numeric($id)) {
 			throw new InvalidArgumentException("Invalid param supplied");
 		}
 
-        $this->db->select("*");
-        $this->db->from(self::TABLE);
-        $this->db->where("id", $id);
+		$this->db->select("*");
+		$this->db->from(self::TABLE);
+		$this->db->where("id", $id);
 		$get = $this->db->get()->row_array();
 		if (!is_null($get)) {
 			return $this->populate($get);
 		}
 		return false;
-    }
+	}
 
 	/**
 	 * Find station by name
 	 *
 	 * @access public
 	 * @param  string $name
-     * @return Array
-     */
-    public function findByName($name) {
-        $this->db->select("*");
-        $this->db->from(self::TABLE);
-        $this->db->where("name", $name);
-        $get = $this->db->get();
+	 * @return Array
+	 */
+	public function findByName($name) {
+		$this->db->select("*");
+		$this->db->from(self::TABLE);
+		$this->db->where("name", $name);
+		$get = $this->db->get();
 
-        $result = [];
-        foreach($get->result_array() as $key => $value) {
-            $result[] = $this->populate($value);
-        }
-        return $result;
-    }
+		$result = [];
+		foreach($get->result_array() as $key => $value) {
+			$result[] = $this->populate($value);
+		}
+		return $result;
+	}
 
 	/**
 	 * Delete station by id
@@ -466,21 +490,21 @@ class Station extends CI_Model {
 	 */
 	public function delete($id) {
 		$item = $this->findById($id);
-        if ($item->getId() !== false) {
-            if ($this->db->delete(self::TABLE, array('id' => $item->getId()))) {
-                return true;
-            }
-        }
-        return false;
-    }
+		if ($item->getId() !== false) {
+			if ($this->db->delete(self::TABLE, array('id' => $item->getId()))) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Validates object
 	 *
-     * @access private
-     * @return boolean
-     */
-    private function _validate() {
-        return true;
-    }
+	 * @access private
+	 * @return boolean
+	 */
+	private function _validate() {
+		return true;
+	}
 }
