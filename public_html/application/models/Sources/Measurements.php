@@ -80,12 +80,8 @@ class Measurements extends Source {
 	public function get($source, $user = false) {
 		if ($source->getStation() != null) {
 			$station = $this->_getStations($source, $user);
-			$columns = [
-				$source->getMeasurement() => [
-					'name' => $source->getMeasurement(),
-					'calc' => 'AVG'
-				]
-			];
+			$columns = $this->_defineColumns($source);
+
 			return [$this->getMeasurement($source, $user, $station, $columns)];
 		} else {
 			return $this->getMeasurements($source, $user);
@@ -101,17 +97,7 @@ class Measurements extends Source {
 
 		$stations = $this->_getStations($source, $user);
 		foreach ($stations as $i => $station) {
-			if ($source->getMeasurement()) {
-				$columns = [
-					$source->getMeasurement() => [
-						'name' => $source->getMeasurement(),
-						'calc' => 'AVG'
-					]
-				];
-			} else {
-				$columns = $this->_default_columns;
-			}
-
+			$columns = $this->_defineColumns($source);
 			$result = $this->getMeasurement($source, $user, $station, $columns);
 			if (!is_null($result)) {
 				$data[] = $result;
@@ -137,6 +123,26 @@ class Measurements extends Source {
 		}
 
 		return null;
+	}
+
+	protected function _defineColumns($source) {
+		$return = [];
+		foreach($this->_default_columns as $column) {
+			if ($column['name'] == $source->getMeasurement()) {
+				$return[$source->getMeasurement()] = $column;
+			}
+		}
+
+		if (empty($return)) {
+			$return = [
+				$source->getMeasurement() => [
+					'name' => $source->getMeasurement(),
+					'calc' => 'AVG'
+				]
+			];
+		}
+
+		return $return;
 	}
 
 	/**
