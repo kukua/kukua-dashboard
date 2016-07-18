@@ -67,7 +67,11 @@
 									<td class="text-center bg-{$card->lightColor}">{$card->light}</td>
 									<td class="text-center bg-{$card->sigQualColor}">{$card->sigQual}</td>
 									<td class="text-center bg-{$card->sigQualTimeColor}">{$card->sigQualTime}</td>
-									<td class="text-center"><a href="{$card->link}" target="_blank">{$card->link}</a></td>
+									<td class="text-center">
+										{if !empty($card->link)}
+											<a href="{$card->link}" target="_blank">Google doc</a>
+										{/if}
+									</td>
 								</tr>
 							{/foreach}
 						{/if}
