@@ -37,6 +37,11 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
+				<a href="https://docs.google.com/spreadsheets/d/1H4UnOq9jf972cQg66D5LMXrBBMdKx7riRYIOzFAYNfM/edit" class="btn btn-default">Metadata sheet (google doc)</a>
+			</div>
+		</div>
+		<div class="row" style="margin-top: 20px">
+			<div class="col-xs-12">
 				<table class="table js-statistics-datatable table-striped table-condensed">
 					<thead>
 						<tr>
