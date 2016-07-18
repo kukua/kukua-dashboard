@@ -42,11 +42,15 @@
 						<tr>
 							<th>Name</th>
 							<th>ICCID</th>
-							<th width="80px" class="text-center">Buffers</th>
-							<th width="80px" class="text-center">Records</th>
 							<th width="150px" class="text-center">Last DB TS</th>
 							<th width="80px" class="text-center">Voltage</th>
 							<th width="150px" class="text-center">ESEYE Conn</th>
+							<th width="" class="text-center">Board temp</th>
+							<th width="" class="text-center">Humidity</th>
+							<th width="" class="text-center">Light</th>
+							<th width="" class="text-center">SigQual</th>
+							<th width="" class="text-center">SigQualTime</th>
+							<th width="" class="text-center">Link</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -55,11 +59,15 @@
 								<tr>
 									<td>{$card->name}</td>
 									<td>{$card->ICCID}</td>
-									<td class="text-center">NYI</td>
-									<td class="text-center">NYI</td>
 									<td class="text-center bg-{$card->timestampColor}">{$card->timestamp}</td>
 									<td class="text-center bg-{$card->voltageColor}"><a href="/graph?region={$card->regionId}&graph=battery" target="_blank" class="text-black">{$card->voltage}</a></td>
 									<td class="text-center bg-{$card->statusColor}">{$card->status}</td>
+									<td class="text-center bg-{$card->boardTempColor}">{$card->boardTemp}</td>
+									<td class="text-center bg-{$card->boardHumidColor}">{$card->boardHumid}</td>
+									<td class="text-center bg-{$card->lightColor}">{$card->light}</td>
+									<td class="text-center bg-{$card->sigQualColor}">{$card->sigQual}</td>
+									<td class="text-center bg-{$card->sigQualTimeColor}">{$card->sigQualTime}</td>
+									<td class="text-center"><a href="{$card->link}" target="_blank">{$card->link}</a></td>
 								</tr>
 							{/foreach}
 						{/if}

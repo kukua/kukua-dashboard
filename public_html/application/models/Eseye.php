@@ -83,6 +83,7 @@ class Eseye extends CI_Model {
 			}
 		}
 
+		/* Battery voltage */
 		$batteryBg = "";
 		$batteryVoltage = (new Source())->getBatteryLevel($station->getDeviceId());
 		switch($batteryVoltage) {
@@ -100,6 +101,51 @@ class Eseye extends CI_Model {
 		$timestamp = (new Source())->getLatestTimestamp($station->getDeviceId());
 		$tsBg = $this->_getDifference($timestamp);
 
+		/* Board temperature */
+		$boardTemp = (new Source())->getMaxBoardTemp($station->getDeviceId());
+		$boardTempColor = "";
+		if ($boardTemp >= 40) {
+			$boardTempColor = "red";
+		} elseif ($boardTemp >= 35) {
+			$boardTempColor = "orange";
+		} elseif ($boardTemp >= 0) {
+			$boardTempColor = "green";
+		}
+
+		$boardHumid = (new Source())->getMaxHumidity($station->getDeviceId());
+		$boardHumidColor = "";
+		if ($boardHumid >= 50) {
+			$boardHumidColor = "red";
+		} elseif ($boardHumid >= 30) {
+			$boardHumidColor = "orange";
+		} elseif ($boardHumid >= 0) {
+			$boardHumidColor = "green";
+		}
+
+		$light = (new Source())->getMaxLight($station->getDeviceId());
+		$lightColor = "";
+		if ($light >= 10) {
+			$lightColor = "red";
+		} elseif ($light >= 1) {
+			$lightColor = "green";
+		}
+
+		$sigQual = (new Source())->getMinSigQual($station->getDeviceId());
+		$sigQualColor = "";
+		if ($sigQual >= 50) {
+			$sigQualColor = "red";
+		} elseif ($sigQual >= 1) {
+			$sigQualColor = "green";
+		}
+
+		$sigQualTime = (new Source())->getMaxSigQualMinTime($station->getDeviceId());
+		$sigQualTimeColor = "";
+		if ($sigQualTime >= "10") {
+			$sigQualTimeColor = "red";
+		} elseif ($sigQualTime >= 1) {
+			$sigQualTimeColor = "green";
+		}
+
 		$result->name   = $station->getName();
 		$result->regionId = $station->getRegionId();
 		$result->ICCID  = $station->getSimId();
@@ -109,6 +155,17 @@ class Eseye extends CI_Model {
 		$result->voltageColor = $batteryBg;
 		$result->timestampColor = $tsBg;
 		$result->timestamp = $timestamp;
+		$result->boardTemp = $boardTemp;
+		$result->boardTempColor = $boardTempColor;
+		$result->boardHumid = $boardHumid;
+		$result->boardHumidColor = $boardHumidColor;
+		$result->light = $light;
+		$result->lightColor = $lightColor;
+		$result->sigQual = $sigQual;
+		$result->sigQualColor = $sigQualColor;
+		$result->sigQualTime = $sigQualTime;
+		$result->sigQualTimeColor = $sigQualTimeColor;
+		$result->link = $station->getLink();
 		return $result;
 	}
 

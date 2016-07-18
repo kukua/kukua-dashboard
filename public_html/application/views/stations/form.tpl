@@ -49,6 +49,13 @@
 </div>
 
 <div class="form-group">
+	<label class="col-sm-3 control-label" for="link">Link</label>
+	<div class="col-sm-9">
+		<input type="text" class="form-control" placeholder="Link" name="link" id="link" value="{$station->getLink()}">
+	</div>
+</div>
+
+<div class="form-group">
 	<label class="col-sm-3"></label>
 	<div class="col-sm-3">
 		<button type="submit" class="btn btn-success btn-block">Save</button>

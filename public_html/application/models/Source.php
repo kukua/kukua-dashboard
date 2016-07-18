@@ -308,10 +308,77 @@ class Source extends CI_Model {
 	 * @return int
 	 */
 	public function getLatestTimestamp($deviceId) {
+		$today = (new DateTime());
 		$object = new Measurements();
-		$query = "SELECT `timestamp` FROM `" . $deviceId . "` ORDER BY timestamp DESC LIMIT 1";
+		$query = "SELECT `timestamp` FROM `" . $deviceId . "`WHERE timestamp <= " . $today->getTimestamp() . " ORDER BY timestamp DESC LIMIT 1";
 		$value = $object->single($query);
 
 		return (isset($value["timestamp"])) ? $value['timestamp'] : '0000-00-00 00:00:00';
+	}
+
+	public function getMaxBoardTemp($deviceId) {
+		$today = (new DateTime());
+		$before = (new DateTime())->modify('-7 days');
+
+		$object = new Measurements();
+		$query = "SELECT bmpTemp FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(`timestamp`) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY `bmpTemp` DESC LIMIT 1";
+		$value = $object->single($query);
+		if (isset($value["bmpTemp"])) {
+			return $value["bmpTemp"];
+		}
+
+		return "";
+	}
+
+	public function getMaxHumidity($deviceId) {
+		$today = (new DateTime());
+		$before = (new DateTime())->modify('-7 days');
+
+		$object = new Measurements();
+		$query = "SELECT humid FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(`timestamp`) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY `humid` DESC LIMIT 1";
+		$value = $object->single($query);
+		if (isset($value["humid"])) {
+			return $value["humid"];
+		}
+		return "";
+	}
+
+	public function getMaxLight($deviceId) {
+		$today = (new DateTime());
+		$before = (new DateTime())->modify('-7 days');
+
+		$object = new Measurements();
+		$query = "SELECT lightSensMax FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(`timestamp`) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY `lightSensMax` DESC LIMIT 1";
+		$value = $object->single($query);
+		if (isset($value["lightSensMax"])) {
+			return $value["lightSensMax"];
+		}
+		return "";
+	}
+
+	public function getMaxSigQualMinTime($deviceId) {
+		$today = (new DateTime());
+		$before = (new DateTime())->modify('-7 days');
+
+		$object = new Measurements();
+		$query = "SELECT sigQualMinTime FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(`timestamp`) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY `sigQualMinTime` DESC LIMIT 1";
+		$value = $object->single($query);
+		if (isset($value["sigQualMinTime"])) {
+			return $value["sigQualMinTime"];
+		}
+		return "";
+	}
+
+	public function getMinSigQual($deviceId) {
+		$today = (new DateTime());
+		$before = (new DateTime())->modify('-7 days');
+
+		$object = new Measurements();
+		$query = "SELECT * FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(`timestamp`) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY `sigQual` ASC LIMIT 1";
+		$value = $object->single($query);
+		if (isset($value["sigQual"])) {
+			return $value["sigQual"];
+		}
+		return "";
 	}
 }

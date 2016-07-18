@@ -19,6 +19,7 @@ class Station extends CI_Model {
 	protected $_longitude;
 	protected $_elevation;
 	protected $_active;
+	protected $_link;
 
 	public function __construct() {
 		parent::__construct();
@@ -32,6 +33,7 @@ class Station extends CI_Model {
 		$this->_longitude = null;
 		$this->_elevation = null;
 		$this->_active = 1;
+		$this->_link = null;
 	}
 
 	/**
@@ -225,6 +227,26 @@ class Station extends CI_Model {
 
 	/**
 	 * @access public
+	 * @param  string $link
+	 * @throws InvalidArgumentException
+	 */
+	public function setLink($link) {
+		if (!is_string($link)) {
+			throw new InvalidArgumentException("No valid link supplied");
+		}
+		$this->_link = $link;
+	}
+
+	/**
+	 * @access public
+	 * @return string
+	 */
+	public function getLink() {
+		return $this->_link;
+	}
+
+	/**
+	 * @access public
 	 * @param  Array $data
 	 * @throws InvalidArgumentException
 	 * @return Station
@@ -260,6 +282,9 @@ class Station extends CI_Model {
 		if (isset($data["active"])) {
 			$this->setActive($data["active"]);
 		}
+		if (isset($data["link"])) {
+			$this->setLink($data["link"]);
+		}
 		return $this;
 	}
 
@@ -280,6 +305,7 @@ class Station extends CI_Model {
 			'longitude'		=> $this->getLongitude(),
 			'elevation'		=> $this->getElevation(),
 			'active'		=> $this->getActive(),
+			'link'			=> $this->getLink(),
 		];
 	}
 
