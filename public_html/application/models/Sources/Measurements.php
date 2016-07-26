@@ -37,11 +37,13 @@ class Measurements extends Source {
 		$this->_default_columns = [
 			'Temperature' => [
 				'calc' => 'AVG',
-				'name' => 'temp'
+				'name' => 'temp',
+				'where' => 'temp != 0 AND temp < 300',
 			],
 			'Rainfall' => [
 				'calc' => 'SUM',
-				'name' => 'rain'
+				'name' => 'rain',
+				'where' => 'rain < 1000',
 			],
 			'Pressure' => [
 				'calc' => 'AVG',
@@ -49,15 +51,18 @@ class Measurements extends Source {
 			],
 			'Humidity' => [
 				'calc' => 'AVG',
-				'name' => 'humid'
+				'name' => 'humid',
+				'where' => 'humid <= 100',
 			],
 			'WindSpeed' => [
 				'calc' => 'AVG',
-				'name' => 'windSpeed'
+				'name' => 'windSpeed',
+				'where' => 'windSpeed < 3000',
 			],
 			'WindDir' => [
 				'calc' => 'AVG',
-				'name' => 'windDir'
+				'name' => 'windDir',
+				'where' => 'windDir <= 360 AND windDir > 0',
 			],
 			'SolarRad' => [
 				'calc' => 'AVG',
@@ -152,7 +157,9 @@ class Measurements extends Source {
 	protected function _buildQuery($source, $station, $columns) {
 		$select = $this->buildSelect($columns, $source->getInterval(), $station->getDeviceId());
 		$from	= $this->buildFrom($station->getDeviceId());
-		$where	= $this->buildWhere($source->getDateFrom(), $source->getDateTo());
+		$extra  = $this->buildExtraWhere($columns);
+		$where	= $this->buildWhere($source->getDateFrom(), $source->getDateTo(), $extra);
+
 		$group	= $this->buildGroup($source->getInterval());
 		$sort	= $this->buildSort();
 
@@ -233,6 +240,25 @@ class Measurements extends Source {
 	 */
 	public function buildFrom($deviceId) {
 		return " FROM `" . $deviceId . "`";
+	}
+
+	/**
+	 * Build the extra conditionals for the where part of the query
+	 *
+	 * @access public
+	 * @param  array $columns
+	 * @return string where query part
+	 */
+	public function buildExtraWhere($columns) {
+		$extra = '';
+
+		foreach ($columns as & $column) {
+			if (empty($column['where'])) continue;
+
+			$extra .= ' AND (' . $column['where'] . ')';
+		}
+
+		return $extra;
 	}
 
 	/**
