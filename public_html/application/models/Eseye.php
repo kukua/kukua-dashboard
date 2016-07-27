@@ -108,18 +108,22 @@ class Eseye extends CI_Model {
 			$boardTempColor = "red";
 		} elseif ($boardTemp >= 35) {
 			$boardTempColor = "orange";
-		} elseif ($boardTemp >= 0) {
+		} elseif ($boardTemp >= 1) {
 			$boardTempColor = "green";
+		} else {
+			$boardTemp = "-";
 		}
 
 		$boardHumid = (new Source())->getMaxHumidity($station->getDeviceId());
 		$boardHumidColor = "";
 		if ($boardHumid >= 50) {
-			$boardHumidColor = "red";
+			$boardHumidColor = "green";
 		} elseif ($boardHumid >= 30) {
 			$boardHumidColor = "orange";
-		} elseif ($boardHumid >= 0) {
-			$boardHumidColor = "green";
+		} elseif ($boardHumid >= 1) {
+			$boardHumidColor = "red";
+		} else {
+			$boardHumid = "-";
 		}
 
 		$light = (new Source())->getMaxLight($station->getDeviceId());
@@ -128,6 +132,8 @@ class Eseye extends CI_Model {
 			$lightColor = "red";
 		} elseif ($light >= 1) {
 			$lightColor = "green";
+		} else {
+			$light = "-";
 		}
 
 		$sigQual = (new Source())->getMinSigQual($station->getDeviceId());
@@ -136,6 +142,8 @@ class Eseye extends CI_Model {
 			$sigQualColor = "red";
 		} elseif ($sigQual >= 1) {
 			$sigQualColor = "green";
+		} else {
+			$sigQual = "-";
 		}
 
 		$sigQualTime = (new Source())->getMaxSigQualMinTime($station->getDeviceId());
@@ -144,6 +152,8 @@ class Eseye extends CI_Model {
 			$sigQualTimeColor = "red";
 		} elseif ($sigQualTime >= 1) {
 			$sigQualTimeColor = "green";
+		} else {
+			$sigQualTime = "-";
 		}
 
 		$result->name   = $station->getName();

@@ -397,5 +397,6 @@ class Measurements extends Source {
 		if ($dbResult) {
 			return $dbResult->fetch_assoc();
 		}
+		return $dbResult;
 	}
 }
