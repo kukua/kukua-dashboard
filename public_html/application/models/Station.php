@@ -394,6 +394,7 @@ class Station extends CI_Model {
 		$this->db->select("*");
 		$this->db->from(self::TABLE);
 		$this->db->where("region_id", $regionId);
+		$this->db->where("active", 1);
 		$get = $this->db->get()->result_array();
 
 		$result = [];
@@ -423,6 +424,7 @@ class Station extends CI_Model {
 		$this->db->select("main.*");
 		$this->db->from(self::TABLE . " as main");
 		$this->db->where("region_id", $regionId);
+		$this->db->where("main.active", 1);
 		$this->db->join(
 			"users_stations us",
 			"us.user_id = '". $userId . "' " .
@@ -447,6 +449,7 @@ class Station extends CI_Model {
 
 		$this->db->select("main.*");
 		$this->db->from(self::TABLE . " as main");
+		$this->db->where("main.active", 1);
 		$this->db->join(
 			"users_stations us",
 			"us.user_id = '". $userId . "' " .
@@ -472,7 +475,7 @@ class Station extends CI_Model {
 	 * @throws InvalidArgumentException
 	 * @return Station
 	 */
-	public function findById($id) {
+	public function findById($id, $active = false) {
 		if (!is_numeric($id)) {
 			throw new InvalidArgumentException("Invalid param supplied");
 		}
@@ -480,6 +483,10 @@ class Station extends CI_Model {
 		$this->db->select("*");
 		$this->db->from(self::TABLE);
 		$this->db->where("id", $id);
+		if ($active === true) {
+			$this->db->where('active', 1);
+		}
+
 		$get = $this->db->get()->row_array();
 		if (!is_null($get)) {
 			return $this->populate($get);

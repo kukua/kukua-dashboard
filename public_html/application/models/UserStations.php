@@ -108,8 +108,10 @@ class UserStations extends CI_Model {
 		$result = [];
 		if (!is_null($dbResult)) {
 			foreach($dbResult as $row) {
-				$object = (new Station())->findById($row["station_id"]);
-				$result[] = $object;
+				$object = (new Station())->findById($row["station_id"], true);
+				if ($object !== false) {
+					$result[] = $object;
+				}
 			}
 		}
 		return $result;
