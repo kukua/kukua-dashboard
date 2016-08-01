@@ -310,7 +310,7 @@ class Source extends CI_Model {
 	public function getLatestTimestamp($deviceId) {
 		$today = (new DateTime(null, new DateTimeZone('UTC')));
 		$object = new Measurements();
-		$query = "SELECT timestamp FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(`timestamp`) <= " . $today->getTimestamp() . " ORDER BY UNIX_TIMESTAMP(`timestamp`) DESC LIMIT 1";
+		$query = "SELECT timestamp FROM `" . $deviceId . "` WHERE timestamp <= FROM_UNIXTIME(" . (int) $today->getTimestamp() . ") ORDER BY timestamp DESC LIMIT 1";
 		$value = $object->single($query);
 
 		return (isset($value["timestamp"])) ? $value['timestamp'] : '0000-00-00 00:00:00';
