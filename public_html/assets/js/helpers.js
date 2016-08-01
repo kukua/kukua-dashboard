@@ -173,11 +173,11 @@
 	helpers.statisticsDataTable = function() {
 		$('.js-statistics-datatable').dataTable({
 			"aLengthMenu": [
-    		    [50, 100, 500, -1],
-    		    [50, 100, 500, "All"]
-    		],
-    		"iDisplayLength": -1,
-			"order": [[4, "asc"]]
+			    [50, 100, 500, -1],
+			    [50, 100, 500, "All"]
+			],
+			"iDisplayLength": -1,
+			"order": [[2, "desc"], [4, "asc"]]
 		});
 	}
 
