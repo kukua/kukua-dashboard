@@ -79,6 +79,7 @@ class Eseye extends CI_Model {
 
 					// TODO(mauvm): Quick fix for not displaying Airtel SIMs.
 					if ($statusBg === 'red') {
+						$statusBg = '';
 						$statusText = '-';
 					} else {
 						$statusText = $tsDate->format("Y-m-d H:i:s") . " | " . $result->LastRadiusBytes;
