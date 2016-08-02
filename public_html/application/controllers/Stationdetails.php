@@ -25,7 +25,7 @@ class StationDetails extends MyController {
 	 */
 	public function index($stationId) {
 		if (!is_numeric($stationId)) {
-			Notification::set(Stations::WARNING, "No access allowed");
+			Notification::set(StationDetails::WARNING, "No access allowed");
 			redirect("/graph");
 		}
 
