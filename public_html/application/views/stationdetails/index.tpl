@@ -46,7 +46,7 @@
 
 		<div class="row">
 			<div class="col-sm-12">
-				<a href="/measurements/create/{$stationId}" class="btn btn-primary">Add measurement</a>
+				<a href="/stationdetails/create/{$stationId}" class="btn btn-primary">Add measurement</a>
 			</div>
 		</div>
 	</div>
