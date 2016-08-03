@@ -316,12 +316,13 @@ class Source extends CI_Model {
 		return (isset($value["timestamp"])) ? $value['timestamp'] : '0000-00-00 00:00:00';
 	}
 
-	public function getMaxBoardTemp($deviceId) {
+	public function getExceedBoardTempDate($deviceId) {
+		// Returns datetime if board has been overheated in last 7 days
 		$today = (new DateTime());
 		$before = (new DateTime())->modify('-7 days');
 
 		$object = new Measurements();
-		$query = "SELECT bmpTemp FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(`timestamp`) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY `bmpTemp` DESC LIMIT 1";
+		$query = "SELECT timestamp FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(timestamp) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " AND bmpTemp >= 45 ORDER BY timestamp DESC LIMIT 1";
 		$value = $object->single($query);
 		if (isset($value["bmpTemp"])) {
 			return $value["bmpTemp"];
@@ -344,6 +345,7 @@ class Source extends CI_Model {
 	}
 
 	public function getLastOpenedDate ($deviceId) {
+		// Returns datetime if board has been opened in the last 7 days
 		$today = (new DateTime());
 		$before = (new DateTime())->modify('-7 days');
 

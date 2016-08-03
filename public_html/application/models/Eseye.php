@@ -117,14 +117,10 @@ class Eseye extends CI_Model {
 		$tsBg = $this->_getDifference($timestamp);
 
 		/* Board temperature */
-		$boardTemp = (new Source())->getMaxBoardTemp($station->getDeviceId());
+		$boardTemp = (new Source())->getExceedBoardTempDate($station->getDeviceId());
 		$boardTempColor = "";
-		if ($boardTemp >= 40) {
+		if ($boardTemp) {
 			$boardTempColor = "red";
-		} elseif ($boardTemp >= 35) {
-			$boardTempColor = "orange";
-		} elseif ($boardTemp >= 1) {
-			$boardTempColor = "green";
 		} else {
 			$boardTemp = "-";
 		}
