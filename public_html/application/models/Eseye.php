@@ -141,14 +141,12 @@ class Eseye extends CI_Model {
 			$boardHumid = "-";
 		}
 
-		$light = (new Source())->getMaxLight($station->getDeviceId());
-		$lightColor = "";
-		if ($light >= 10) {
-			$lightColor = "red";
-		} elseif ($light >= 1) {
-			$lightColor = "green";
+		$lastOpened = (new Source())->getLastOpenedDate($station->getDeviceId());
+		$lastOpenedColor = "";
+		if ($lastOpened) {
+			$lastOpenedColor = "red";
 		} else {
-			$light = "-";
+			$lastOpened = "-";
 		}
 
 		$sigQual = (new Source())->getMinSigQual($station->getDeviceId());
@@ -184,8 +182,8 @@ class Eseye extends CI_Model {
 		$result->boardTempColor = $boardTempColor;
 		$result->boardHumid = $boardHumid;
 		$result->boardHumidColor = $boardHumidColor;
-		$result->light = $light;
-		$result->lightColor = $lightColor;
+		$result->lastOpened = $lastOpened;
+		$result->lastOpenedColor = $lastOpenedColor;
 		$result->sigQual = $sigQual;
 		$result->sigQualColor = $sigQualColor;
 		$result->sigQualTime = $sigQualTime;

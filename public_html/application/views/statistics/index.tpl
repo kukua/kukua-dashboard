@@ -52,7 +52,7 @@
 							<th width="150px" class="text-center">ESEYE Conn</th>
 							<th width="" class="text-center">Board temp</th>
 							<th width="" class="text-center">Humidity</th>
-							<th width="" class="text-center">Light</th>
+							<th width="" class="text-center">LastOpened</th>
 							<th width="" class="text-center">SigQual</th>
 							<th width="" class="text-center">SigQualTime</th>
 							<th width="" class="text-center">Link</th>
@@ -69,7 +69,7 @@
 									<td class="text-center bg-{$card->statusColor}">{$card->status}</td>
 									<td class="text-center bg-{$card->boardTempColor}">{$card->boardTemp}</td>
 									<td class="text-center bg-{$card->boardHumidColor}">{$card->boardHumid}</td>
-									<td class="text-center bg-{$card->lightColor}">{$card->light}</td>
+									<td class="text-center bg-{$card->lastOpenedColor}">{$card->lastOpened}</td>
 									<td class="text-center bg-{$card->sigQualColor}">{$card->sigQual}</td>
 									<td class="text-center bg-{$card->sigQualTimeColor}">{$card->sigQualTime}</td>
 									<td class="text-center">

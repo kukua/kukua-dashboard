@@ -356,6 +356,19 @@ class Source extends CI_Model {
 		return "";
 	}
 
+	public function getLastOpenedDate ($deviceId) {
+		$today = (new DateTime());
+		$before = (new DateTime())->modify('-7 days');
+
+		$object = new Measurements();
+		$query = "SELECT timestamp FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(timestamp) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " AND lightSensMax > 100 ORDER BY timestamp DESC LIMIT 1";
+		$value = $object->single($query);
+		if (isset($value["timestamp"])) {
+			return $value["timestamp"];
+		}
+		return "";
+	}
+
 	public function getMaxSigQualMinTime($deviceId) {
 		$today = (new DateTime());
 		$before = (new DateTime())->modify('-7 days');
