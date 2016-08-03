@@ -50,9 +50,9 @@
 							<th width="150px" class="text-center">Last DB TS</th>
 							<th width="80px" class="text-center">Voltage</th>
 							<th width="150px" class="text-center">ESEYE Conn</th>
-							<th width="" class="text-center">Board temp</th>
+							<th width="" class="text-center">BoardTemp</th>
 							<th width="" class="text-center">Humidity</th>
-							<th width="" class="text-center">LastOpened</th>
+							<th width="" class="text-center">Opened</th>
 							<th width="" class="text-center">SigQual</th>
 							<th width="" class="text-center">SigQualTime</th>
 							<th width="" class="text-center">Link</th>

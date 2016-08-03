@@ -343,19 +343,6 @@ class Source extends CI_Model {
 		return "";
 	}
 
-	public function getMaxLight($deviceId) {
-		$today = (new DateTime());
-		$before = (new DateTime())->modify('-7 days');
-
-		$object = new Measurements();
-		$query = "SELECT lightSensMax FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(`timestamp`) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY `lightSensMax` DESC LIMIT 1";
-		$value = $object->single($query);
-		if (isset($value["lightSensMax"])) {
-			return $value["lightSensMax"];
-		}
-		return "";
-	}
-
 	public function getLastOpenedDate ($deviceId) {
 		$today = (new DateTime());
 		$before = (new DateTime())->modify('-7 days');
