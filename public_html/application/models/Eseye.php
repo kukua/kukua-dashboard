@@ -94,13 +94,6 @@ class Eseye extends CI_Model {
 		$batteryBg = "";
 		$batteryVoltage = (new Source())->getBatteryLevel($station->getDeviceId());
 
-		// TODO(mauvm): Remove this temporary fix after battery levels have been sanitized.
-		if ($batteryVoltage > 10000) {
-			$batteryVoltage /= 10;
-		} else if ($batteryVoltage < 1000) {
-			$batteryVoltage *= 10;
-		}
-
 		switch($batteryVoltage) {
 			case ($batteryVoltage >= 4000):
 				$batteryBg = "green";
