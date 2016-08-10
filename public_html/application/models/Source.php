@@ -376,7 +376,7 @@ class Source extends CI_Model {
 		$before = (new DateTime())->modify('-7 days');
 
 		$object = new Measurements();
-		$query = "SELECT * FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(`timestamp`) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY `sigQual` ASC LIMIT 1";
+		$query = "SELECT sigQual FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(`timestamp`) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY `sigQual` ASC LIMIT 1";
 		$value = $object->single($query);
 		if (isset($value["sigQual"])) {
 			return $value["sigQual"];

@@ -145,7 +145,10 @@ class Eseye extends CI_Model {
 		} elseif ($sigQual >= 1) {
 			$sigQualColor = "green";
 		} else {
-			$sigQual = "-";
+
+			if (!is_numeric($sigQual)) {
+				$sigQual = "-";
+			}
 		}
 
 		$sigQualTime = (new Source())->getMaxSigQualMinTime($station->getDeviceId());
