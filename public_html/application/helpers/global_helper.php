@@ -78,7 +78,7 @@ class GlobalHelper {
 			throw new Exception("Cannot open zip archive");
 		}
 
-		if (is_array($assocData)) {
+		if (is_array($assocData) && !empty($assocData)) {
 			foreach($assocData as $data) {
 				if (!isset($data["data"])) {
 					continue;

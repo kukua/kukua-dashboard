@@ -38,7 +38,7 @@ class Measurements extends Source {
 			'Temperature' => [
 				'calc' => 'AVG',
 				'name' => 'temp',
-				'where' => 'temp != 0 AND temp < 300',
+				'where' => 'temp < 300',
 			],
 			'Rainfall' => [
 				'calc' => 'SUM',
@@ -130,21 +130,31 @@ class Measurements extends Source {
 		return null;
 	}
 
+	/**
+	 *
+	 */
 	protected function _defineColumns($source) {
 		$return = [];
-		foreach($this->_default_columns as $column) {
-			if ($column['name'] == $source->getMeasurement()) {
-				$return[$source->getMeasurement()] = $column;
-			}
-		}
 
-		if (empty($return)) {
-			$return = [
-				$source->getMeasurement() => [
-					'name' => $source->getMeasurement(),
-					'calc' => 'AVG'
-				]
-			];
+		if ($source->getMeasurement() !== "") {
+
+			//Try to loop over default columns
+			foreach($this->_default_columns as $column) {
+				if ($column['name'] == $source->getMeasurement()) {
+					$return[$source->getMeasurement()] = $column;
+				}
+			}
+
+			if (empty($return)) {
+				$return = [
+					$source->getMeasurement() => [
+						'name' => $source->getMeasurement(),
+						'calc' => 'AVG'
+					]
+				];
+			}
+		} else {
+			$return = $this->_default_columns;
 		}
 
 		return $return;
@@ -157,7 +167,7 @@ class Measurements extends Source {
 	protected function _buildQuery($source, $station, $columns) {
 		$select = $this->buildSelect($columns, $source->getInterval(), $station->getDeviceId());
 		$from	= $this->buildFrom($station->getDeviceId());
-		$extra  = $this->buildExtraWhere($columns);
+		$extra	= $this->buildExtraWhere($columns);
 		$where	= $this->buildWhere($source->getDateFrom(), $source->getDateTo(), $extra);
 
 		$group	= $this->buildGroup($source->getInterval());
