@@ -65,7 +65,7 @@
 									<td>{$card->name}</td>
 									<td>{$card->ICCID}</td>
 									<td class="text-center bg-{$card->timestampColor}">{$card->timestamp}</td>
-									<td class="text-center bg-{$card->voltageColor}"><a href="/graph?region={$card->regionId}&graph=battery" target="_blank" class="text-black">{$card->voltage}</a></td>
+									<td class="text-center bg-{$card->voltageColor}"><a href="/graph?region={$card->regionId}&graph=battery&dateFrom={$dates.from->format('Y-m-d')}&dateTo={$dates.to->format('Y-m-d')}" target="_blank" class="text-black">{$card->voltage}</a></td>
 									<td class="text-center bg-{$card->statusColor}">{$card->status}</td>
 									<td class="text-center bg-{$card->boardTempColor}">{$card->boardTemp}</td>
 									<td class="text-center bg-{$card->boardHumidColor}">{$card->boardHumid}</td>

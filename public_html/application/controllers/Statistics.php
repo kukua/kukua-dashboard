@@ -4,10 +4,10 @@ use \Curl\Curl;
 
 class Statistics extends MyController {
 
-    public function __construct() {
-        parent::__construct();
-        $this->allow("manager");
-    }
+	public function __construct() {
+		parent::__construct();
+		$this->allow("manager");
+	}
 
 	public function index() {
 		$stations = (new Station())->findByUserId($this->_user->id);
@@ -17,7 +17,12 @@ class Statistics extends MyController {
 			$simCards[] = $eseye->getSim($station);
 		}
 
-        $this->data["simcards"] = $simCards;
-        $this->load->view("statistics/index", $this->data);
-    }
+		$dateFrom = (new \DateTime())->modify('-1 week');
+		$dateTo = new \DateTime();
+
+		$this->data["simcards"] = $simCards;
+		$this->data["dates"] = ['from' => $dateFrom, 'to' => $dateTo];
+
+		$this->load->view("statistics/index", $this->data);
+	}
 }
