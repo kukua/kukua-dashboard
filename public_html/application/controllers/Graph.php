@@ -71,9 +71,7 @@ class Graph extends MyController {
 			}
 
 			$result = (new Source($data))->get($this->_user);
-			echo "<pre>";
-			print_r($result);
-			die();
+
 			if (is_array($result)) {
 				GlobalHelper::outputCsv("export-stations", $result, $data["station"]);
 				exit;

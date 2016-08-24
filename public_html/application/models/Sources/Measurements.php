@@ -175,9 +175,6 @@ class Measurements extends Source {
 		$sort	= $this->buildSort();
 
 		$query = $select . $from . $where . $group . $sort;
-
-		print_r($query);
-		die();
 		log_message("ERROR", $query);
 
 		return $this->_db->query($query);
