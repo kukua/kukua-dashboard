@@ -112,8 +112,11 @@ class Eseye extends CI_Model {
 		/* Board temperature */
 		$boardTemp = (new Source())->getExceedBoardTempDate($station->getDeviceId());
 		$boardTempColor = "";
-		if ($boardTemp) {
+
+		if ($boardTemp >= 45) {
 			$boardTempColor = "red";
+		} elseif ($boardTemp < 45) {
+			$boardTempColor = "green";
 		} else {
 			$boardTemp = "-";
 		}

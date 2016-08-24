@@ -62,7 +62,7 @@ class Measurements extends Source {
 			'WindDir' => [
 				'calc' => 'AVG',
 				'name' => 'windDir',
-				'where' => 'windDir <= 360 AND windDir > 0',
+				'where' => 'windDir < 360 AND windDir >= 0',
 			],
 			'SolarRad' => [
 				'calc' => 'AVG',
@@ -104,6 +104,7 @@ class Measurements extends Source {
 		foreach ($stations as $i => $station) {
 			$columns = $this->_defineColumns($source);
 			$result = $this->getMeasurement($source, $user, $station, $columns);
+
 			if (!is_null($result)) {
 				$data[] = $result;
 			}
@@ -136,7 +137,7 @@ class Measurements extends Source {
 	protected function _defineColumns($source) {
 		$return = [];
 
-		if ($source->getMeasurement() !== "") {
+		if ($source->getMeasurement()) {
 
 			//Try to loop over default columns
 			foreach($this->_default_columns as $column) {
@@ -174,6 +175,9 @@ class Measurements extends Source {
 		$sort	= $this->buildSort();
 
 		$query = $select . $from . $where . $group . $sort;
+
+		print_r($query);
+		die();
 		log_message("ERROR", $query);
 
 		return $this->_db->query($query);

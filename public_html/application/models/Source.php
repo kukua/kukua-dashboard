@@ -233,9 +233,10 @@ class Source extends CI_Model {
 	 * @param  User
 	 * @return Array
 	 */
-	public function getMultipleStations($user = null) {
+    public function getMultipleStations($user = null) {
 		$result = [];
 		$measurements = (new Measurements())->get($this, $user);
+
 		if (isset($measurements[0])) {
 			$result = $measurements;
 		}
@@ -322,10 +323,16 @@ class Source extends CI_Model {
 		$before = (new DateTime())->modify('-7 days');
 
 		$object = new Measurements();
-		$query = "SELECT timestamp FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(timestamp) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " AND bmpTemp >= 45 ORDER BY timestamp DESC LIMIT 1";
+		$query = "SELECT MAX(bmpTemp) as bmpTemp, MAX(tempBMP) as tempBMP, MAX(tempSHT21) as tempSHT21 FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(timestamp) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY timestamp DESC LIMIT 1";
 		$value = $object->single($query);
 		if (isset($value["bmpTemp"])) {
 			return $value["bmpTemp"];
+		}
+		if (isset($value["tempBMP"])) {
+			return $value["tempBMP"] / 10;
+		}
+		if (isset($value["tempSHT21"])) {
+			return $value["tempSHT21"];
 		}
 
 		return "";
