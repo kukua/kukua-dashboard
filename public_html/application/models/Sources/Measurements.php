@@ -283,6 +283,7 @@ class Measurements extends Source {
 	 */
 	public function buildWhere($from, $to, $extra = null) {
 		$where = " WHERE timestamp > FROM_UNIXTIME(" . $from . ") AND timestamp < FROM_UNIXTIME(" . $to . ") ";
+		$where .= " AND timestamp <= NOW() ";
 		if ($extra !== null) {
 			$where .= $extra;
 		}
