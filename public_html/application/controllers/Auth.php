@@ -42,8 +42,9 @@ class Auth extends MyController {
 	public function request() {
 		if ($this->input->post()) {
 			$username = "";
-			$password = "";
-			$email	  = $this->input->post("email");
+            $password = "";
+            $identity = $this->input->post("identity");
+            $email	  = $this->input->post("email");
 			$data	  = [
 				"first_name" => $this->input->post("first_name"),
 				"last_name"  => $this->input->post("last_name"),
@@ -54,13 +55,13 @@ class Auth extends MyController {
 				redirect("auth/request", "refresh");
 			}
 
-			// Check if e-mail already exists
-			if ($this->ion_auth->email_check($email) === true) {
-				Notification::set(Auth::WARNING, "This e-mail address is already registered");
+			// Check if identity already exists
+			if ($this->ion_auth->identity_check($identity) === true) {
+				Notification::set(Auth::WARNING, "This username is already registered");
 				redirect("auth/request", "refresh");
 			}
 
-			$user = $this->ion_auth->register($username, $password, $email, $data);
+			$user = $this->ion_auth->register($identity, $password, $email, $data);
 			if ($user == false) {
 				Notification::set(Auth::DANGER, "Something went wrong. Please try again.");
 				redirect("auth/request", "refresh");
@@ -118,12 +119,14 @@ class Auth extends MyController {
         if ($this->input->post()) {
             $this->form_validation->set_rules("first_name", "First name", "required");
             $this->form_validation->set_rules("last_name", "Last name", "required");
+            $this->form_validation->set_rules("identity", "Username", "required");
             $this->form_validation->set_rules('password', 'Password', 'required|matches[password_confirm]');
             $this->form_validation->set_rules('password_confirm', 'Repeat password', 'required');
             if ($this->form_validation->run() !== false) {
                 $userData = [
                     "first_name"        => $this->input->post("first_name"),
                     "last_name"         => $this->input->post("last_name"),
+                    "identity"          => $this->input->post("identity"),
                     "password"          => $this->input->post("password"),
                     "activation_code"   => "",
                     "active"            => 1
@@ -254,7 +257,7 @@ class Auth extends MyController {
      * @return boolean
      */
     protected function _validate() {
-        $this->form_validation->set_rules("identity", "E-mail address", "required");
+        $this->form_validation->set_rules("identity", "E-mail address / username", "required");
         $this->form_validation->set_rules("password", "Password", "required");
         return $this->form_validation->run() !== false;
     }

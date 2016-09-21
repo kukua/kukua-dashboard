@@ -9,8 +9,8 @@
 						<h1 class="ellipsis">Authenticate</h1>
 						{include file="global/notification.tpl"}
 						<form class="form-signin clearfix" method="post" action="/auth/login">
-							<label for="inputEmail" class="sr-only">Emailaddress</label>
-							<input type="text" id="inputEmail" name="identity" class="form-control" placeholder="E-mail address">
+							<label for="inputEmail" class="sr-only">Username</label>
+							<input type="text" id="inputEmail" name="identity" class="form-control" placeholder="Username">
 							<span id="suggestion"></span>
 							<div>
 								<label for="inputPassword" class="sr-only">Password</label>

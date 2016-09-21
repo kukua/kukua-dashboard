@@ -14,6 +14,11 @@
                 	    </div>
 
                 	    <div class="form-group">
+                	        <label for="">Username</label>
+                	        <input type="text" value="{$user->identity}" class="form-control" name="identity">
+                	    </div>
+
+                	    <div class="form-group">
                 	        <label for="first-name">Name</label>
                 	        <div class="row">
                 	            <div class="col-sm-6">

@@ -164,7 +164,8 @@ class User extends MyController {
 		$this->allow("admin");
 		if ($this->input->post("email")) {
 			$username = "";
-			$password = "";
+            $password = "";
+            $identity = $this->input->post("identity");
 			$email	  = $this->input->post("email");
 			$data	  = [
 				"first_name" => $this->input->post("first_name"),
@@ -177,13 +178,13 @@ class User extends MyController {
 			}
 
 			// Check if e-mail already exists
-			if ($this->ion_auth->email_check($email) === true) {
-				Notification::set(User::WARNING, "This e-mail address is already registered");
+			if ($this->ion_auth->identity_check($identity) === true) {
+				Notification::set(User::WARNING, "This username is already registered");
 				redirect("user/invite", "refresh");
 			}
 
 			$data["activation_code"] = bin2hex(openssl_random_pseudo_bytes(8));
-			$user = $this->ion_auth->register($username, $password, $email, $data);
+			$user = $this->ion_auth->register($identity, $password, $email, $data);
 			if ($user == false) {
 				Notification::set(User::DANGER, "Something went wrong. Please try again.");
 				redirect("user/invite", "refresh");

@@ -21,7 +21,13 @@
 				</div>
 
 				<div class="form-group">
-					<label for="email" class="col-sm-3 control-label">E-mailaddress</label>
+					<label for="email" class="col-sm-3 control-label">Username</label>
+					<div class="col-sm-7">
+						<input type="text" name="identity" class="form-control" aria-label="Enter username" placeholder="username">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="email" class="col-sm-3 control-label">E-mail address</label>
 					<div class="col-sm-7">
 						<input type="text" name="email" class="form-control" aria-label="Enter email" placeholder="info@example.cc">
 					</div>

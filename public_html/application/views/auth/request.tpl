@@ -18,6 +18,10 @@
 								<input type="text" id="inputLastname" name="last_name" class="form-control" placeholder="Last name">
 							</div>
 							<div>
+								<label for="inputIdentity" class="sr-only">Username</label>
+								<input type="text" id="inputIdentity" name="identity" class="form-control" placeholder="Username">
+							</div>
+							<div>
 								<label for="inputEmail" class="sr-only">E-mail address</label>
 								<input type="text" id="inputEmail" name="email" class="form-control" placeholder="E-mail address">
 							</div>
