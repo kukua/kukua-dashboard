@@ -290,7 +290,7 @@ class Source extends CI_Model {
 	 */
 	public function getBatteryLevel($deviceId) {
 		$object = new Measurements();
-		$query = "SELECT * FROM `" . $deviceId . "` ORDER BY timestamp DESC LIMIT 1";
+		$query = "SELECT * FROM `" . $deviceId . "` WHERE timestamp <= NOW() ORDER BY timestamp DESC LIMIT 1";
 		$value = $object->single($query);
 
 		if (isset($value["battery"])) {
