@@ -54,8 +54,9 @@ class User extends MyController {
 		$this->allow("members", $id);
 
 		$isAdmin = $this->ion_auth->in_group("admin");
-		if ($this->input->post("first_name")) {
+		if ($this->input->post("identity")) {
 
+			$this->form_validation->set_rules("identity", "Username", "required");
 			$this->form_validation->set_rules("first_name", "First name", "required");
 			$this->form_validation->set_rules("last_name", "Last name", "required");
 			$postPw = $this->input->post("new") ? true : false;
@@ -66,6 +67,7 @@ class User extends MyController {
 			}
 
 			if ($this->form_validation->run() !== false) {
+				$userData["identity"] = $this->input->post("identity");
 				$userData["first_name"] = $this->input->post("first_name");
 				$userData["last_name"] = $this->input->post("last_name");
 				if ($postPw) {
@@ -164,8 +166,8 @@ class User extends MyController {
 		$this->allow("admin");
 		if ($this->input->post("email")) {
 			$username = "";
-            $password = "";
-            $identity = $this->input->post("identity");
+			$password = "";
+			$identity = $this->input->post("identity");
 			$email	  = $this->input->post("email");
 			$data	  = [
 				"first_name" => $this->input->post("first_name"),

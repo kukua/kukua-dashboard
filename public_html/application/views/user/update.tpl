@@ -17,19 +17,29 @@
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="col-sm-12">
-				<h4><i class="glyphicon glyphicon-user"></i> Personal info</h4>
-			</div>
-		</div>
 
 		<div class="row">
 			<div class="col-sm-12">
 				<form method="post" action="/user/update/{$member->id}" class="form-horizontal">
+					<div class="row">
+						<div class="col-sm-6">
+							<h4><i class="glyphicon glyphicon-user"></i> Personal info</h4>
+						</div>
+						<div class="col-sm-6">
+							<button type="submit" class="btn btn-primary pull-right">Update user</button>
+						</div>
+					</div>
+
 					<div class="form-group">
 						<label for="email" class="control-label col-sm-3">E-mail address</label>
-						<div class="col-sm-9">
+						<div class="col-sm-6">
 							<p class="form-control-static">{$member->email}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="username" class="control-label col-sm-3">Username</label>
+						<div class="col-sm-6">
+							<input type="text" name="identity" placeholder="Username" class="form-control" id="username" value="{$member->identity}">
 						</div>
 					</div>
 
