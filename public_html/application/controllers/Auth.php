@@ -26,6 +26,17 @@ class Auth extends MyController {
 
         if ($this->input->post()) {
             if ($this->_authenticate() === True) {
+				// Log logins to file
+				file_put_contents(
+					FCPATH . 'application/logs/auth.log',
+					json_encode([
+						'type' => 'login',
+						'username' => $this->input->post('identity'),
+						'time' => date_format(new DateTime(), 'c'),
+					]) . "\n",
+					FILE_APPEND | LOCK_EX
+				);
+
                 redirect("graph", "refresh");
             }
         }
