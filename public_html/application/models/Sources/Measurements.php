@@ -64,6 +64,16 @@ class Measurements extends Source {
 				'name' => 'windDir',
 				'where' => 'windDir < 360 AND windDir >= 0',
 			],
+			'GustSpeed' => [
+				'calc' => 'AVG',
+				'name' => 'gustSpeed',
+				'where' => 'gustSpeed < 3000',
+			],
+			'GustDir' => [
+				'calc' => 'AVG',
+				'name' => 'gustDir',
+				'where' => 'gustDir < 360 AND gustDir >= 0',
+			],
 			'SolarRad' => [
 				'calc' => 'AVG',
 				'name' => 'solarIrrad'

@@ -54,7 +54,15 @@ class Foreca extends Source {
 			'WindDir' => [
 				'calc' => 'avg',
 				'name' => 'windDir'
-			]
+			],
+			'GustSpeed' => [
+				'calc' => 'avg',
+				'name' => 'gustSpeed'
+			],
+			'GustDir' => [
+				'calc' => 'avg',
+				'name' => 'gustDir'
+			],
 		];
 	}
 
