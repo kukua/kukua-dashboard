@@ -79,7 +79,7 @@ class Foreca extends Source {
 		$data = [];
 		foreach($stations as $key => $station) {
 			$from  = $this->buildFrom($station['type']);
-			$where = $this->buildWhere($station['id'], $source->getDateFrom(), $source->getDateTo());
+			$where = $this->buildWhere($station['id'], $station['type'], $source->getDateFrom(), $source->getDateTo());
 			$query = $select . $from . $where . $group . $sort;
 
 			log_message("ERROR", $query);
@@ -141,7 +141,7 @@ class Foreca extends Source {
 	 * @return void
 	 */
 	public function buildFrom($type) {
-		return " FROM `" . $type . "`";
+		return " FROM `" . $type . "` as main";
 	}
 
 	/**
@@ -149,14 +149,17 @@ class Foreca extends Source {
 	 *
 	 * @access public
 	 * @param  int       $id
+	 * @param  string    $type
 	 * @param  timestamp $from
 	 * @param  timestamp $to
 	 * @param  string	 $extra
 	 * @return string
 	 */
-	public function buildWhere($id, $from, $to, $extra = null) {
+	public function buildWhere($id, $type, $from, $to, $extra = null) {
 		$where = " WHERE id = '" . $id . "' AND date > FROM_UNIXTIME(" . $from . ") AND date < FROM_UNIXTIME(" . $to . ")";
 		$where .=" AND date > NOW()";
+		$where .=" AND created_at = (SELECT created_at FROM `". $type .
+			"` WHERE id = main.id AND date = main.date ORDER BY created_at DESC LIMIT 1)";
 		if ($extra !== null) {
 			$where .= $extra;
 		}
