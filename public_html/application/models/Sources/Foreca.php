@@ -73,13 +73,13 @@ class Foreca extends Source {
 	 */
 	public function get($source, $stations = Array()) {
 		$select = $this->buildSelect($source->getMeasurement(), $source->getInterval());
-		$where  = $this->buildWhere($source->getDateFrom(), $source->getDateTo());
 		$group  = $this->buildGroup($source->getInterval());
 		$sort   = $this->buildSort();
 
 		$data = [];
 		foreach($stations as $key => $station) {
-			$from  = $this->buildFrom($station);
+			$from  = $this->buildFrom($station['type']);
+			$where = $this->buildWhere($station['id'], $source->getDateFrom(), $source->getDateTo());
 			$query = $select . $from . $where . $group . $sort;
 
 			log_message("ERROR", $query);
@@ -112,7 +112,7 @@ class Foreca extends Source {
 
 		$div = 3600;
 		$select  = "SELECT ";
-		$select .= " (UNIX_TIMESTAMP(timestamp) - mod(UNIX_TIMESTAMP(timestamp)," . $div . ")) * 1000 as timestamp,";
+		$select .= " (UNIX_TIMESTAMP(date) - mod(UNIX_TIMESTAMP(date)," . $div . ")) * 1000 as timestamp,";
 		$select .= $column['calc'] . "(" . $column['name'] . ") AS " . $column['name'] . ",";
 		return trim($select, ",");
 	}
@@ -137,25 +137,26 @@ class Foreca extends Source {
 	 * Build FROM
 	 *
 	 * @access public
-	 * @param  deviceId
+	 * @param  string    $type
 	 * @return void
 	 */
-	public function buildFrom($deviceId) {
-		return " FROM " . $deviceId;
+	public function buildFrom($type) {
+		return " FROM `" . $type . "`";
 	}
 
 	/**
 	 * Set where clause
 	 *
 	 * @access public
+	 * @param  int       $id
 	 * @param  timestamp $from
 	 * @param  timestamp $to
 	 * @param  string	 $extra
 	 * @return string
 	 */
-	public function buildWhere($from, $to, $extra = null) {
-		$where = " WHERE timestamp > FROM_UNIXTIME(" . $from . ") AND timestamp < FROM_UNIXTIME(" . $to . ")";
-		$where .=" AND timestamp > NOW()";
+	public function buildWhere($id, $from, $to, $extra = null) {
+		$where = " WHERE id = '" . $id . "' AND date > FROM_UNIXTIME(" . $from . ") AND date < FROM_UNIXTIME(" . $to . ")";
+		$where .=" AND date > NOW()";
 		if ($extra !== null) {
 			$where .= $extra;
 		}
@@ -170,7 +171,7 @@ class Foreca extends Source {
 	 * @return string $group
 	 */
 	public function buildGroup($interval) {
-		$group = " GROUP BY UNIX_TIMESTAMP(timestamp) - UNIX_TIMESTAMP(timestamp) % 3600";
+		$group = " GROUP BY UNIX_TIMESTAMP(date) - UNIX_TIMESTAMP(date) % 3600";
 		return $group;
 	}
 
@@ -181,7 +182,7 @@ class Foreca extends Source {
 	 * @return string
 	 */
 	public function buildSort() {
-		$sort = " ORDER BY timestamp ASC";
+		$sort = " ORDER BY date ASC";
 		return $sort;
 	}
 }

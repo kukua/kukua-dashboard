@@ -263,10 +263,20 @@ class Source extends CI_Model {
 		$result = [];
 		switch($this->getRegion()) {
 		case '1':
-			$stations = ['hourly_02339354'];
+			$stations = [
+				[
+					'type' => 'hourly',
+					'id' => '102339354',
+				],
+			];
 			break;
 		case '2':
-			$stations = ['hourly_100156918'];
+			$stations = [
+				[
+					'type' => 'hourly',
+					'id' => '100156918',
+				],
+			];
 			break;
 		default:
 			$stations = [];
