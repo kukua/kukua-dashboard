@@ -52,7 +52,9 @@
 							<th>ICCID</th>
 							<th width="150px" class="text-center">Last DB TS</th>
 							<th width="80px" class="text-center">Voltage</th>
+							{if $includeSimStatus}
 							<th width="150px" class="text-center">ESEYE Conn</th>
+							{/if}
 							<th width="" class="text-center">Board temp exceeded</th>
 							<th width="" class="text-center">Humidity</th>
 							<th width="" class="text-center">Opened</th>
@@ -69,7 +71,9 @@
 									<td>{$card->ICCID}</td>
 									<td class="text-center bg-{$card->timestampColor}">{$card->timestamp}</td>
 									<td class="text-center bg-{$card->voltageColor}"><a href="/graph?region={$card->regionId}&graph=battery&dateFrom={$dates.from->format('Y-m-d')}&dateTo={$dates.to->format('Y-m-d')}" target="_blank" class="text-black">{$card->voltage}</a></td>
+									{if $includeSimStatus}
 									<td class="text-center bg-{$card->statusColor}">{$card->status}</td>
+									{/if}
 									<td class="text-center bg-{$card->boardTempColor}">{$card->boardTemp}</td>
 									<td class="text-center bg-{$card->boardHumidColor}">{$card->boardHumid}</td>
 									<td class="text-center bg-{$card->lastOpenedColor}">{$card->lastOpened}</td>
