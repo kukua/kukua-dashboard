@@ -37,6 +37,9 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
+				{if ! $includeSimStatus}
+				<a href="/statistics?simStatus=1" class="btn btn-default">Show SIM statuses</a>
+				{/if}
 				<a href="https://docs.google.com/spreadsheets/d/1H4UnOq9jf972cQg66D5LMXrBBMdKx7riRYIOzFAYNfM/edit" class="btn btn-default">Metadata sheet (google doc)</a>
 			</div>
 		</div>

@@ -39,7 +39,7 @@ class Eseye extends CI_Model {
 	 * @throws Exception
 	 * @return StdClass
 	 */
-	public function getSim($station) {
+	public function getSim($station, $includeSimStatus = true) {
 		$result = new StdClass();
 		$result->LastRadiusStop = "-";
 		$result->LastRadiusBytes = "";
@@ -47,7 +47,7 @@ class Eseye extends CI_Model {
 		$statusBg = "";
 		$statusText = "-";
 
-		if ($station->getSimId()) {
+		if ($includeSimStatus && $station->getSimId()) {
 			$curl = new Curl();
 			$curl->setHeader("Content-type", "application/json");
 			$curl->post($this->_url . "/getCookieName");
