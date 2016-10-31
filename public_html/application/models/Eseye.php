@@ -77,13 +77,7 @@ class Eseye extends CI_Model {
 					$tsDate = (new DateTime())->createFromFormat("Y-m-d H:i:s", $result->LastRadiusStop, (new DateTimeZone("UTC")));
 					$statusBg   = $this->_getDifference($result->LastRadiusStop);
 
-					// TODO(mauvm): Quick fix for not displaying Airtel SIMs.
-					if ($statusBg === 'red') {
-						$statusBg = '';
-						$statusText = '-';
-					} else {
-						$statusText = $tsDate->format("Y-m-d H:i:s") . " | " . $result->LastRadiusBytes;
-					}
+					$statusText = $tsDate->format("Y-m-d H:i:s") . " | " . $result->LastRadiusBytes;
 				}
 			} catch (Exception $e) {
 				throw $e;
