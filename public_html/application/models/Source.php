@@ -333,16 +333,20 @@ class Source extends CI_Model {
 		$before = (new DateTime())->modify('-7 days');
 
 		$object = new Measurements();
-		$query = "SELECT MAX(bmpTemp) as bmpTemp, MAX(tempBMP) as tempBMP, MAX(tempSHT21) as tempSHT21 FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(timestamp) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY timestamp DESC LIMIT 1";
+		$query = "SELECT MAX(bmpTemp) as temp FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(timestamp) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY timestamp DESC LIMIT 1";
 		$value = $object->single($query);
-		if (isset($value["bmpTemp"])) {
-			return $value["bmpTemp"];
+		if (isset($value["temp"])) {
+			return $value["temp"];
 		}
-		if (isset($value["tempBMP"])) {
-			return $value["tempBMP"] / 10;
+		$query = "SELECT MAX(tempBMP) / 10 as temp FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(timestamp) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY timestamp DESC LIMIT 1";
+		$value = $object->single($query);
+		if (isset($value["temp"])) {
+			return $value["temp"];
 		}
-		if (isset($value["tempSHT21"])) {
-			return $value["tempSHT21"];
+		$query = "SELECT MAX(tempSHT21) as temp FROM `" . $deviceId . "` WHERE UNIX_TIMESTAMP(timestamp) BETWEEN " . $before->getTimestamp() . " AND " . $today->getTimestamp() . " ORDER BY timestamp DESC LIMIT 1";
+		$value = $object->single($query);
+		if (isset($value["temp"])) {
+			return $value["temp"];
 		}
 
 		return "";
