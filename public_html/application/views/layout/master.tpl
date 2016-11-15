@@ -384,9 +384,11 @@
 						<li class="dropdown">
 							<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi {$user->first_name}! <span class="caret"></span></a>
 							<ul class="dropdown-menu">
+								{if ! $isDemoAccount}
 								<li><a href="{$baseUrl}user/update/{$user->id}">My account</a></li>
 								<li><a href="{$baseUrl}map">Location map</a></li>
 								<li role="separator" class="divider"></li>
+								{/if}
 								{if $isAdmin}
 									<li><a href="{$baseUrl}user"><i class="glyphicon glyphicon-user"></i> Users</a></li>
 									<li><a href="{$baseUrl}regions"><i class="glyphicon glyphicon-globe"></i> Regions</a></li>

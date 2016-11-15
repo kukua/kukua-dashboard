@@ -36,6 +36,7 @@ class MyController extends CI_Controller {
         $this->_user = false;
 		$this->data["isAdmin"] = false;
 		$this->data["isManager"] = false;
+		$this->data["isDemoAccount"] = false;
         if ($this->ion_auth->logged_in()) {
             $this->_user = $this->ion_auth->user()->row();
             if ($this->ion_auth->in_group("admin")) {
@@ -43,6 +44,9 @@ class MyController extends CI_Controller {
 			}
 			if ($this->ion_auth->in_group('manager')) {
 				$this->data["isManager"] = true;
+			}
+			if ($this->ion_auth->in_group('demo_account')) {
+				$this->data["isDemoAccount"] = true;
 			}
         }
         $this->data["user"] = $this->_user;
@@ -88,6 +92,25 @@ class MyController extends CI_Controller {
                 $this->_disallow();
             }
         }
+    }
+
+    /**
+     * Check if user doesn't has access
+     *
+     * @access protected
+     * @param  String   $group
+     * @return void
+     */
+    protected function disallow ($group = null) {
+        if ( ! $this->ion_auth->logged_in()) {
+            Notification::set(self::WARNING, 'No access allowed');
+            redirect('auth/login', 'refresh');
+        }
+
+		// Disallow people who are in the group
+		if ($this->_groupCheck($group)) {
+            $this->_disallow();
+		}
     }
 
     private function _groupCheck($group) {

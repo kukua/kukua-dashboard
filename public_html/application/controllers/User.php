@@ -52,6 +52,7 @@ class User extends MyController {
 	 */
 	public function update($id = null) {
 		$this->allow("members", $id);
+		$this->disallow('demo_account', $id);
 
 		$isAdmin = $this->ion_auth->in_group("admin");
 		if ($this->input->post("identity")) {
