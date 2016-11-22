@@ -6,7 +6,7 @@
 	}
 
 	map.init = function() {
-		GoogleMapsLoader.KEY = 'AIzaSyANRqq9BPcWmvt3TFzS8fdYiS7RbJZUMfw'
+		GoogleMapsLoader.KEY = 'AIzaSyDq2BXy6EpcOpD_q7pkp44AF75Gbb3HDcc'
 		map.render();
 	}
 
