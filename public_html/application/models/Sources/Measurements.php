@@ -43,7 +43,7 @@ class Measurements extends Source {
 			'Rainfall' => [
 				'calc' => 'SUM',
 				'name' => 'rain',
-				'where' => 'rain < 1000',
+				'where' => 'rain < 300',
 			],
 			'Pressure' => [
 				'calc' => 'AVG',
