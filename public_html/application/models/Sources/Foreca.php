@@ -86,7 +86,11 @@ class Foreca extends Source {
 			$dbResult = $this->_db->query($query);
 
 			if ($dbResult) {
-				$data[$key]["name"] = "Forecast";
+				$name = 'Forecast';
+				if ($source->getRegion() == '1') {
+					$name = 'Forecast (Lushoto)';
+				}
+				$data[$key]["name"] = $name;
 				while($rows = $dbResult->fetch_assoc()) {
 					$fin = $this->_measurement($source->getMeasurement());
 					$data[$key]["data"][] = [
